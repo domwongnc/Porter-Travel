@@ -2087,7 +2087,7 @@ async function saveCardEdit(){
 // MAP VIEW — Mapbox GL JS
 // ═══════════════════════════════════
 const MB_TOKEN = 'pk.eyJ1IjoiZG9td25jIiwiYSI6ImNtbjY0ZndxaDAyYm4ycXM0ZHllMzliNnQifQ.cMpvCLFQbkTh0rxnhAcxJw';
-mapboxgl.accessToken = MB_TOKEN;
+if(typeof mapboxgl !== 'undefined') mapboxgl.accessToken = MB_TOKEN;
 
 let mbMap = null;
 let mbMarkersArr = [];
@@ -2131,6 +2131,8 @@ function clearMapLayers() {
 }
 
 function openMap() {
+  if(typeof mapboxgl === 'undefined'){toast('Map not loaded — check your connection');return;}
+  mapboxgl.accessToken = MB_TOKEN;
   const panel = document.getElementById('map-panel');
   panel.classList.add('on');
   const trip = trips.find(t => t.id === tripId);
