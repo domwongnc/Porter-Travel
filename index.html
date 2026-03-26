@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Porter — Travel OS</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#F4F1EB;--card:#FAFAF7;--ink:#1A1A18;--muted:#6B6B66;
+  --border:#E2DFD6;--accent:#2D6A4F;--accent-soft:#E8F5EE;
+  --warn:#C17435;--warn-soft:#FDF3E7;--sky:#2563A8;--sky-soft:#EBF2FB;
+  --danger:#B91C1C;--danger-soft:#FEE2E2;
+  --pill:999px;--r:14px;--r-sm:8px;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --font-display:'Fraunces',Georgia,serif;
+}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--font-body)}
+body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh}
+
+/* ── SHELL ── */
+.shell{width:100%;max-width:430px;min-height:100svh;display:flex;flex-direction:column;position:relative;background:var(--bg)}
+.statusbar{display:flex;justify-content:space-between;padding:10px 20px 4px;font-size:11px;color:var(--muted);font-weight:500}
+
+/* ── SCREENS ── */
+.screen{flex:1;display:none;flex-direction:column;overflow:hidden;animation:fadeIn .2s ease}
+.screen.active{display:flex}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── TAB BAR ── */
+.tabbar{display:flex;background:var(--card);border-top:1px solid var(--border);padding:6px 0 max(10px,env(safe-area-inset-bottom));position:sticky;bottom:0;z-index:50}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px;transition:all .2s}
+.tab-icon{font-size:19px;line-height:1;transition:transform .2s}
+.tab-label{font-size:10px;font-weight:500;color:var(--muted);transition:color .2s}
+.tab.active .tab-label{color:var(--accent)}
+.tab.active .tab-icon{transform:scale(1.12)}
+
+/* ── AUTH SCREEN ── */
+#screen-auth{background:var(--bg);justify-content:center;align-items:center;gap:0;padding:40px 32px}
+.auth-logo{font-family:var(--font-display);font-size:42px;font-weight:600;letter-spacing:-.03em;color:var(--ink);margin-bottom:6px}
+.auth-logo span{color:var(--accent)}
+.auth-tagline{font-size:14px;color:var(--muted);margin-bottom:40px;text-align:center;line-height:1.5}
+.auth-form{width:100%;display:flex;flex-direction:column;gap:12px}
+.auth-input{width:100%;padding:13px 16px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--card);font-size:15px;font-family:var(--font-body);color:var(--ink);outline:none;transition:border-color .2s}
+.auth-input:focus{border-color:var(--accent)}
+.auth-input::placeholder{color:#9B9991}
+.auth-btn{width:100%;padding:14px;border-radius:var(--r-sm);border:none;background:var(--accent);color:#fff;font-size:15px;font-weight:600;font-family:var(--font-body);cursor:pointer;transition:opacity .15s}
+.auth-btn:hover{opacity:.9}
+.auth-btn:disabled{opacity:.5;cursor:default}
+.auth-toggle{font-size:13px;color:var(--muted);text-align:center;cursor:pointer;margin-top:4px}
+.auth-toggle span{color:var(--accent);font-weight:500}
+.auth-error{font-size:13px;color:var(--danger);text-align:center;background:var(--danger-soft);padding:10px;border-radius:var(--r-sm);display:none}
+.auth-error.show{display:block}
+
+/* ── CAPTURE SCREEN ── */
+.capture-header{padding:16px 20px 0;display:flex;justify-content:space-between;align-items:center}
+.wordmark{font-family:var(--font-display);font-size:26px;font-weight:600;letter-spacing:-.02em}
+.wordmark span{color:var(--accent)}
+.avatar-btn{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;cursor:pointer;border:none}
+
+.ingest-box{margin:14px 20px;background:var(--card);border:1.5px dashed var(--border);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px;transition:border-color .2s}
+.ingest-box:focus-within{border-color:var(--accent);border-style:solid}
+.ingest-label{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.ingest-row{display:flex;gap:8px;align-items:flex-end}
+#url-input{flex:1;border:none;background:#F0EDE6;border-radius:var(--r-sm);padding:10px 12px;font-size:14px;font-family:var(--font-body);color:var(--ink);outline:none;resize:none;min-height:42px;max-height:90px;transition:background .2s}
+#url-input:focus{background:#E8E4DC}
+#url-input::placeholder{color:#9B9991}
+.ingest-btn{background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);padding:10px 14px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s;font-family:var(--font-body)}
+.ingest-btn:active{transform:scale(.97)}
+.ingest-btn:disabled{opacity:.5;cursor:default}
+
+.filter-chips{display:flex;gap:6px;padding:0 20px;overflow-x:auto;scrollbar-width:none}
+.filter-chips::-webkit-scrollbar{display:none}
+.chip{display:flex;align-items:center;gap:4px;padding:5px 11px;border-radius:var(--pill);background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+
+.section-header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px 8px}
+.section-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.section-action{font-size:13px;color:var(--accent);font-weight:500;cursor:pointer}
+
+.cards-scroll{flex:1;overflow-y:auto;padding:0 20px 80px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none}
+.cards-scroll::-webkit-scrollbar{display:none}
+
+/* ── INSPIRATION CARD ── */
+.icard{background:var(--card);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;animation:slideUp .3s ease forwards;opacity:0}
+@keyframes slideUp{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
+.icard-img{height:120px;display:flex;align-items:center;justify-content:center;font-size:42px;position:relative}
+.icard-img-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.2))}
+.icard-source{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.5);color:#fff;font-size:10px;padding:3px 7px;border-radius:var(--pill);font-weight:500}
+.icard-body{padding:12px}
+.icard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.icard-name{font-family:var(--font-display);font-size:16px;font-weight:600;line-height:1.2;letter-spacing:-.01em}
+.icard-loc{font-size:12px;color:var(--muted);margin-top:2px}
+.add-btn{width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
+.add-btn:active{transform:scale(.88)}
+.add-btn.added{background:var(--accent-soft);color:var(--accent);font-size:14px}
+.icard-desc{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.55}
+.tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.tag{padding:3px 8px;border-radius:var(--pill);font-size:11px;font-weight:600}
+.tag-food{background:#FEF3C7;color:#92400E}
+.tag-nature{background:#D1FAE5;color:#065F46}
+.tag-culture{background:#EDE9FE;color:#4C1D95}
+.tag-stay{background:#FEE2E2;color:#991B1B}
+.tag-beach{background:#DBEAFE;color:#1E40AF}
+.tag-adventure{background:#FDE68A;color:#92400E}
+.tag-nightlife{background:#FCE7F3;color:#9D174D}
+
+/* ── PARSING CARD ── */
+.parsing-card{background:var(--card);border-radius:var(--r);border:1px dashed var(--accent);padding:14px;display:flex;gap:12px;align-items:center;animation:slideUp .25s ease forwards;opacity:0}
+.spinner{width:22px;height:22px;border:2px solid var(--accent-soft);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.parsing-text{font-size:13px;color:var(--muted);line-height:1.4}
+.parsing-text strong{color:var(--ink)}
+
+/* ── EMPTY STATE ── */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);padding:40px 20px;flex:1}
+.empty-icon{font-size:44px;opacity:.35}
+.empty-title{font-size:15px;font-weight:500;color:var(--ink)}
+.empty-sub{font-size:13px;text-align:center;line-height:1.55;max-width:240px}
+
+/* ── CANVAS SCREEN ── */
+.canvas-header{padding:16px 20px 10px;display:flex;justify-content:space-between;align-items:flex-start}
+.trip-title{font-family:var(--font-display);font-size:22px;font-weight:600;letter-spacing:-.02em}
+.trip-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.header-actions{display:flex;gap:8px}
+.icon-btn{width:34px;height:34px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;transition:background .15s}
+.icon-btn:hover{background:#E8E4DC}
+
+.collab-bar{display:flex;align-items:center;gap:8px;padding:0 20px 10px}
+.collab-faces{display:flex}
+.face{width:26px;height:26px;border-radius:50%;border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;margin-left:-6px}
+.face:first-child{margin-left:0}
+.collab-text{font-size:12px;color:var(--muted)}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#22C55E;margin-left:auto;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+.day-selector{display:flex;gap:6px;padding:0 20px 12px;overflow-x:auto;scrollbar-width:none}
+.day-selector::-webkit-scrollbar{display:none}
+.day-pill{padding:6px 14px;border-radius:var(--pill);background:var(--card);border:1px solid var(--border);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
+.day-pill.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.timeline{flex:1;overflow-y:auto;padding:0 20px 80px;scrollbar-width:none}
+.timeline::-webkit-scrollbar{display:none}
+.timeline-slot{display:flex;gap:12px;margin-bottom:8px}
+.time-col{width:42px;text-align:right;flex-shrink:0;padding-top:14px}
+.time-label{font-size:11px;color:var(--muted);font-weight:500}
+.line-col{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:16px}
+.line-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);margin-top:18px;flex-shrink:0}
+.line-track{width:1.5px;background:var(--border);flex:1;margin:4px 0}
+.event-card{flex:1;background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:11px;cursor:pointer;transition:border-color .15s}
+.event-card:hover{border-color:#C0BDBA}
+.event-card.highlight{border-color:var(--warn);background:var(--warn-soft)}
+.event-title{font-weight:600;font-size:14px}
+.event-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.event-tags{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+
+.add-slot-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border:1.5px dashed var(--border);border-radius:var(--r-sm);color:var(--muted);font-size:13px;cursor:pointer;transition:all .2s;margin-bottom:10px;background:transparent;width:100%;font-family:var(--font-body)}
+.add-slot-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── VAULT SCREEN ── */
+.vault-search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border);border-radius:var(--pill);padding:9px 14px;margin:8px 20px}
+.vault-search input{flex:1;border:none;background:transparent;font-size:14px;font-family:var(--font-body);color:var(--ink);outline:none}
+.vault-search input::placeholder{color:#9B9991}
+
+.doc-list{flex:1;overflow-y:auto;padding:0 20px 80px;display:flex;flex-direction:column;gap:8px;scrollbar-width:none}
+.doc-list::-webkit-scrollbar{display:none}
+.doc-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;display:flex;gap:10px;align-items:center;cursor:pointer;transition:background .15s;animation:slideUp .25s ease forwards;opacity:0}
+.doc-item:hover{background:#F0EDE6}
+.doc-icon{font-size:20px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:var(--bg);border-radius:var(--r-sm);flex-shrink:0}
+.doc-info{flex:1;min-width:0}
+.doc-name{font-weight:500;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc-meta{font-size:12px;color:var(--muted);margin-top:1px}
+.doc-badge{padding:3px 8px;border-radius:var(--pill);font-size:11px;font-weight:600;flex-shrink:0}
+
+/* ── MODAL ── */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-backdrop.open{display:flex}
+.modal{background:var(--card);border-radius:20px 20px 0 0;width:100%;max-width:430px;padding:20px 24px 40px;animation:slideSheet .3s ease}
+@keyframes slideSheet{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-title{font-family:var(--font-display);font-size:18px;font-weight:600;margin-bottom:16px}
+.modal-input{width:100%;padding:11px 14px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--bg);font-size:14px;font-family:var(--font-body);color:var(--ink);outline:none;margin-bottom:10px}
+.modal-input:focus{border-color:var(--accent)}
+.modal-row{display:flex;gap:8px}
+.modal-btn{flex:1;padding:12px;border-radius:var(--r-sm);font-size:14px;font-weight:600;font-family:var(--font-body);cursor:pointer;border:none;transition:opacity .15s}
+.modal-btn.primary{background:var(--accent);color:#fff}
+.modal-btn.secondary{background:var(--border);color:var(--ink)}
+.modal-btn:hover{opacity:.88}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(12px);background:#1A1A18;color:#fff;padding:10px 18px;border-radius:var(--pill);font-size:13px;opacity:0;transition:all .28s;pointer-events:none;white-space:nowrap;z-index:300;font-family:var(--font-body)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── LOADING ── */
+.loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.loading-logo{font-family:var(--font-display);font-size:36px;font-weight:600;letter-spacing:-.03em}
+.loading-logo span{color:var(--accent)}
+.loading-sub{font-size:13px;color:var(--muted)}
+
+/* ── TRIP SELECTOR ── */
+.trip-selector{padding:8px 20px 0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.trip-selector::-webkit-scrollbar{display:none}
+.trip-chip{padding:5px 12px;border-radius:var(--pill);background:var(--card);border:1px solid var(--border);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
+.trip-chip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.trip-chip.new{border-style:dashed;color:var(--accent);border-color:var(--accent)}
+</style>
+</head>
+<body>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loading">
+  <div class="loading-logo">Port<span>er</span></div>
+  <div class="loading-sub">Loading your trips…</div>
+</div>
+
+<div class="shell">
+  <div class="statusbar"><span id="clock">9:41</span><span>✦ Porter</span></div>
+
+  <!-- AUTH SCREEN -->
+  <div class="screen active" id="screen-auth" style="flex:1;min-height:calc(100svh - 24px)">
+    <div class="auth-logo">Port<span>er</span></div>
+    <div class="auth-tagline">Your travel operating system.<br>From inspiration to execution.</div>
+    <div class="auth-form">
+      <div class="auth-error" id="auth-error"></div>
+      <input class="auth-input" id="auth-email" type="email" placeholder="Email address" autocomplete="email">
+      <input class="auth-input" id="auth-password" type="password" placeholder="Password" autocomplete="current-password">
+      <button class="auth-btn" id="auth-submit" onclick="handleAuth()">Sign in</button>
+      <div class="auth-toggle" id="auth-toggle" onclick="toggleAuthMode()">
+        No account? <span>Create one</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAPTURE SCREEN -->
+  <div class="screen" id="screen-capture">
+    <div class="capture-header">
+      <div class="wordmark">Port<span>er</span></div>
+      <button class="avatar-btn" id="avatar-btn" onclick="signOut()">?</button>
+    </div>
+
+    <div class="trip-selector" id="trip-selector"></div>
+
+    <div class="ingest-box">
+      <span class="ingest-label">✦ Paste link or describe a place</span>
+      <div class="ingest-row">
+        <textarea id="url-input" placeholder="TikTok, Instagram, Google Maps, or just describe it…" rows="1" oninput="autoResize(this)"></textarea>
+        <button class="ingest-btn" id="ingest-btn" onclick="ingestLink()">Add</button>
+      </div>
+    </div>
+
+    <div class="filter-chips">
+      <div class="chip active" onclick="filterCards('all',this)">✨ All</div>
+      <div class="chip" onclick="filterCards('food',this)">🍜 Food</div>
+      <div class="chip" onclick="filterCards('nature',this)">🌿 Nature</div>
+      <div class="chip" onclick="filterCards('stay',this)">🏨 Stay</div>
+      <div class="chip" onclick="filterCards('culture',this)">🏛 Culture</div>
+      <div class="chip" onclick="filterCards('beach',this)">🏝 Beach</div>
+    </div>
+
+    <div class="section-header">
+      <span class="section-title" id="cards-count">Saved ideas</span>
+      <span class="section-action" onclick="switchTab('canvas')">Plan trip →</span>
+    </div>
+
+    <div class="cards-scroll" id="cards-container">
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">✈️</div>
+        <div class="empty-title">Start collecting inspiration</div>
+        <div class="empty-sub">Paste a link above or describe any place to get started</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CANVAS SCREEN -->
+  <div class="screen" id="screen-canvas">
+    <div class="canvas-header">
+      <div>
+        <div class="trip-title" id="canvas-trip-title">My Trip</div>
+        <div class="trip-meta" id="canvas-trip-meta">Loading…</div>
+      </div>
+      <div class="header-actions">
+        <div class="icon-btn" onclick="showToast('Share link copied!')">🔗</div>
+        <div class="icon-btn" onclick="showToast('Co-pilot auditing your itinerary…')">🧭</div>
+      </div>
+    </div>
+
+    <div class="collab-bar">
+      <div class="collab-faces">
+        <div class="face" id="collab-face" style="background:var(--accent)">?</div>
+      </div>
+      <span class="collab-text" id="collab-text">Your trip</span>
+      <div class="live-dot"></div>
+    </div>
+
+    <div class="day-selector" id="day-selector"></div>
+
+    <div class="timeline" id="timeline-container"></div>
+  </div>
+
+  <!-- VAULT SCREEN -->
+  <div class="screen" id="screen-vault">
+    <div class="canvas-header">
+      <div>
+        <div class="trip-title" style="font-family:var(--font-display)">Smart Vault</div>
+        <div class="trip-meta">All trip documents & bookings</div>
+      </div>
+    </div>
+    <div class="vault-search">
+      <span style="font-size:15px">🔍</span>
+      <input placeholder="Search tickets, hotels, docs…" oninput="filterVault(this.value)">
+    </div>
+    <div class="doc-list" id="vault-list"></div>
+  </div>
+
+  <!-- TAB BAR (hidden until authed) -->
+  <div class="tabbar" id="tabbar" style="display:none">
+    <div class="tab active" id="tab-capture" onclick="switchTab('capture')">
+      <div class="tab-icon">✨</div>
+      <div class="tab-label">Capture</div>
+    </div>
+    <div class="tab" id="tab-canvas" onclick="switchTab('canvas')">
+      <div class="tab-icon">🗓</div>
+      <div class="tab-label">Plan</div>
+    </div>
+    <div class="tab" id="tab-vault" onclick="switchTab('vault')">
+      <div class="tab-icon">🗂</div>
+      <div class="tab-label">Vault</div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Event Modal -->
+<div class="modal-backdrop" id="event-modal">
+  <div class="modal">
+    <div class="modal-title">Add a stop</div>
+    <input class="modal-input" id="event-title-input" placeholder="Place name" autocomplete="off">
+    <input class="modal-input" id="event-loc-input" placeholder="Location / address">
+    <input class="modal-input" id="event-time-input" placeholder="Time (e.g. 09:00)" type="time">
+    <div class="modal-row">
+      <button class="modal-btn secondary" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn primary" onclick="saveEvent()">Add to Day</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Supabase init ──
+const SUPA_URL = 'https://bhmawmiikcyxltfjrnlu.supabase.co';
+const SUPA_KEY = 'sb_publishable_PEVbJOaaMmPQf5Dl73CUKw_fouTefQ4';
+const { createClient } = supabase;
+const sb = createClient(SUPA_URL, SUPA_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true }
+});
+
+// ── Detect file:// protocol ──
+if(window.location.protocol === 'file:') {
+  document.getElementById('loading').style.display = 'none';
+  document.querySelector('.loading-sub') && (document.querySelector('.loading-sub').textContent = '');
+  const overlay = document.getElementById('loading');
+  overlay.style.display = 'flex';
+  overlay.style.flexDirection = 'column';
+  overlay.style.gap = '16px';
+  overlay.style.padding = '40px';
+  overlay.style.textAlign = 'center';
+  overlay.innerHTML = `
+    <div style="font-family:'Fraunces',serif;font-size:32px;font-weight:600;letter-spacing:-.02em">Port<span style="color:#2D6A4F">er</span></div>
+    <div style="font-size:15px;font-weight:600;color:#1A1A18">One quick step needed</div>
+    <div style="font-size:13px;color:#6B6B66;line-height:1.7;max-width:280px">
+      Porter needs to be served over <code style="background:#E2DFD6;padding:2px 6px;border-radius:4px">http://</code> to connect to Supabase.<br><br>
+      Run this in your terminal in the same folder as <code style="background:#E2DFD6;padding:2px 6px;border-radius:4px">porter.html</code>:
+    </div>
+    <div style="background:#1A1A18;color:#E8F5EE;padding:14px 20px;border-radius:10px;font-family:monospace;font-size:13px;max-width:300px">
+      npx serve .
+    </div>
+    <div style="font-size:12px;color:#6B6B66">Then open <strong>http://localhost:3000/porter.html</strong></div>
+    <div style="font-size:12px;color:#6B6B66;margin-top:4px">Or: <code style="background:#E2DFD6;padding:2px 5px;border-radius:4px">python3 -m http.server 8080</code></div>
+  `;
+  throw new Error('file:// protocol — serve over http');
+}
+
+// ── State ──
+let currentUser = null;
+let currentProfile = null;
+let trips = [];
+let currentTripId = null;
+let cards = [];
+let itineraryEvents = [];
+let vaultDocs = [];
+let currentFilter = 'all';
+let currentDay = 1;
+let isSignUp = false;
+let addingEventDay = 1;
+
+// ── Clock ──
+function updateClock(){
+  const n = new Date();
+  document.getElementById('clock').textContent =
+    n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');
+}
+updateClock(); setInterval(updateClock, 10000);
+
+// ── Auth ──
+let authMode = 'signin';
+function toggleAuthMode(){
+  isSignUp = !isSignUp;
+  document.getElementById('auth-submit').textContent = isSignUp ? 'Create account' : 'Sign in';
+  document.getElementById('auth-toggle').innerHTML = isSignUp
+    ? 'Already have an account? <span>Sign in</span>'
+    : 'No account? <span>Create one</span>';
+  document.getElementById('auth-error').classList.remove('show');
+}
+
+async function handleAuth(){
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const btn = document.getElementById('auth-submit');
+  const errEl = document.getElementById('auth-error');
+  if(!email || !password){ showAuthError('Please enter email and password'); return; }
+  btn.disabled = true;
+  btn.textContent = '…';
+  errEl.classList.remove('show');
+  try {
+    let res;
+    if(isSignUp){
+      res = await sb.auth.signUp({email, password, options:{data:{display_name: email.split('@')[0]}}});
+    } else {
+      res = await sb.auth.signInWithPassword({email, password});
+    }
+    if(res.error) throw res.error;
+    if(isSignUp && !res.data.session){
+      // Email confirmation required — show friendly message
+      document.getElementById('auth-error').style.background = 'var(--accent-soft)';
+      document.getElementById('auth-error').style.color = 'var(--accent)';
+      showAuthError('✓ Account created! Check your email to confirm, then sign in.');
+      btn.disabled = false; btn.textContent = 'Create account'; return;
+    }
+  } catch(e){
+    showAuthError(e.message || 'Authentication failed');
+    btn.disabled = false;
+    btn.textContent = isSignUp ? 'Create account' : 'Sign in';
+  }
+}
+
+function showAuthError(msg){
+  const el = document.getElementById('auth-error');
+  el.textContent = msg; el.classList.add('show');
+}
+
+async function signOut(){
+  await sb.auth.signOut();
+  currentUser = null; currentProfile = null; trips = []; currentTripId = null;
+  cards = []; itineraryEvents = []; vaultDocs = [];
+  document.getElementById('tabbar').style.display = 'none';
+  showScreen('auth');
+}
+
+// ── Session listener ──
+sb.auth.onAuthStateChange(async (event, session) => {
+  document.getElementById('loading').style.display = 'none';
+  if(session?.user){
+    currentUser = session.user;
+    await loadProfile();
+    await loadTrips();
+    document.getElementById('tabbar').style.display = 'flex';
+    showScreen('capture');
+  } else {
+    document.getElementById('tabbar').style.display = 'none';
+    showScreen('auth');
+  }
+});
+
+// ── Profile ──
+async function loadProfile(){
+  const {data} = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+  currentProfile = data;
+  if(data){
+    document.getElementById('avatar-btn').textContent = data.avatar_initials || '?';
+    document.getElementById('collab-face').textContent = data.avatar_initials || '?';
+    document.getElementById('collab-text').textContent = data.display_name || currentUser.email;
+  }
+}
+
+// ── Trips ──
+async function loadTrips(){
+  const {data, error} = await sb.from('trips').select('*').order('created_at', {ascending: false});
+  if(error){ console.error(error); return; }
+  trips = data || [];
+  if(trips.length === 0){
+    // Create a default trip
+    const {data: newTrip} = await sb.from('trips').insert({
+      owner_id: currentUser.id,
+      title: 'My First Trip',
+      destination: 'Anywhere',
+    }).select().single();
+    if(newTrip){ trips = [newTrip]; }
+  }
+  currentTripId = trips[0]?.id;
+  renderTripSelector();
+  await Promise.all([loadCards(), loadEvents(), loadVault()]);
+}
+
+function renderTripSelector(){
+  const sel = document.getElementById('trip-selector');
+  sel.innerHTML = '';
+  trips.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'trip-chip' + (t.id === currentTripId ? ' active' : '');
+    el.textContent = t.title;
+    el.onclick = () => selectTrip(t.id, el);
+    sel.appendChild(el);
+  });
+  const newEl = document.createElement('div');
+  newEl.className = 'trip-chip new';
+  newEl.textContent = '+ New trip';
+  newEl.onclick = () => openNewTripModal();
+  sel.appendChild(newEl);
+
+  // Update canvas header
+  const trip = trips.find(t => t.id === currentTripId);
+  if(trip){
+    document.getElementById('canvas-trip-title').textContent = trip.title;
+    const days = trip.start_date && trip.end_date
+      ? Math.ceil((new Date(trip.end_date)-new Date(trip.start_date))/(86400000))+1
+      : '?';
+    document.getElementById('canvas-trip-meta').textContent =
+      `${trip.destination || ''}${days !== '?' ? ' · '+days+' days' : ''}`;
+  }
+}
+
+async function selectTrip(id, el){
+  currentTripId = id;
+  document.querySelectorAll('.trip-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderTripSelector();
+  currentDay = 1;
+  await Promise.all([loadCards(), loadEvents(), loadVault()]);
+}
+
+async function openNewTripModal(){
+  const name = prompt('Trip name:');
+  if(!name) return;
+  const dest = prompt('Destination:') || '';
+  const {data, error} = await sb.from('trips').insert({
+    owner_id: currentUser.id, title: name, destination: dest
+  }).select().single();
+  if(!error && data){ trips.unshift(data); currentTripId = data.id; renderTripSelector(); }
+}
+
+// ── Cards ──
+async function loadCards(){
+  if(!currentTripId) return;
+  const {data, error} = await sb.from('inspiration_cards')
+    .select('*').eq('trip_id', currentTripId).order('created_at', {ascending: false});
+  if(error){ console.error(error); return; }
+  cards = data || [];
+  renderCards();
+}
+
+function renderCards(){
+  const container = document.getElementById('cards-container');
+  const empty = document.getElementById('empty-state');
+  const filtered = currentFilter === 'all' ? cards : cards.filter(c => (c.tags||[]).includes(currentFilter));
+
+  document.getElementById('cards-count').textContent =
+    filtered.length > 0 ? `${filtered.length} saved idea${filtered.length !== 1 ? 's' : ''}` : 'Saved ideas';
+
+  if(filtered.length === 0){
+    container.innerHTML = '';
+    container.appendChild(empty);
+    return;
+  }
+  container.innerHTML = '';
+  filtered.forEach((card, i) => {
+    const el = document.createElement('div');
+    el.className = 'icard';
+    el.style.animationDelay = (i * 0.06) + 's';
+    el.innerHTML = `
+      <div class="icard-img" style="background:linear-gradient(135deg,${card.color||'#c8dfc8'},${darken(card.color||'#c8dfc8')})">
+        <span style="filter:drop-shadow(0 2px 6px rgba(0,0,0,.15))">${card.emoji||'📍'}</span>
+        <div class="icard-img-overlay"></div>
+        ${card.source_url ? `<div class="icard-source">🔗 link</div>` : ''}
+      </div>
+      <div class="icard-body">
+        <div class="icard-top">
+          <div>
+            <div class="icard-name">${esc(card.title)}</div>
+            <div class="icard-loc">📍 ${esc(card.location||'')}</div>
+          </div>
+          <button class="add-btn ${card.added_to_trip?'added':''}"
+            onclick="toggleCard('${card.id}',this)">
+            ${card.added_to_trip ? '✓' : '+'}
+          </button>
+        </div>
+        ${card.description ? `<div class="icard-desc">${esc(card.description)}</div>` : ''}
+        <div class="tags">${(card.tags||[]).map(t=>`<span class="tag tag-${t}">${t}</span>`).join('')}</div>
+      </div>`;
+    container.appendChild(el);
+  });
+}
+
+function darken(hex){ return hex; }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+
+async function toggleCard(id, btn){
+  const card = cards.find(c => c.id === id);
+  if(!card) return;
+  const newVal = !card.added_to_trip;
+  card.added_to_trip = newVal;
+  btn.textContent = newVal ? '✓' : '+';
+  btn.className = 'add-btn' + (newVal ? ' added' : '');
+  await sb.from('inspiration_cards').update({added_to_trip: newVal}).eq('id', id);
+  if(newVal) showToast(card.title + ' added to trip ✓');
+}
+
+function filterCards(type, el){
+  currentFilter = type;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderCards();
+}
+
+function autoResize(el){
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 90) + 'px';
+}
+
+// ── AI Ingest ──
+async function ingestLink(){
+  const input = document.getElementById('url-input');
+  const btn = document.getElementById('ingest-btn');
+  const val = input.value.trim();
+  if(!val || !currentTripId) return;
+
+  btn.disabled = true; btn.textContent = '…';
+  const savedVal = val;
+  input.value = ''; input.style.height = '42px';
+
+  // Parsing placeholder
+  const container = document.getElementById('cards-container');
+  document.getElementById('empty-state').style.display = 'none';
+  const parsing = document.createElement('div');
+  parsing.className = 'parsing-card';
+  parsing.innerHTML = `<div class="spinner"></div><div class="parsing-text"><strong>Extracting vibes…</strong><br>Porter is reading your inspiration</div>`;
+  container.insertBefore(parsing, container.firstChild);
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `You are Porter's inspiration parser. Extract structured travel inspiration from any input (URLs, descriptions, place names).
+Return ONLY a raw JSON object (no markdown, no backticks, no explanation) with exactly these fields:
+- title: short evocative name (2-5 words, sentence case)
+- location: city + country/region  
+- emoji: single most relevant emoji
+- tags: array of 1-3 from ["food","nature","stay","culture","beach","adventure","nightlife"]
+- description: one enticing sentence, max 90 chars
+- color: a muted hex color matching the vibe (#c8dfc8 nature, #c8d0e0 beach, #e0c8c8 food, #dcd4c8 culture)`,
+        messages: [{role: 'user', content: `Parse this into a Porter travel card: "${savedVal}"`}]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.find(b => b.type === 'text')?.text || '{}';
+    const clean = text.replace(/```json?|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+    parsing.remove();
+
+    const {data: saved, error} = await sb.from('inspiration_cards').insert({
+      trip_id: currentTripId,
+      added_by: currentUser.id,
+      title: parsed.title || savedVal,
+      location: parsed.location || '',
+      emoji: parsed.emoji || '📍',
+      tags: parsed.tags || ['culture'],
+      description: parsed.description || '',
+      source_url: savedVal.startsWith('http') ? savedVal : null,
+      color: parsed.color || '#d4cfc4',
+      added_to_trip: false,
+    }).select().single();
+
+    if(!error && saved){ cards.unshift(saved); renderCards(); showToast('✨ Inspiration captured!'); }
+    else { throw new Error(error?.message); }
+  } catch(e){
+    parsing.remove();
+    // Fallback — save as generic card
+    const {data: saved} = await sb.from('inspiration_cards').insert({
+      trip_id: currentTripId,
+      added_by: currentUser.id,
+      title: savedVal.length > 40 ? savedVal.slice(0,40)+'…' : savedVal,
+      location: 'To be confirmed',
+      emoji: '📍',
+      tags: ['culture'],
+      description: '',
+      color: '#d4cfc4',
+      added_to_trip: false,
+    }).select().single();
+    if(saved){ cards.unshift(saved); renderCards(); }
+    showToast('Saved to backlog');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Add';
+  }
+}
+
+// ── Itinerary ──
+async function loadEvents(){
+  if(!currentTripId) return;
+  const {data} = await sb.from('itinerary_events')
+    .select('*').eq('trip_id', currentTripId)
+    .order('day_number').order('sort_order').order('time_slot');
+  itineraryEvents = data || [];
+
+  // Seed demo events if empty
+  if(itineraryEvents.length === 0){
+    const seed = [
+      {day_number:1,time_slot:'08:30',title:'Chatuchak Weekend Market',location:'Bangkok',emoji:'🏛',tags:['culture'],is_highlight:false,sort_order:0},
+      {day_number:1,time_slot:'12:00',title:'Pad Thai at Thip Samai',location:'Mahachai Rd',emoji:'🍜',tags:['food'],is_highlight:true,sort_order:1},
+      {day_number:1,time_slot:'14:30',title:'Wat Pho Temple',location:'Grand Palace area',emoji:'🛕',tags:['culture'],is_highlight:false,sort_order:2},
+      {day_number:1,time_slot:'19:00',title:'Rooftop dinner at Vertigo',location:'Banyan Tree Hotel',emoji:'🌆',tags:['food'],is_highlight:false,sort_order:3},
+      {day_number:2,time_slot:'09:00',title:'Long-tail boat canal tour',location:'Chao Phraya River',emoji:'🚤',tags:['adventure'],is_highlight:false,sort_order:0},
+      {day_number:2,time_slot:'18:00',title:'Chinatown food walk',location:'Yaowarat Road',emoji:'🥟',tags:['food'],is_highlight:false,sort_order:1},
+    ];
+    const toInsert = seed.map(s => ({...s, trip_id: currentTripId}));
+    const {data: inserted} = await sb.from('itinerary_events').insert(toInsert).select();
+    itineraryEvents = inserted || [];
+  }
+
+  const maxDay = Math.max(...itineraryEvents.map(e => e.day_number), 1);
+  renderDaySelector(maxDay);
+  renderTimeline();
+}
+
+function renderDaySelector(maxDay){
+  const sel = document.getElementById('day-selector');
+  sel.innerHTML = '';
+  for(let d = 1; d <= maxDay; d++){
+    const el = document.createElement('div');
+    el.className = 'day-pill' + (d === currentDay ? ' active' : '');
+    el.textContent = 'Day ' + d;
+    el.onclick = () => { currentDay = d; renderDaySelector(maxDay); renderTimeline(); };
+    sel.appendChild(el);
+  }
+  const addEl = document.createElement('div');
+  addEl.className = 'day-pill';
+  addEl.style.cssText = 'border-style:dashed;color:var(--accent);border-color:var(--accent)';
+  addEl.textContent = '+ Day';
+  addEl.onclick = () => addDay(maxDay);
+  sel.appendChild(addEl);
+}
+
+async function addDay(current){
+  const newDay = current + 1;
+  currentDay = newDay;
+  renderDaySelector(newDay);
+  renderTimeline();
+  showToast('Day ' + newDay + ' added');
+}
+
+function renderTimeline(){
+  const container = document.getElementById('timeline-container');
+  const dayEvents = itineraryEvents.filter(e => e.day_number === currentDay);
+  container.innerHTML = '';
+
+  dayEvents.forEach((ev, i) => {
+    const isLast = i === dayEvents.length - 1;
+    const slot = document.createElement('div');
+    slot.className = 'timeline-slot';
+    slot.innerHTML = `
+      <div class="time-col"><span class="time-label">${ev.time_slot||'--:--'}</span></div>
+      <div class="line-col">
+        <div class="line-dot" style="${ev.is_highlight?'background:var(--warn)':''}"></div>
+        ${!isLast ? '<div class="line-track"></div>' : ''}
+      </div>
+      <div class="event-card ${ev.is_highlight?'highlight':''}" onclick="showToast('Tap to edit — coming soon')">
+        <div class="event-title">${ev.emoji||''} ${esc(ev.title)}</div>
+        <div class="event-sub">${esc(ev.location||'')}</div>
+        <div class="event-tags">${(ev.tags||[]).map(t=>`<span class="tag tag-${t}">${t}</span>`).join('')}</div>
+      </div>`;
+    container.appendChild(slot);
+  });
+
+  if(dayEvents.length === 0){
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.style.paddingTop = '60px';
+    empty.innerHTML = `<div class="empty-icon">🗓</div><div class="empty-title">Nothing planned yet</div><div class="empty-sub">Add a stop below</div>`;
+    container.appendChild(empty);
+  }
+
+  // Add slot button
+  const addBtn = document.createElement('button');
+  addBtn.className = 'add-slot-btn';
+  addBtn.textContent = '+ Add a stop';
+  addBtn.onclick = () => { addingEventDay = currentDay; openEventModal(); };
+  container.appendChild(addBtn);
+}
+
+// ── Event Modal ──
+function openEventModal(){
+  document.getElementById('event-modal').classList.add('open');
+  setTimeout(() => document.getElementById('event-title-input').focus(), 300);
+}
+function closeModal(){
+  document.getElementById('event-modal').classList.remove('open');
+  document.getElementById('event-title-input').value = '';
+  document.getElementById('event-loc-input').value = '';
+  document.getElementById('event-time-input').value = '';
+}
+async function saveEvent(){
+  const title = document.getElementById('event-title-input').value.trim();
+  const loc = document.getElementById('event-loc-input').value.trim();
+  const time = document.getElementById('event-time-input').value;
+  if(!title) return;
+  closeModal();
+  const {data, error} = await sb.from('itinerary_events').insert({
+    trip_id: currentTripId,
+    day_number: addingEventDay,
+    title,
+    location: loc,
+    time_slot: time || null,
+    emoji: '📍',
+    tags: [],
+    is_highlight: false,
+    sort_order: itineraryEvents.filter(e => e.day_number === addingEventDay).length,
+  }).select().single();
+  if(!error && data){
+    itineraryEvents.push(data);
+    const maxDay = Math.max(...itineraryEvents.map(e => e.day_number), 1);
+    renderDaySelector(maxDay);
+    renderTimeline();
+    showToast(title + ' added ✓');
+  }
+}
+
+// ── Vault ──
+async function loadVault(){
+  if(!currentTripId) return;
+  const {data} = await sb.from('vault_documents')
+    .select('*').eq('trip_id', currentTripId).order('created_at', {ascending: false});
+  vaultDocs = data || [];
+
+  // Seed demo vault if empty
+  if(vaultDocs.length === 0){
+    const seed = [
+      {name:'Thai Airways · TG201 + TG412', doc_type:'Flight', meta_text:'E-ticket · Conf: 7X9K2L', icon:'✈️', badge_color:'sky'},
+      {name:'The Standard Bangkok', doc_type:'Hotel', meta_text:'3 nights · Deluxe room', icon:'🏨', badge_color:'warn'},
+      {name:'Hyrox Bangkok 2026', doc_type:'Event', meta_text:'Race bib #2841 · Mar 15 · BITEC', icon:'🎟', badge_color:'accent'},
+      {name:'Travel insurance – AMEX', doc_type:'Insurance', meta_text:'Policy #AXA-88221 · Auto-attached', icon:'💳', badge_color:'muted'},
+    ];
+    const {data: inserted} = await sb.from('vault_documents')
+      .insert(seed.map(s => ({...s, trip_id: currentTripId, uploaded_by: currentUser.id})))
+      .select();
+    vaultDocs = inserted || [];
+  }
+  renderVault(vaultDocs);
+}
+
+function renderVault(docs){
+  const list = document.getElementById('vault-list');
+  list.innerHTML = '';
+  if(docs.length === 0){
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">🗂</div><div class="empty-title">Vault is empty</div><div class="empty-sub">Bookings and documents will appear here</div></div>`;
+    return;
+  }
+  docs.forEach((doc, i) => {
+    const badgeStyles = {
+      sky: 'background:var(--sky-soft);color:var(--sky)',
+      warn: 'background:var(--warn-soft);color:var(--warn)',
+      accent: 'background:var(--accent-soft);color:var(--accent)',
+      muted: 'background:var(--border);color:var(--muted)',
+    };
+    const el = document.createElement('div');
+    el.className = 'doc-item';
+    el.style.animationDelay = (i * 0.05) + 's';
+    el.innerHTML = `
+      <div class="doc-icon">${doc.icon||'📄'}</div>
+      <div class="doc-info">
+        <div class="doc-name">${esc(doc.name)}</div>
+        <div class="doc-meta">${esc(doc.meta_text||'')}</div>
+      </div>
+      <span class="doc-badge" style="${badgeStyles[doc.badge_color]||badgeStyles.muted}">${esc(doc.doc_type||'Doc')}</span>`;
+    el.onclick = () => showToast('Opening ' + doc.name + '…');
+    list.appendChild(el);
+  });
+}
+
+function filterVault(q){
+  const filtered = vaultDocs.filter(d => d.name.toLowerCase().includes(q.toLowerCase()));
+  renderVault(filtered);
+}
+
+// ── Navigation ──
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+}
+
+function switchTab(tab){
+  showScreen(tab);
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// ── Toast ──
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+// ── Keyboard ──
+document.getElementById('url-input').addEventListener('keydown', e => {
+  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); ingestLink(); }
+});
+document.getElementById('auth-password').addEventListener('keydown', e => {
+  if(e.key === 'Enter') handleAuth();
+});
+
+// ── Init ──
+// Auth state check happens via onAuthStateChange above
+// Hide loading after 3s max fallback
+setTimeout(() => { document.getElementById('loading').style.display = 'none'; }, 3000);
+</script>
+</body>
+</html>
