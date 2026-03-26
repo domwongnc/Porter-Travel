@@ -5,9 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Porter</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,400;1,9..144,600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
-<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js" defer></script>
 <style>
 /* ═══════════ RESET + TOKENS ═══════════ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -931,8 +929,9 @@ button,input,textarea{font-family:var(--font)}
   <div class="toast" id="toast"></div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function(){
 // ═══════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════
@@ -2339,12 +2338,9 @@ function closeChat(){
 
 function buildTripContext(){
   const trip = trips.find(t => t.id === tripId);
-  const cardList = cards.filter(c=>!c._opt).map(c=>`- ${c.emoji||'📍'} ${c.title} (${c.location||'?'}) [${(c.tags||[]).join(',')}]`).join('
-');
-  const eventList = events.map(e=>`- Day ${e.day_number} ${e.time_slot||''}: ${e.title} in ${e.city||e.location||'?'}`).join('
-');
-  const vaultList = vault.map(v=>`- [${v.doc_type}] ${v.name}: ${v.meta_text||''}`).join('
-');
+  const cardList = cards.filter(c=>!c._opt).map(c=>`- ${c.emoji||'📍'} ${c.title} (${c.location||'?'}) [${(c.tags||[]).join(',')}]`).join('\n');
+  const eventList = events.map(e=>`- Day ${e.day_number} ${e.time_slot||''}: ${e.title} in ${e.city||e.location||'?'}`).join('\n');
+  const vaultList = vault.map(v=>`- [${v.doc_type}] ${v.name}: ${v.meta_text||''}`).join('\n');
 
   return `You are Porter, an expert AI travel planner embedded inside the Porter travel app.
 
@@ -2408,8 +2404,7 @@ function appendPorterMsg(text, suggestions){
   if(cleanText){
     const bubble = document.createElement('div');
     bubble.className = 'msg-bubble';
-    bubble.innerHTML = esc(cleanText).replace(/
-/g, '<br>');
+    bubble.innerHTML = esc(cleanText).replace(/\n/g, '<br>');
     wrapper.appendChild(bubble);
   }
 
@@ -2551,7 +2546,6 @@ document.getElementById('a-pw').addEventListener('keydown',e=>{if(e.key==='Enter
 document.getElementById('vault-q').addEventListener('keydown',e=>{if(e.key==='Enter')ragSearch();});
 document.getElementById('qa-in').addEventListener('keydown',e=>{if(e.key==='Enter')quickAdd();});
 document.getElementById('chat-in').addEventListener('keydown',e=>{if(e.key==='Enter')sendChat();});
-}); // end DOMContentLoaded
 </script>
 </body>
 </html>
