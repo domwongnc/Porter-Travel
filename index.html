@@ -505,6 +505,7 @@ body{display:flex;justify-content:center}
 const SUPA_URL = 'https://bhmawmiikcyxltfjrnlu.supabase.co';
 const SUPA_KEY = 'sb_publishable_PEVbJOaaMmPQf5Dl73CUKw_fouTefQ4';
 const CLAUDE   = 'claude-sonnet-4-20250514';
+const AKEY     = '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';
 const sb = supabase.createClient(SUPA_URL, SUPA_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
 
 // ─────────────────────────────────────────────
@@ -532,14 +533,11 @@ tick(); setInterval(tick, 15000);
 sb.auth.onAuthStateChange(async (event, session) => {
   if (session?.user) {
     user = session.user;
-    document.getElementById('tabs').style.display = 'flex';
-    await loadProfile();
-    const isNew = event === 'SIGNED_IN' && !(await hasTrips());
-    if (isNew) {
-      showScreen('onboard');
-    } else {
+    try {
+      await loadProfile();
       await loadTrips();
-      goTab('capture');
+    } catch (e) {
+      console.error('Post-login load failed:', e);
     }
   } else {
     user = null; trips = []; tripId = null; cards = []; events = []; vault = [];
@@ -547,11 +545,6 @@ sb.auth.onAuthStateChange(async (event, session) => {
     showScreen('auth');
   }
 });
-
-async function hasTrips() {
-  const { count } = await sb.from('trips').select('id', { count: 'exact', head: true }).eq('owner_id', user.id);
-  return count > 0;
-}
 
 function togAuth() {
   isSignUp = !isSignUp;
@@ -609,13 +602,12 @@ async function createFirstTrip() {
   trips = [data]; tripId = data.id;
   renderTripStrip(); updateCanvasHeader();
   await Promise.all([loadCards(), loadEvents(), loadVault()]);
-  document.getElementById('tabs').style.display = 'flex';
   goTab('capture');
   toast('✈️ ' + name + ' is ready — start capturing ideas');
 }
 
-function skipOnboard() {
-  loadTrips().then(() => goTab('capture'));
+async function skipOnboard() {
+  await loadTrips();
 }
 
 // ─────────────────────────────────────────────
@@ -635,12 +627,18 @@ async function loadProfile() {
 // ─────────────────────────────────────────────
 async function loadTrips() {
   const { data, error } = await sb.from('trips').select('*').order('created_at', { ascending: false });
-  if (error) { showBanner('canvas-err', 'Could not load trips: ' + error.message); return; }
+  if (error) { showBanner('canvas-err', 'Could not load trips: ' + error.message); document.getElementById('tabs').style.display = 'none'; showScreen('auth'); return; }
   trips = data || [];
-  if (!trips.length) { showScreen('onboard'); return; }
+  if (!trips.length) {
+    document.getElementById('tabs').style.display = 'none';
+    showScreen('onboard');
+    return;
+  }
   tripId = trips[0].id;
+  document.getElementById('tabs').style.display = 'flex';
   renderTripStrip(); updateCanvasHeader();
   await Promise.all([loadCards(), loadEvents(), loadVault()]);
+  goTab('capture');
 }
 
 function renderTripStrip() {
@@ -792,7 +790,7 @@ async function capture() {
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': AKEY, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
       body: JSON.stringify({
         model: CLAUDE, max_tokens: 400,
         system: `You extract travel inspiration into structured data. Return ONLY raw JSON (no markdown, no backticks):
@@ -891,7 +889,7 @@ async function runCopilotSilent(day) {
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': AKEY, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
       body: JSON.stringify({
         model: CLAUDE, max_tokens: 80,
         system: 'You audit travel day itineraries. Find ONE specific issue: time conflicts, venues closed on certain days (e.g. Chatuchak is weekends only), unrealistic gaps, missing travel time. If no issues, reply with exactly: OK. Otherwise give ONE warning under 18 words, direct, no preamble.',
@@ -1202,7 +1200,7 @@ async function ragSearch() {
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': AKEY, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
       body: JSON.stringify({
         model: CLAUDE, max_tokens: 300,
         system: `You are Porter's booking assistant. Answer questions using ONLY the documents and itinerary below. Quote exact confirmation numbers, times, and dates. If not found, say "I don't have that in your bookings."\n\nBOOKINGS:\n${vCtx}\n\nITINERARY:\n${iCtx}`,
