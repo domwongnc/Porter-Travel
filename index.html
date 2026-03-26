@@ -535,7 +535,7 @@ button,input,textarea{font-family:var(--font)}
   <div class="sbar">
     <span id="clk">9:41</span>
     <span class="sbar-brand">Port<em>er</em></span>
-    <span>v1.0</span>
+    <span>v1.1</span>
   </div>
 
   <!-- AUTH -->
@@ -2362,9 +2362,9 @@ YOUR ROLE:
 - Give specific, actionable recommendations with personality
 - When you suggest a place to ADD to their trip, format it EXACTLY like this at the end of your message (never inside sentences):
 
-<suggest>{"title":"Place Name","location":"City, Country","emoji":"🍜","tags":["food"],"description":"One enticing sentence under 80 chars","color":"#E8C8C8"}</suggest>
+[SUGGEST]{"title":"Place Name","location":"City, Country","emoji":"🍜","tags":["food"],"description":"One enticing sentence under 80 chars","color":"#E8C8C8"}[/SUGGEST]
 
-- You can include multiple <suggest> blocks in one message
+- You can include multiple [SUGGEST] blocks in one message
 - Only suggest places NOT already in their captured list above
 - If they say "yes", "add it", "add that", "sure", or similar — the app will add the card automatically
 - Keep responses concise — max 3 sentences + suggestions
@@ -2399,8 +2399,8 @@ function appendPorterMsg(text, suggestions){
   const wrapper = document.createElement('div');
   wrapper.className = 'chat-msg porter';
 
-  // Render text (strip <suggest> blocks from display text)
-  const cleanText = text.replace(/<suggest>[\s\S]*?<\/suggest>/g, '').trim();
+  // Render text (strip [SUGGEST] blocks from display text)
+  const cleanText = text.replace(/\[SUGGEST\][\s\S]*?\[\/SUGGEST\]/g, '').trim();
   if(cleanText){
     const bubble = document.createElement('div');
     bubble.className = 'msg-bubble';
@@ -2517,9 +2517,9 @@ async function sendChat(){
 
     const rawText = d.content?.find(b=>b.type==='text')?.text || "I'm not sure — could you rephrase that?";
 
-    // Parse <suggest> blocks
+    // Parse [SUGGEST] blocks
     const suggestions = [];
-    const suggestRx = /<suggest>([\s\S]*?)<\/suggest>/g;
+    const suggestRx = /\[SUGGEST\]([\s\S]*?)\[\/SUGGEST\]/g;
     let match;
     while((match = suggestRx.exec(rawText)) !== null){
       try{ suggestions.push(JSON.parse(match[1].trim())); }catch(e){ console.warn('Bad suggest JSON:', e); }
