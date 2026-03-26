@@ -6,8 +6,8 @@
 <title>Porter</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,400;1,9..144,600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
 <style>
 /* ═══════════ RESET + TOKENS ═══════════ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -519,7 +519,7 @@ button,input,textarea{font-family:var(--font)}
 .map-back{font-size:22px;cursor:pointer;color:var(--green2);line-height:1}
 .map-title{font-family:var(--serif);font-size:17px;font-weight:600;letter-spacing:-.02em;flex:1}
 #map-container{flex:1;position:relative}
-#leaflet-map{width:100%;height:100%}
+#mapbox-map{width:100%;height:100%}
 .route-card{position:absolute;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);padding:12px 16px;z-index:500;max-height:50%;overflow-y:auto}
 .route-hd{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}
 .route-leg{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)}
@@ -900,7 +900,7 @@ button,input,textarea{font-family:var(--font)}
       <div class="icon-btn" onclick="refreshMapRoutes()" title="Get travel times">🧭</div>
     </div>
     <div id="map-container">
-      <div id="leaflet-map"></div>
+      <div id="mapbox-map" style="position:absolute;inset:0"></div>
       <div class="route-card" id="route-card" style="display:none">
         <div class="route-hd">Route · travel times estimated by Porter</div>
         <div id="route-legs"></div>
@@ -1468,7 +1468,12 @@ async function capture(){
     data=r2.data; error=r2.error;
   }
   if(error){showErr('cap-err','Save failed: '+error.message);}
-  else{cards.unshift(data);toast(parsed?`✨ ${data.title}`:'📍 Saved');}
+  else{
+    cards.unshift(data);
+    toast(parsed?'✨ '+data.title:'📍 Saved');
+    // Geocode in background — get real coordinates for map
+    if(data.location) geocodeAndSaveCard(data.id, data.title, data.location);
+  }
   renderCards();renderClusters();
   btn.disabled=false;btn.textContent='Add';
 }
@@ -2079,149 +2084,198 @@ async function saveCardEdit(){
 }
 
 // ═══════════════════════════════════
-// MAP VIEW
+// MAP VIEW — Mapbox GL JS
 // ═══════════════════════════════════
-let leafletMap=null;
-let leafletMarkers=[];
+const MB_TOKEN = 'pk.eyJ1IjoiZG9td25jIiwiYSI6ImNtbjY0ZndxaDAyYm4ycXM0ZHllMzliNnQifQ.cMpvCLFQbkTh0rxnhAcxJw';
+mapboxgl.accessToken = MB_TOKEN;
 
-// City → approximate lat/lng for initial map center
-const CITY_COORDS={
-  'Bangkok':[13.75,100.5],'Chiang Mai':[18.79,98.98],'Phuket':[7.89,98.4],
-  'Tokyo':[35.68,139.69],'Kyoto':[35.01,135.77],'Osaka':[34.69,135.5],
-  'Bali':[8.34,115.09],'Ubud':[-8.51,115.26],'Singapore':[1.35,103.82],
-  'Paris':[48.86,2.35],'London':[51.51,-0.13],'Rome':[41.9,12.49],
-  'Barcelona':[41.39,2.15],'Amsterdam':[52.37,4.9],'Lisbon':[38.72,-9.14],
-  'Seoul':[37.57,126.98],'Hong Kong':[22.33,114.17],'Taipei':[25.04,121.56],
-  'Hanoi':[21.03,105.85],'Ho Chi Minh City':[10.77,106.69],
-  'Kuala Lumpur':[3.14,101.69],'Penang':[5.41,100.33],
-  'Dubai':[25.2,55.27],'New York':[40.71,-74.01],'Los Angeles':[34.05,-118.24],
-  'Sydney':[-33.87,151.21],'Melbourne':[-37.81,144.96],
-};
+let mbMap = null;
+let mbMarkersArr = [];
 
-function openMap(){
-  const panel=document.getElementById('map-panel');
-  panel.classList.add('on');
-  const trip=trips.find(t=>t.id===tripId);
-  document.getElementById('map-title').textContent=`${curCity||trip?.title||'Map'} · Day ${curDay}`;
-
-  // Init Leaflet once
-  setTimeout(()=>{
-    if(!leafletMap){
-      const coords=CITY_COORDS[curCity]||[13.75,100.5];
-      leafletMap=L.map('leaflet-map',{zoomControl:true}).setView(coords,13);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-        attribution:'© OpenStreetMap contributors',maxZoom:18
-      }).addTo(leafletMap);
-    } else {
-      const coords=CITY_COORDS[curCity]||[13.75,100.5];
-      leafletMap.setView(coords,13);
-    }
-    plotDayOnMap();
-  },100);
+// Geocode a place using Mapbox → [lng, lat] or null
+async function geocodePlace(name, city) {
+  const q = encodeURIComponent(name + (city ? ', ' + city : ''));
+  try {
+    const r = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${q}.json?access_token=${MB_TOKEN}&limit=1&types=poi,place,address`);
+    const d = await r.json();
+    return d.features?.[0]?.center || null;
+  } catch(e) { return null; }
 }
 
-function closeMap(){
+// Geocode card on capture and persist coords
+async function geocodeAndSaveCard(cardId, title, location) {
+  const coords = await geocodePlace(title, location);
+  if (!coords) return;
+  const [lng, lat] = coords;
+  await sb.from('inspiration_cards').update({ lng, lat }).eq('id', cardId);
+  const c = cards.find(c => c.id === cardId);
+  if (c) { c.lng = lng; c.lat = lat; }
+}
+
+// Mapbox Directions API — walking
+async function getRoute(coordPairs, profile) {
+  if (coordPairs.length < 2) return null;
+  const coords = coordPairs.map(c => c.join(',')).join(';');
+  try {
+    const r = await fetch(`https://api.mapbox.com/directions/v5/mapbox/${profile}/${coords}?access_token=${MB_TOKEN}&geometries=geojson&overview=full`);
+    const d = await r.json();
+    return d.routes?.[0] || null;
+  } catch(e) { return null; }
+}
+
+function clearMapLayers() {
+  mbMarkersArr.forEach(m => m.remove());
+  mbMarkersArr = [];
+  if (mbMap?.getLayer('route-line')) mbMap.removeLayer('route-line');
+  if (mbMap?.getSource('route-source')) mbMap.removeSource('route-source');
+}
+
+function openMap() {
+  const panel = document.getElementById('map-panel');
+  panel.classList.add('on');
+  const trip = trips.find(t => t.id === tripId);
+  document.getElementById('map-title').textContent = (curCity || trip?.title || 'Map') + ' · Day ' + curDay;
+  setTimeout(() => {
+    if (!mbMap) {
+      mbMap = new mapboxgl.Map({
+        container: 'mapbox-map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [100.5, 13.75], zoom: 13
+      });
+      mbMap.addControl(new mapboxgl.NavigationControl(), 'top-right');
+      mbMap.on('load', () => plotDayOnMap());
+    } else {
+      clearMapLayers();
+      plotDayOnMap();
+    }
+  }, 150);
+}
+
+function closeMap() {
   document.getElementById('map-panel').classList.remove('on');
 }
 
-function plotDayOnMap(){
-  if(!leafletMap) return;
-  // Clear old markers
-  leafletMarkers.forEach(m=>m.remove());
-  leafletMarkers=[];
+async function plotDayOnMap() {
+  if (!mbMap) return;
+  clearMapLayers();
 
-  const dayEvs=events.filter(e=>e.city===curCity&&e.day_number===curDay)
-    .sort((a,b)=>(a.time_slot||'99').localeCompare(b.time_slot||'99'));
+  const dayEvs = events
+    .filter(e => e.city === curCity && e.day_number === curDay)
+    .sort((a, b) => (a.time_slot || '99').localeCompare(b.time_slot || '99'));
 
-  if(!dayEvs.length){
-    document.getElementById('route-card').style.display='none';
-    return;
-  }
+  if (!dayEvs.length) { document.getElementById('route-card').style.display = 'none'; return; }
 
-  const bounds=[];
-  const cityCoords=CITY_COORDS[curCity];
+  // Geocode any events missing coords
+  await Promise.all(dayEvs.map(async ev => {
+    if (!ev.lat || !ev.lng) {
+      const coords = await geocodePlace(ev.title, ev.location || curCity);
+      if (coords) {
+        ev.lng = coords[0]; ev.lat = coords[1];
+        sb.from('itinerary_events').update({ lng: ev.lng, lat: ev.lat }).eq('id', ev.id);
+      }
+    }
+  }));
 
-  // For each event, either use stored coords or offset from city center
-  dayEvs.forEach((ev,i)=>{
-    // Use stored lat/lng if available, else generate plausible offset
-    let lat=ev.lat||(cityCoords?cityCoords[0]+((i-dayEvs.length/2)*0.008):0);
-    let lng=ev.lng||(cityCoords?cityCoords[1]+((i-dayEvs.length/2)*0.009):0);
+  const valid = dayEvs.filter(ev => ev.lat && ev.lng);
+  const bounds = new mapboxgl.LngLatBounds();
 
-    const greenIcon=L.divIcon({
-      html:`<div style="background:${i===0?'#1B4332':'#2D6A4F'};color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)">${i+1}</div>`,
-      className:'',iconSize:[28,28],iconAnchor:[14,14]
-    });
-    const marker=L.marker([lat,lng],{icon:greenIcon})
-      .addTo(leafletMap)
-      .bindPopup(`<b>${ev.emoji||'📍'} ${ev.title}</b><br><span style="font-size:11px;color:#666">${ev.time_slot||'No time set'}</span>`);
-    leafletMarkers.push(marker);
-    bounds.push([lat,lng]);
+  valid.forEach((ev, i) => {
+    const el = document.createElement('div');
+    el.style.cssText = 'background:' + (i === 0 ? '#1B4332' : '#2D6A4F') + ';color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.35);cursor:pointer';
+    el.textContent = i + 1;
+    const popup = new mapboxgl.Popup({ offset: 18, closeButton: false })
+      .setHTML('<div style="padding:4px 2px"><div style="font-weight:600;font-size:13px">' + (ev.emoji || '📍') + ' ' + esc(ev.title) + '</div><div style="font-size:11px;color:#666;margin-top:2px">' + (ev.time_slot || 'No time set') + '</div><div style="font-size:11px;color:#999">' + esc(ev.location || curCity) + '</div></div>');
+    const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
+      .setLngLat([ev.lng, ev.lat]).setPopup(popup).addTo(mbMap);
+    mbMarkersArr.push(marker);
+    bounds.extend([ev.lng, ev.lat]);
   });
 
-  if(bounds.length>1) leafletMap.fitBounds(bounds,{padding:[30,30]});
-  else if(bounds.length===1) leafletMap.setView(bounds[0],15);
+  if (valid.length > 1) mbMap.fitBounds(bounds, { padding: { top: 60, bottom: 300, left: 40, right: 40 }, maxZoom: 15 });
+  else if (valid.length === 1) mbMap.flyTo({ center: [valid[0].lng, valid[0].lat], zoom: 15 });
 
-  // Draw route line
-  if(bounds.length>1){
-    const line=L.polyline(bounds,{color:'#2D6A4F',weight:2.5,opacity:.6,dashArray:'6,4'}).addTo(leafletMap);
-    leafletMarkers.push(line);
+  // Get real route from Mapbox Directions
+  let route = null;
+  if (valid.length > 1) {
+    const coordPairs = valid.map(ev => [ev.lng, ev.lat]);
+    // Try walking first; if any leg > 3km use driving
+    route = await getRoute(coordPairs, 'walking');
+    const totalKm = (route?.distance || 0) / 1000;
+    if (!route || totalKm > 5) route = await getRoute(coordPairs, 'driving');
+    if (route && mbMap.isStyleLoaded()) {
+      if (mbMap.getSource('route-source')) {
+        mbMap.getSource('route-source').setData(route.geometry);
+      } else {
+        mbMap.addSource('route-source', { type: 'geojson', data: route.geometry });
+        mbMap.addLayer({ id: 'route-line', type: 'line', source: 'route-source',
+          layout: { 'line-join': 'round', 'line-cap': 'round' },
+          paint: { 'line-color': '#2D6A4F', 'line-width': 3.5, 'line-opacity': 0.8, 'line-dasharray': [2, 1.5] }
+        });
+      }
+    }
   }
 
-  // Render route card
-  renderRouteCard(dayEvs);
+  renderRouteCard(valid, route);
 }
 
-function renderRouteCard(evs){
-  const card=document.getElementById('route-card');
-  const legs=document.getElementById('route-legs');
-  card.style.display='block';
-  legs.innerHTML='';
-  evs.forEach((ev,i)=>{
-    const leg=document.createElement('div');
-    leg.className='route-leg';
-    // Travel time from previous stop (will be filled by AI)
-    const travelHtml=i>0?`<div class="route-leg-travel" id="travel-${i}">⏱ Estimating travel time…</div>`:'';
-    leg.innerHTML=`
-      <div class="route-leg-num">${i+1}</div>
-      <div class="route-leg-info">
-        <div class="route-leg-name">${esc(ev.emoji||'📍')} ${esc(ev.title)}</div>
-        <div class="route-leg-meta">${ev.time_slot||'No time set'} · ${esc(ev.location||curCity)}</div>
-        ${travelHtml}
-      </div>`;
+function renderRouteCard(evs, route) {
+  const card = document.getElementById('route-card');
+  const legs = document.getElementById('route-legs');
+  card.style.display = 'block';
+  legs.innerHTML = '';
+  const mbLegs = route?.legs || [];
+
+  evs.forEach((ev, i) => {
+    const leg = document.createElement('div');
+    leg.className = 'route-leg';
+    let travel = '';
+    if (i > 0) {
+      const ml = mbLegs[i - 1];
+      if (ml) {
+        const mins = Math.round(ml.duration / 60);
+        const km = (ml.distance / 1000).toFixed(1);
+        const method = km > 2 ? 'taxi / Grab' : km > 0.8 ? 'walk / tuk-tuk' : 'walk';
+        travel = '<div class="route-leg-travel">⏱ ' + mins + ' min · ' + method + ' · ' + km + ' km</div>';
+      } else {
+        travel = '<div class="route-leg-travel" id="travel-' + i + '">⏱ Estimating…</div>';
+      }
+    }
+    leg.innerHTML = '<div class="route-leg-num">' + (i + 1) + '</div><div class="route-leg-info"><div class="route-leg-name">' + esc(ev.emoji || '📍') + ' ' + esc(ev.title) + '</div><div class="route-leg-meta">' + (ev.time_slot || 'No time set') + ' · ' + esc(ev.location || curCity) + '</div>' + travel + '</div>';
     legs.appendChild(leg);
   });
-  // Trigger AI travel time estimation
-  estimateTravelTimes(evs);
+
+  if (!route) estimateTravelTimesAI(evs);
 }
 
-async function estimateTravelTimes(evs){
-  if(evs.length<2) return;
-  const pairs=evs.slice(1).map((ev,i)=>({from:evs[i].title,to:ev.title,city:curCity}));
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:AI_H,body:JSON.stringify({
-      model:AI_MODEL,max_tokens:300,
-      system:`You estimate travel times between tourist attractions in cities. For each pair, estimate realistic travel time including waiting, transit, or walking. Return ONLY a JSON array:
-[{"from":"place","to":"place","minutes":15,"method":"walk","note":"10 min walk"}]
-Be specific and realistic. Typical methods: walk, taxi/grab, BTS/MRT, tuk-tuk, ferry.`,
-      messages:[{role:'user',content:`City: ${curCity}. Pairs: ${JSON.stringify(pairs)}`}]
-    })});
-    const d=await res.json();
-    const raw=(d.content?.find(b=>b.type==='text')?.text||'').trim();
-    const match=raw.match(/\[[\s\S]*\]/);
-    if(!match) return;
-    const times=JSON.parse(match[0]);
-    times.forEach((t,i)=>{
-      const el=document.getElementById('travel-'+(i+1));
-      if(el) el.innerHTML=`⏱ ${t.minutes} min · ${t.method} <span style="color:var(--muted)">— ${esc(t.note||'')}</span>`;
+async function estimateTravelTimesAI(evs) {
+  if (evs.length < 2) return;
+  const pairs = evs.slice(1).map((ev, i) => ({ from: evs[i].title, to: ev.title }));
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: AI_H,
+      body: JSON.stringify({
+        model: AI_MODEL, max_tokens: 300,
+        system: 'Estimate travel times between tourist spots. Return ONLY a JSON array: [{"minutes":15,"method":"walk","note":"short stroll"}]. Methods: walk, taxi/Grab, BTS/MRT, tuk-tuk, ferry.',
+        messages: [{ role: 'user', content: 'City: ' + curCity + '. Legs: ' + JSON.stringify(pairs) }]
+      })
     });
-  }catch(e){console.warn('Travel time estimate failed:',e.message);}
+    const d = await res.json();
+    const raw = (d.content?.find(b => b.type === 'text')?.text || '').trim();
+    const match = raw.match(/\[[\s\S]*?\]/s);
+    if (!match) return;
+    const times = JSON.parse(match[0]);
+    times.forEach((t, i) => {
+      const el = document.getElementById('travel-' + (i + 1));
+      if (el) el.innerHTML = '⏱ ' + t.minutes + ' min · ' + t.method + ' <span style="color:var(--muted)">— ' + esc(t.note || '') + '</span>';
+    });
+  } catch(e) { console.warn('AI travel time:', e.message); }
 }
 
-async function refreshMapRoutes(){
-  const dayEvs=events.filter(e=>e.city===curCity&&e.day_number===curDay)
-    .sort((a,b)=>(a.time_slot||'99').localeCompare(b.time_slot||'99'));
-  renderRouteCard(dayEvs);
+async function refreshMapRoutes() {
+  clearMapLayers();
+  await plotDayOnMap();
 }
+
 
 // ═══════════════════════════════════
 // URL PARAM — handle ?join= invite links
