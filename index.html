@@ -1060,7 +1060,7 @@ const SB_KEY   = 'sb_publishable_PEVbJOaaMmPQf5Dl73CUKw_fouTefQ4';
 // AI calls route through Supabase Edge Function — key never exposed in client
 const AI_MODEL = 'claude-sonnet-4-6';
 const AI_PROXY = 'https://bhmawmiikcyxltfjrnlu.supabase.co/functions/v1/ai';
-const AI_H = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SB_KEY };
+const AI_H = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SB_KEY, 'apikey': SB_KEY };
 const sb = supabase.createClient(SB_URL, SB_KEY, { auth:{ persistSession:true, autoRefreshToken:true }});
 
 // ═══════════════════════════════════
@@ -1190,20 +1190,20 @@ async function loadProfile(){
 
 function openProfileModal(){
   const p=window._profileData||{};
-  const init=p.avatar_initials||user.email.slice(0,2).toUpperCase();
+  const init=p.avatar_initials||(user?.email||'??').slice(0,2).toUpperCase();
   document.getElementById('profile-av').textContent=init;
-  document.getElementById('profile-name-display').textContent=p.display_name||user.email.split('@')[0];
-  document.getElementById('profile-email-display').textContent=user.email||'';
+  document.getElementById('profile-name-display').textContent=p.display_name||(user?.email||'').split('@')[0];
+  document.getElementById('profile-email-display').textContent=user?.email||'';
   document.getElementById('profile-name').value=p.display_name||'';
   document.getElementById('profile-country').value=p.country||'';
   document.getElementById('profile-prefs').value=p.preferences||'';
-  // Theme
   const saved=localStorage.getItem('porter_theme')||'beige';
   document.querySelectorAll('.theme-opt').forEach(o=>{
     const isOn=o.dataset.theme===saved;
     o.style.border=isOn?'2px solid var(--accent)':'1.5px solid var(--b1)';
   });
-  openModal('profile-modal');
+  // Directly show modal — do NOT call openModal() here (infinite loop)
+  document.getElementById('profile-modal')?.classList.add('on');
 }
 
 function pickTheme(el){
@@ -1950,28 +1950,28 @@ async function capture(){
   const val=input.value.trim();
   if(!val) return;
   if(!tripId){toast('Create a trip first');return;}
-  // If 2+ trips, ask which one (only if they explicitly have trips to choose from)
+  btn.disabled=true;btn.textContent='…';
+  input.value='';input.style.height='42px';
   if(trips.length>1){
-    const raw2=val;
+    // Ask which trip, then capture into that one
     showTripPicker(async(selectedTripId)=>{
       const prevTripId=tripId;
       tripId=selectedTripId;
-      await captureToTrip(raw2);
-      tripId=prevTripId; // restore active trip
+      await captureToTrip(val);
+      tripId=prevTripId;
+      btn.disabled=false;btn.textContent='Add';
     });
+    // Keep btn disabled until picker resolves — reset if modal closed without picking
     return;
   }
-  btn.disabled=true;btn.textContent='…';
-  const raw=val;input.value='';input.style.height='42px';
+  await captureToTrip(val);
+  btn.disabled=false;btn.textContent='Add';
 }
 
 async function captureToTrip(raw){
-  // actual capture — tripId must already be set to target trip
   hideErr('cap-err');
-  // Optimistic
   const optId='_opt_'+Date.now();
   cards.unshift({id:optId,_opt:true,raw});renderCards();
-  // AI
   let parsed=null;
   try{
     const res=await fetch(AI_PROXY,{method:'POST',headers:AI_H,body:JSON.stringify({
@@ -1993,8 +1993,6 @@ async function captureToTrip(raw){
     setTimeout(()=>hideErr('cap-err'),6000);
   }
   cards=cards.filter(c=>c.id!==optId);
-  const displayName=user.email?.split('@')[0]||'You';
-  // Derive canonical city: use AI's city field, else first part of location
   const derivedCity=parsed?.city||(parsed?.location||raw).split(',')[0].trim().slice(0,60)||'';
   const payload={
     trip_id:tripId,added_by:user.id,
@@ -2008,10 +2006,8 @@ async function captureToTrip(raw){
     source_url:raw.startsWith('http')?raw:null,
     added_to_trip:false,
   };
-  // Try with optional columns first, fall back without them if schema mismatch
   let{data,error}=await sb.from('inspiration_cards').insert(payload).select().single();
   if(error&&(error.message?.includes('column')||error.code==='PGRST204')){
-    // Column doesn't exist yet — retry without optional fields
     delete payload.reaction_count; delete payload.added_by_name;
     const r2=await sb.from('inspiration_cards').insert(payload).select().single();
     data=r2.data; error=r2.error;
@@ -2021,11 +2017,9 @@ async function captureToTrip(raw){
     cards.unshift(data);
     toast(parsed?'✨ '+data.title:'📍 Saved');
     if(cards.filter(x=>!x._opt).length===1 && members.length<2) setTimeout(()=>toast('💡 Invite your crew — tap 👥 so they can add places too!'),1800);
-    // Geocode in background — get real coordinates for map
     if(data.location) geocodeAndSaveCard(data.id, data.title, data.location);
   }
   renderCards();renderClusters();
-  btn.disabled=false;btn.textContent='Add';
 }
 
 // ═══════════════════════════════════
