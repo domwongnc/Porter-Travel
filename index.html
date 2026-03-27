@@ -40,6 +40,8 @@ button,input,textarea{font-family:var(--font)}
 .tab-lbl{font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.02em;transition:color .2s}
 .tab.on .tab-lbl{color:var(--accent)}
 .tab.on .tab-ico{transform:scale(1.1)}
+.tab .tab-ico svg{color:var(--muted);transition:color .2s}
+.tab.on .tab-ico svg{color:var(--accent)}
 .tab-badge{position:absolute;top:2px;right:calc(50% - 18px);width:7px;height:7px;border-radius:50%;background:var(--warm);border:2px solid var(--card);display:none}
 .tab-badge.on{display:block}
 /* AUTH */
@@ -112,7 +114,16 @@ button,input,textarea{font-family:var(--font)}
 .err-strip{background:var(--red-s);border:1px solid var(--red-b);border-radius:var(--rx);padding:9px 13px;font-size:12px;color:var(--red);line-height:1.5;margin:0 20px 6px;flex-shrink:0;display:none}
 .err-strip.on{display:block;animation:rise .2s ease}
 /* CARD SCROLL */
-.card-scroll{flex:1;overflow-y:auto;padding:0 20px 100px;display:flex;flex-direction:column;gap:8px;scrollbar-width:none;min-height:0}
+.card-scroll{flex:1;overflow-y:auto;padding:0 0 100px;display:flex;flex-direction:column;gap:0;scrollbar-width:none;min-height:0}
+/* ── SWIPE CARD WRAPPER ── */
+.swipe-wrapper{position:relative;overflow:hidden;margin-bottom:0;flex-shrink:0}
+.swipe-bg-left{position:absolute;inset:0;background:var(--red-s);display:flex;align-items:center;justify-content:flex-end;padding-right:24px;opacity:0;transition:opacity .15s}
+.swipe-bg-left .swipe-icon{font-size:28px;font-weight:700;color:var(--red)}
+.swipe-bg-left .swipe-lbl{font-size:10px;font-weight:700;color:var(--red);margin-top:3px;text-align:center}
+.swipe-bg-right{position:absolute;inset:0;background:var(--accent-s);display:flex;align-items:center;justify-content:flex-start;padding-left:24px;opacity:0;transition:opacity .15s}
+.swipe-bg-right .swipe-icon{font-size:28px;font-weight:700;color:var(--accent)}
+.swipe-bg-right .swipe-lbl{font-size:10px;font-weight:700;color:var(--accent);margin-top:3px;text-align:center}
+.swipe-inner{position:relative;z-index:2;transition:transform .15s;will-change:transform;background:var(--bg)}
 .card-scroll::-webkit-scrollbar{display:none}
 /* INSPIRATION CARDS */
 .icard{background:var(--card);border-radius:var(--r);border:1px solid var(--b1);overflow:visible;animation:rise .3s ease both;box-shadow:var(--sh)}
@@ -127,13 +138,27 @@ button,input,textarea{font-family:var(--font)}
 .card-desc{font-size:12px;color:var(--ink2);line-height:1.6;margin-top:5px}
 .card-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:7px}
 .tag{padding:3px 9px;border-radius:var(--pill);font-size:10px;font-weight:500}
-.t-food{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}
-.t-nature{background:#D1FAE5;color:#065F46;border:1px solid #6EE7B7}
-.t-culture{background:#EDE9FE;color:#4C1D95;border:1px solid #C4B5FD}
-.t-stay{background:#FEE2E2;color:#991B1B;border:1px solid #FECACA}
-.t-beach{background:#DBEAFE;color:#1E40AF;border:1px solid #BFDBFE}
-.t-adventure{background:#FEF9C3;color:#713F12;border:1px solid #FDE68A}
-.t-nightlife{background:#F3E8FF;color:#581C87;border:1px solid #E9D5FF}
+.t-food,.t-eat{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}
+.t-nature,.t-explore,.t-hike{background:#D1FAE5;color:#065F46;border:1px solid #6EE7B7}
+.t-culture,.t-visit,.t-watch{background:#EDE9FE;color:#4C1D95;border:1px solid #C4B5FD}
+.t-stay,.t-sleep{background:#FEE2E2;color:#991B1B;border:1px solid #FECACA}
+.t-beach,.t-swim{background:#DBEAFE;color:#1E40AF;border:1px solid #BFDBFE}
+.t-adventure,.t-hike,.t-race{background:#FEF9C3;color:#713F12;border:1px solid #FDE68A}
+.t-nightlife,.t-dance,.t-drinks{background:#F3E8FF;color:#581C87;border:1px solid #E9D5FF}
+.t-shop{background:#FFF7ED;color:#C2410C;border:1px solid #FED7AA}
+.t-spa{background:#ECFDF5;color:#065F46;border:1px solid #6EE7B7}
+.t-music{background:#FDF2F8;color:#86198F;border:1px solid #F0ABFC}
+/* ── BOOKING STATUS BADGES ── */
+.bs-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:var(--pill);font-size:10px;font-weight:600;flex-shrink:0;line-height:1}
+.bs-needs{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}
+.bs-online{background:#DBEAFE;color:#1E40AF;border:1px solid #BFDBFE}
+.bs-free{background:#EAF2EE;color:#2C5F4A;border:1px solid #9BCAB0}
+.bs-booked{background:#F3E8FF;color:#581C87;border:1px solid #E9D5FF}
+.bs-btn{padding:6px 14px;border-radius:var(--pill);font-size:11px;font-weight:700;cursor:pointer;border:none;transition:all .15s;white-space:nowrap}
+.bs-btn.needs{background:var(--warm);color:#fff}
+.bs-btn.online{background:#1E40AF;color:#fff}
+.bs-btn.free{background:var(--accent-s);color:var(--accent);border:1px solid var(--accent-b)}
+.bs-btn.booked{background:#F3E8FF;color:#581C87}
 .card-footer{display:flex;align-items:center;justify-content:space-between;padding:7px 13px 10px;border-top:1px solid var(--bg)}
 .card-contributor{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
 .contributor-dot{width:18px;height:18px;border-radius:50%;background:var(--accent-s);color:var(--accent);font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -184,6 +209,31 @@ button,input,textarea{font-family:var(--font)}
 .city-preview{padding:3px 9px;border-radius:var(--pill);background:var(--bg);border:1px solid var(--b1);font-size:11px;color:var(--ink2)}
 /* PLANNER */
 .planner{display:none;flex-direction:column;flex:1;overflow:hidden;min-height:0}
+/* ── CALENDAR GRID ── */
+.cal-wrap{display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0}
+.cal-ev{position:absolute;border-radius:8px;padding:4px 7px;cursor:grab;overflow:hidden;touch-action:none;box-shadow:0 1px 4px rgba(0,0,0,.12);border:1px solid rgba(255,255,255,.25);user-select:none;-webkit-user-select:none}
+.cal-ev:active{cursor:grabbing;box-shadow:0 6px 20px rgba(0,0,0,.18);z-index:100!important}
+.cal-ev.dragging{opacity:.75;z-index:100!important;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.cal-ev-time{font-size:8px;font-weight:700;opacity:.8;line-height:1}
+.cal-ev-name{font-family:var(--serif);font-size:10px;font-style:italic;line-height:1.25;margin-top:2px;color:#fff}
+.cal-ev-emoji{font-size:12px;line-height:1}
+.cal-resize{position:absolute;bottom:0;left:0;right:0;height:8px;cursor:ns-resize;display:flex;align-items:center;justify-content:center}
+.cal-resize::after{content:'';width:20px;height:2px;border-radius:1px;background:rgba(255,255,255,.4)}
+.blackout-block{position:absolute;left:2px;right:2px;z-index:5;border-radius:6px;display:flex;align-items:center;justify-content:center;gap:5px;font-size:9px;font-weight:700;overflow:hidden}
+.blackout-sleep{background:repeating-linear-gradient(45deg,#E8E0D5,#E8E0D5 4px,#EEE9E0 4px,#EEE9E0 11px);color:var(--muted)}
+.blackout-gym{background:repeating-linear-gradient(45deg,#FEF3C7,#FEF3C7 4px,#FEFCE8 4px,#FEFCE8 11px);color:#92400E}
+.blackout-chill{background:repeating-linear-gradient(45deg,#EAF2EE,#EAF2EE 4px,#F0F7F4 4px,#F0F7F4 11px);color:var(--accent)}
+.blackout-lbl{background:rgba(255,255,255,.75);border-radius:99px;padding:2px 7px;white-space:nowrap;font-size:8px}
+.now-line{position:absolute;left:0;right:0;z-index:25;pointer-events:none;display:flex;align-items:center}
+.now-dot{width:8px;height:8px;border-radius:50%;background:var(--warm);flex-shrink:0;margin-left:-4px}
+.now-bar{flex:1;height:1.5px;background:var(--warm)}
+.hour-line{position:absolute;left:0;right:0;border-top:1px solid var(--b1);z-index:2;pointer-events:none}
+.half-line{position:absolute;left:0;right:0;border-top:1px dashed #EDE8E0;z-index:2;pointer-events:none}
+.drop-preview{position:absolute;left:4px;right:4px;border-radius:7px;border:2px dashed var(--accent-b);background:var(--accent-s);z-index:8;opacity:0;pointer-events:none;transition:opacity .1s;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--accent);font-weight:700}
+.drop-preview.show{opacity:1}
+.us-chip{padding:5px 10px;border-radius:99px;background:var(--card);border:1.5px solid var(--b1);font-size:11px;color:var(--ink);cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:all .15s}
+.us-chip:hover,.us-chip.sel{background:var(--accent-s);border-color:var(--accent-b);color:var(--accent)}
+.us-chip.used{opacity:.3;pointer-events:none}
 .planner.on{display:flex;animation:rise .15s ease}
 .planner-hd{padding:10px 20px 10px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid var(--b1);background:var(--card);flex-shrink:0}
 .planner-back{font-size:12px;color:var(--accent);font-weight:600;cursor:pointer;margin-bottom:3px}
@@ -449,6 +499,84 @@ button,input,textarea{font-family:var(--font)}
 .exp-summary{background:var(--accent-s);border:1px solid var(--accent-b);border-radius:var(--rs);padding:11px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
 .exp-total{font-family:var(--serif);font-size:20px;font-style:italic;color:var(--accent)}
 .exp-breakdown{font-size:11px;color:var(--accent2);line-height:1.6;text-align:right}
+
+/* ═══ MAGAZINE CAPTURE CARDS ═══ */
+.icard{background:var(--card);border-radius:var(--r);border:1px solid var(--b1);overflow:hidden;animation:rise .3s ease both;box-shadow:var(--sh);cursor:pointer}
+.icard.ghost{opacity:.4;pointer-events:none;filter:blur(.5px)}
+.card-hero{height:140px;display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;overflow:hidden;border-radius:var(--r) var(--r) 0 0}
+.card-hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 35%,rgba(0,0,0,.52))}
+.card-hero-meta{position:absolute;bottom:0;left:0;right:0;padding:10px 13px;z-index:2}
+.card-hero-name{font-family:var(--serif);font-size:17px;font-style:italic;color:#fff;line-height:1.2;margin-bottom:3px;letter-spacing:-.01em}
+.card-hero-loc{font-size:10px;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:4px}
+.card-hero-actions{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.card-hero-react{display:flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--pill);background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);font-size:11px;color:#fff;cursor:pointer;transition:all .15s}
+.card-hero-react.reacted{background:rgba(44,95,74,.5);border-color:rgba(155,202,176,.5)}
+.card-crew-badge{font-size:9px;font-weight:700;color:rgba(255,255,255,.85);background:rgba(0,0,0,.2);border-radius:99px;padding:2px 8px;letter-spacing:.03em}
+.card-del-hero{position:absolute;top:9px;right:9px;z-index:10;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.35);color:rgba(255,255,255,.85);border:none;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;backdrop-filter:blur(4px)}
+.card-del-hero:hover{background:rgba(180,30,30,.6)}
+.card-edit-hero{position:absolute;top:9px;right:42px;z-index:10;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.3);color:rgba(255,255,255,.8);border:none;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.card-tags-hero{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+.card-desc-hero{font-size:11px;color:rgba(255,255,255,.7);margin-top:3px;line-height:1.5}
+.crew-pick-badge{position:absolute;top:9px;left:9px;z-index:10;background:var(--accent);color:#fff;border-radius:99px;padding:3px 9px;font-size:9px;font-weight:700;letter-spacing:.04em}
+
+/* ═══ COMPACT CARD STRIP (below hero) ═══ */
+.card-strip-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 20px 2px;flex-shrink:0}
+.card-strip-row::-webkit-scrollbar{display:none}
+.strip-card{background:var(--card);border-bottom:1px solid var(--b1);width:100%;display:flex;align-items:center;gap:12px;cursor:pointer;padding:10px 20px;transition:background .15s}
+.strip-card:hover{background:var(--accent-s)}
+.strip-card-ico{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.strip-card-body{flex:1;min-width:0}
+.strip-card-name{font-family:var(--serif);font-size:14px;font-style:italic;color:var(--ink);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.strip-card-loc{font-size:11px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.strip-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.strip-card-who{font-size:10px;color:var(--muted)}
+.strip-card-react{font-size:10px;padding:2px 8px;border-radius:99px;border:1px solid var(--b1);color:var(--muted);background:var(--bg)}
+.strip-card-react.on{color:var(--accent);border-color:var(--accent-b);background:var(--accent-s)}
+
+/* ═══ TRIP LIVE MODE - enhanced ═══ */
+.wn-hero-card{background:var(--accent);border-radius:var(--r);padding:18px 20px;box-shadow:0 6px 24px rgba(44,95,74,.3);position:relative;overflow:hidden}
+.wn-hero-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
+.wn-hero-card::after{content:'';position:absolute;bottom:-20px;left:-10px;width:80px;height:80px;border-radius:50%;background:rgba(0,0,0,.06);pointer-events:none}
+.wn-eyebrow-row{display:flex;align-items:center;gap:5px;margin-bottom:10px}
+.wn-live-dot{width:6px;height:6px;border-radius:50%;background:#9BCAB0;animation:pulse 2s infinite;flex-shrink:0}
+.wn-eyebrow-txt{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.65)}
+.wn-hero-ico{font-size:36px;margin-bottom:8px;display:block;filter:drop-shadow(0 4px 12px rgba(0,0,0,.2))}
+.wn-hero-name{font-family:var(--serif);font-size:22px;font-style:italic;color:#fff;line-height:1.2;margin-bottom:4px;letter-spacing:-.01em}
+.wn-hero-loc{font-size:12px;color:rgba(255,255,255,.7);margin-bottom:12px}
+.wn-hero-footer{display:flex;align-items:center;gap:8px}
+.wn-time-chip{background:rgba(255,255,255,.18);border-radius:99px;padding:5px 12px;font-size:11px;font-weight:700;color:#fff}
+.wn-leave-chip{background:#fff;color:var(--accent);border-radius:99px;padding:5px 12px;font-size:11px;font-weight:700;animation:pulse 2s infinite}
+.wn-map-chip{background:rgba(255,255,255,.12);border-radius:99px;padding:5px 10px;font-size:11px;color:rgba(255,255,255,.8);margin-left:auto;cursor:pointer}
+
+/* Timeline enhanced */
+.tl-row{display:flex;gap:10px;padding:7px 20px;align-items:flex-start}
+.tl-time-col{width:38px;text-align:right;flex-shrink:0;padding-top:4px;font-size:10px;font-weight:600;color:var(--muted)}
+.tl-spine{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:16px}
+.tl-node{width:9px;height:9px;border-radius:50%;background:var(--b2);margin-top:4px;flex-shrink:0;border:2px solid var(--cream);transition:all .2s}
+.tl-node.done{background:var(--muted)}
+.tl-node.now{background:var(--accent);box-shadow:0 0 0 4px var(--accent-s);border-color:var(--accent-s)}
+.tl-spine-line{width:1.5px;background:var(--b1);flex:1;min-height:18px;margin:3px 0}
+.tl-content{flex:1;min-width:0}
+.tl-card{background:var(--card);border-radius:var(--rs);padding:8px 11px;border:1px solid var(--b1);box-shadow:var(--sh)}
+.tl-card.tl-now{border-color:var(--accent-b);background:var(--accent-s)}
+.tl-card.tl-done{opacity:.45}
+.tl-card-name{font-weight:600;font-size:13px;color:var(--ink);line-height:1.3}
+.tl-card.tl-now .tl-card-name{color:var(--accent)}
+.tl-card-loc{font-size:11px;color:var(--muted);margin-top:2px}
+.tl-card.tl-done .tl-card-name{text-decoration:line-through;text-decoration-color:var(--b2)}
+
+/* ═══ EMERGENCY CARD - cinematic dark ═══ */
+.emergency-card{margin:0 20px 10px;background:linear-gradient(135deg,#1C1917 0%,#2C2420 100%);border:1px solid rgba(155,123,62,.35);border-radius:var(--r);padding:14px 16px;flex-shrink:0;cursor:pointer;display:none;transition:all .2s;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.emergency-card.on{display:block;animation:rise .2s ease}
+.ec-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9B7B3E;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.ec-label::before{content:'';width:16px;height:1px;background:rgba(155,123,62,.4)}
+.ec-label::after{content:'';flex:1;height:1px;background:rgba(155,123,62,.4)}
+.ec-row{display:grid;grid-template-columns:1fr 1px 1fr;gap:13px}
+.ec-divider{background:rgba(255,255,255,.08)}
+.ec-item-label{font-size:8px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.ec-item-value{font-family:var(--serif);font-size:16px;font-style:italic;color:#fff;line-height:1.25;margin-bottom:3px}
+.ec-item-sub{font-size:10px;color:rgba(255,255,255,.45)}
+
 </style>
 
 </head>
@@ -558,7 +686,7 @@ button,input,textarea{font-family:var(--font)}
     <div class="top-bar">
       <div class="wordmark">Port<em>er</em></div>
       <div class="top-actions">
-        <div class="icon-btn" onclick="openModal('invite-modal')" title="Invite crew">👥</div>
+        <div class="icon-btn" onclick="openModal('invite-modal')" title="Invite crew" id="crew-btn">👥</div>
         <div class="icon-btn" onclick="openModal('trip-actions-modal')" title="Trip options">⋯</div>
         <button class="av-btn" id="av-btn" onclick="openModal('profile-modal')">?</button>
       </div>
@@ -566,21 +694,22 @@ button,input,textarea{font-family:var(--font)}
     <div class="trip-strip" id="trip-strip"></div>
     <div class="members-strip" id="members-strip"></div>
     <div class="ingest">
-      <div class="ingest-lbl">✦ Add a place — paste a link or just describe it</div>
-      <div style="font-size:11px;color:var(--muted);line-height:1.55;padding:2px 0 4px">Try: a TikTok or Instagram URL, a Google Maps link, or just type <em>"best rooftop bar Bangkok"</em></div>
+      <div class="ingest-lbl">✦ Add a place</div>
       <div class="ingest-row">
-        <textarea id="url-in" placeholder="Paste an Instagram link, TikTok URL, Google Maps link, or describe any restaurant, hotel, beach…" rows="1" oninput="autosize(this)"></textarea>
+        <textarea id="url-in" placeholder="Paste a TikTok, Instagram or Maps link — or just describe it: &quot;best rooftop bar Bangkok&quot;" rows="1" oninput="autosize(this)"></textarea>
         <button class="add-btn" id="cap-btn" onclick="capture()">Add</button>
       </div>
     </div>
     <div class="chips">
       <div class="chip on" data-f="all" onclick="setFilter(this)">All</div>
-      <div class="chip" data-f="food" onclick="setFilter(this)">🍜 Food</div>
-      <div class="chip" data-f="stay" onclick="setFilter(this)">🏨 Stay</div>
-      <div class="chip" data-f="culture" onclick="setFilter(this)">🏛 Culture</div>
-      <div class="chip" data-f="nature" onclick="setFilter(this)">🌿 Nature</div>
-      <div class="chip" data-f="beach" onclick="setFilter(this)">🏝 Beach</div>
-      <div class="chip" data-f="nightlife" onclick="setFilter(this)">🌙 Night</div>
+      <div class="chip" data-f="eat" onclick="setFilter(this)">🍜 Eat</div>
+      <div class="chip" data-f="sleep" onclick="setFilter(this)">🏨 Sleep</div>
+      <div class="chip" data-f="explore" onclick="setFilter(this)">🏛 Explore</div>
+      <div class="chip" data-f="hike" onclick="setFilter(this)">🌿 Outdoors</div>
+      <div class="chip" data-f="swim" onclick="setFilter(this)">🏝 Beach</div>
+      <div class="chip" data-f="drinks" onclick="setFilter(this)">🌙 Drinks</div>
+      <div class="chip" data-f="dance" onclick="setFilter(this)">🎵 Music</div>
+      <div class="chip" data-f="shop" onclick="setFilter(this)">🛍 Shop</div>
     </div>
     <div class="sec-row">
       <span class="sec-lbl" id="card-count">Saved places</span>
@@ -619,26 +748,49 @@ button,input,textarea{font-family:var(--font)}
       <div class="clusters" id="clusters"></div>
     </div>
     <div class="planner" id="planner">
+      <!-- Planner header -->
       <div class="planner-hd">
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="planner-back" onclick="backToClusters()">← Cities</div>
           <div class="planner-city" id="planner-city">—</div>
-          <div class="planner-sub" id="planner-sub">Tap a place · tap a slot to add</div>
         </div>
         <div class="planner-acts">
-          <div class="icon-btn" onclick="openMap()" title="Map view">🗺</div>
-          <div class="icon-btn" onclick="runCopilot()" title="Co-pilot audit">🧭</div>
+          <!-- View toggle -->
+          <div style="display:flex;border:1.5px solid var(--b1);border-radius:var(--rx);overflow:hidden;background:var(--bg)">
+            <button id="cal-view-day" onclick="setCalView('day')" style="padding:5px 10px;border:none;background:var(--accent);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font)">Day</button>
+            <button id="cal-view-trip" onclick="setCalView('trip')" style="padding:5px 10px;border:none;background:transparent;color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font)">Trip</button>
+          </div>
+          <div class="icon-btn" onclick="openMap()" title="Map">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+          </div>
+          <div class="icon-btn" onclick="runCopilot()" title="Co-pilot">🧭</div>
         </div>
       </div>
       <div class="copilot-bar" id="copilot-bar">
         <span id="copilot-txt"></span>
         <span class="cop-x" onclick="dismissCopilot()">✕</span>
       </div>
-      <div class="day-bar" id="day-bar"></div>
-      <div class="day-summary" id="day-summary"></div>
-      <div class="planner-body">
-        <div class="sidebar" id="sidebar"><div class="sb-lbl">Tap to select</div></div>
-        <div class="timeline" id="timeline"></div>
+      <!-- Unscheduled strip -->
+      <div id="unscheduled-strip" style="display:flex;gap:6px;padding:6px 12px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;border-bottom:1px solid var(--b1);background:var(--card);min-height:40px;align-items:center"></div>
+      <!-- Calendar grid -->
+      <div class="cal-wrap" id="cal-wrap">
+        <!-- Day headers (scrolls with grid horizontally) -->
+        <div style="display:flex;position:sticky;top:0;z-index:30;background:var(--card);border-bottom:1px solid var(--b1)">
+          <div style="width:44px;flex-shrink:0"></div><!-- gutter spacer -->
+          <div id="cal-day-headers" style="display:flex;flex:1;overflow:hidden"></div>
+        </div>
+        <!-- Scrollable body -->
+        <div id="cal-body" style="display:flex;overflow-y:auto;overflow-x:auto;flex:1;scrollbar-width:thin;scrollbar-color:var(--b2) transparent">
+          <!-- Time gutter (scrolls vertically, fixed left) -->
+          <div id="cal-gutter" style="width:44px;flex-shrink:0;position:sticky;left:0;z-index:20;background:var(--card);border-right:1px solid var(--b1)"></div>
+          <!-- Day columns -->
+          <div id="cal-cols" style="display:flex;flex:1;position:relative"></div>
+        </div>
+      </div>
+      <!-- Add blackout / add stop footer -->
+      <div style="display:flex;gap:8px;padding:8px 14px;border-top:1px solid var(--b1);background:var(--card);flex-shrink:0">
+        <button onclick="addBlackoutSheet()" style="flex:1;padding:8px;border-radius:var(--rs);border:1.5px dashed var(--b2);background:transparent;font-size:11px;color:var(--muted);cursor:pointer;font-family:var(--font)">+ Block time</button>
+        <button onclick="evDay=curDay;openModal('ev-modal');setTimeout(()=>document.getElementById('ev-title').focus(),200)" style="flex:1;padding:8px;border-radius:var(--rs);border:1.5px solid var(--accent-b);background:var(--accent-s);font-size:11px;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--font)">+ Add stop</button>
       </div>
     </div>
   </div>
@@ -736,17 +888,21 @@ button,input,textarea{font-family:var(--font)}
   <!-- TABS -->
   <div class="tabs" id="tabs" style="display:none">
     <div class="tab on" id="t-capture" onclick="goTab('capture')">
-      <div class="tab-ico">✨</div><div class="tab-lbl">Capture</div>
+      <div class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg></div>
+      <div class="tab-lbl">Capture</div>
     </div>
     <div class="tab" id="t-plan" onclick="goTab('plan')">
-      <div class="tab-ico">🗺</div><div class="tab-lbl">Plan</div>
+      <div class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg></div>
+      <div class="tab-lbl">Plan</div>
     </div>
     <div class="tab" id="t-vault" onclick="goTab('vault')">
-      <div class="tab-ico">📂</div><div class="tab-lbl">Bookings</div>
+      <div class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/><line x1="9" y1="12" x2="15" y2="12" stroke-dasharray="2 2"/></svg></div>
+      <div class="tab-lbl">Bookings</div>
       <div class="tab-badge" id="vault-badge"></div>
     </div>
     <div class="tab" id="t-trip" onclick="goTab('trip')">
-      <div class="tab-ico">🧳</div><div class="tab-lbl">Trip</div>
+      <div class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
+      <div class="tab-lbl">Trip</div>
     </div>
   </div>
 
@@ -920,13 +1076,16 @@ button,input,textarea{font-family:var(--font)}
       <input class="m-in" id="ec-location" placeholder="e.g. Chatuchak, Bangkok, Thailand">
       <div class="m-label" style="margin-bottom:8px">Category tags</div>
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px" id="ec-tags-sel">
-        <button class="doc-type-btn" data-tag="food" onclick="toggleCardTag(this)">🍜 Food</button>
-        <button class="doc-type-btn" data-tag="stay" onclick="toggleCardTag(this)">🏨 Stay</button>
-        <button class="doc-type-btn" data-tag="culture" onclick="toggleCardTag(this)">🏛 Culture</button>
-        <button class="doc-type-btn" data-tag="nature" onclick="toggleCardTag(this)">🌿 Nature</button>
-        <button class="doc-type-btn" data-tag="beach" onclick="toggleCardTag(this)">🏝 Beach</button>
-        <button class="doc-type-btn" data-tag="adventure" onclick="toggleCardTag(this)">⚡ Adventure</button>
-        <button class="doc-type-btn" data-tag="nightlife" onclick="toggleCardTag(this)">🌙 Nightlife</button>
+        <button class="doc-type-btn" data-tag="eat" onclick="toggleCardTag(this)">🍜 Eat here</button>
+        <button class="doc-type-btn" data-tag="drinks" onclick="toggleCardTag(this)">🍸 Drinks</button>
+        <button class="doc-type-btn" data-tag="sleep" onclick="toggleCardTag(this)">🏨 Sleep here</button>
+        <button class="doc-type-btn" data-tag="explore" onclick="toggleCardTag(this)">🏛 Explore</button>
+        <button class="doc-type-btn" data-tag="hike" onclick="toggleCardTag(this)">🌿 Go hiking</button>
+        <button class="doc-type-btn" data-tag="swim" onclick="toggleCardTag(this)">🏝 Beach day</button>
+        <button class="doc-type-btn" data-tag="dance" onclick="toggleCardTag(this)">🎵 Live music</button>
+        <button class="doc-type-btn" data-tag="shop" onclick="toggleCardTag(this)">🛍 Go shopping</button>
+        <button class="doc-type-btn" data-tag="spa" onclick="toggleCardTag(this)">💆 Spa day</button>
+        <button class="doc-type-btn" data-tag="race" onclick="toggleCardTag(this)">🏃 Race day</button>
       </div>
       <div class="m-btns">
         <button class="m-btn sec" onclick="closeModal('edit-card-modal')">Cancel</button>
@@ -951,33 +1110,131 @@ button,input,textarea{font-family:var(--font)}
 
   <!-- ADD BOOKING MODAL -->
   <div class="modal-bg" id="doc-modal">
-    <div class="modal">
+    <div class="modal" style="padding-bottom:32px">
       <div class="modal-h">Add a booking</div>
-      <div class="m-tabs">
+      <div class="m-tabs" style="margin-bottom:14px">
         <button class="m-tab on" id="doc-tab-manual" onclick="switchDocTab('manual')">✏️ Manual</button>
         <button class="m-tab" id="doc-tab-email" onclick="switchDocTab('email')">📧 Paste email</button>
       </div>
+
+      <!-- MANUAL TAB -->
       <div id="doc-manual">
+        <!-- Type picker -->
         <div class="doc-types">
-          <button class="doc-type-btn on" onclick="selDT(this,'Flight','✈️')">✈️ Flight</button>
+          <button class="doc-type-btn on" onclick="selDT(this,'Restaurant','🍽️')">🍽️ Restaurant</button>
+          <button class="doc-type-btn" onclick="selDT(this,'Flight','✈️')">✈️ Flight</button>
           <button class="doc-type-btn" onclick="selDT(this,'Hotel','🏨')">🏨 Hotel</button>
           <button class="doc-type-btn" onclick="selDT(this,'Event','🎟')">🎟 Event</button>
-          <button class="doc-type-btn" onclick="selDT(this,'Insurance','💳')">💳 Insurance</button>
           <button class="doc-type-btn" onclick="selDT(this,'Transport','🚗')">🚗 Transport</button>
           <button class="doc-type-btn" onclick="selDT(this,'Other','📄')">📄 Other</button>
         </div>
-        <input class="m-in" id="doc-name" placeholder="Name or booking reference">
-        <input class="m-in" id="doc-meta" placeholder="Details — dates, conf number, address…">
+
+        <!-- Core fields -->
+        <div class="m-label">Name</div>
+        <input class="m-in" id="doc-name" placeholder="e.g. Thip Samai, Thai Airways TG201, The Standard Bangkok">
+        <div class="m-label">Confirmation / Reservation number</div>
+        <input class="m-in" id="doc-res-number" placeholder="e.g. STD-8821, 7X9K2L, OpenTable #39281">
+
+        <!-- Time + Duration row -->
+        <div style="display:flex;gap:8px">
+          <div style="flex:1">
+            <div class="m-label">Time</div>
+            <input class="m-in" id="doc-time" type="time" style="margin-bottom:0">
+          </div>
+          <div style="flex:1">
+            <div class="m-label">Duration</div>
+            <select class="m-in" id="doc-duration" style="margin-bottom:0">
+              <option value="">Open ended</option>
+              <option value="60">1 hour</option>
+              <option value="90">1.5 hours</option>
+              <option value="120">2 hours</option>
+              <option value="180">3 hours</option>
+              <option value="240">4 hours</option>
+            </select>
+          </div>
+        </div>
+        <div style="height:10px"></div>
+
+        <!-- Party size + Platform -->
+        <div style="display:flex;gap:8px">
+          <div style="flex:1">
+            <div class="m-label">Party size</div>
+            <select class="m-in" id="doc-pax" style="margin-bottom:0">
+              <option value="">—</option>
+              <option value="1">1 person</option>
+              <option value="2">2 people</option>
+              <option value="3">3 people</option>
+              <option value="4">4 people</option>
+              <option value="5">5 people</option>
+              <option value="6">6 people</option>
+              <option value="8">8+ people</option>
+            </select>
+          </div>
+          <div style="flex:1">
+            <div class="m-label">Booked through</div>
+            <input class="m-in" id="doc-platform" placeholder="OpenTable, Klook, direct…" style="margin-bottom:0">
+          </div>
+        </div>
+        <div style="height:10px"></div>
+
+        <!-- Notes -->
+        <div class="m-label">Any other details</div>
+        <input class="m-in" id="doc-meta" placeholder="Address, notes, dress code, special requests…">
+
+        <!-- Attachment -->
+        <div class="m-label">Attach screenshot or PDF</div>
+        <div id="doc-attach-zone" onclick="document.getElementById('doc-file-in').click()" style="border:1.5px dashed var(--b2);border-radius:var(--rx);padding:14px;text-align:center;cursor:pointer;margin-bottom:10px;transition:all .15s" onmouseover="this.style.borderColor='var(--accent-b)'" onmouseout="this.style.borderColor='var(--b2)'">
+          <div style="font-size:22px;margin-bottom:5px" id="attach-ico">📎</div>
+          <div style="font-size:12px;color:var(--muted)" id="attach-lbl">Tap to attach confirmation screenshot or PDF</div>
+        </div>
+        <input type="file" id="doc-file-in" accept="image/*,.pdf" style="display:none" onchange="handleAttachment(this)">
       </div>
+
+      <!-- EMAIL TAB -->
       <div id="doc-email" style="display:none">
-        <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6">Paste your confirmation email text below — Porter will extract the key details automatically.</p>
-        <textarea class="m-ta" id="email-paste" placeholder="Paste email text here…&#10;&#10;e.g. Your booking at The Standard Bangkok is confirmed. Check-in: 14 March 2026. Confirmation: STD-8821…"></textarea>
+        <div style="background:var(--accent-s);border:1px solid var(--accent-b);border-radius:var(--rx);padding:10px 13px;margin-bottom:10px;font-size:12px;color:var(--mid);line-height:1.6">
+          ✦ Paste your confirmation email text — Porter extracts time, party size, res number, and platform automatically.
+        </div>
+        <textarea class="m-ta" id="email-paste" placeholder="Paste email text here…&#10;&#10;e.g. Your table for 3 at Thip Samai is confirmed for Saturday 15 March at 7:00 PM. Reservation: OpenTable #39281. A 2-hour dining limit applies."></textarea>
         <button class="m-btn pri" id="extract-btn" onclick="extractFromEmail()" style="width:100%;margin-bottom:10px">✦ Extract with AI</button>
-        <div id="extract-preview" style="display:none;background:var(--accent-s);border:1px solid var(--accent-b);border-radius:var(--rx);padding:11px 13px;font-size:13px;line-height:1.65;margin-bottom:10px;color:var(--ink2)"></div>
+        <div id="extract-preview" style="display:none;background:var(--accent-s);border:1px solid var(--accent-b);border-radius:var(--rx);padding:11px 13px;font-size:12px;line-height:1.75;margin-bottom:10px;color:var(--ink2)"></div>
       </div>
+
       <div class="m-btns">
         <button class="m-btn sec" onclick="closeModal('doc-modal')">Cancel</button>
         <button class="m-btn pri" id="save-doc-btn" onclick="saveDoc()">Save booking</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOKING DETAIL MODAL (tap any doc to expand) -->
+  <div class="modal-bg" id="booking-detail-modal">
+    <div class="modal" style="padding-bottom:32px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div id="bd-icon" style="width:48px;height:48px;border-radius:12px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0">📄</div>
+        <div style="flex:1">
+          <div id="bd-name" style="font-family:var(--serif);font-size:18px;font-style:italic;color:var(--ink)">—</div>
+          <div id="bd-type" style="font-size:11px;color:var(--muted);margin-top:2px">—</div>
+        </div>
+        <button onclick="closeModal('booking-detail-modal')" style="background:none;border:none;font-size:20px;color:var(--muted);cursor:pointer;padding:4px">✕</button>
+      </div>
+      <!-- Structured detail grid -->
+      <div id="bd-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px"></div>
+      <!-- Notes -->
+      <div id="bd-notes-wrap" style="display:none;margin-bottom:14px">
+        <div class="m-label">Details</div>
+        <div id="bd-notes" style="font-size:13px;color:var(--ink2);line-height:1.65;background:var(--bg);border-radius:var(--rx);padding:10px 12px"></div>
+      </div>
+      <!-- Attachment preview -->
+      <div id="bd-attach-wrap" style="display:none;margin-bottom:14px">
+        <div class="m-label">Attached confirmation</div>
+        <div id="bd-attach-preview" style="border-radius:var(--rx);overflow:hidden;border:1px solid var(--b1)"></div>
+      </div>
+      <!-- Who added + crew -->
+      <div id="bd-who" style="font-size:11px;color:var(--muted);margin-bottom:16px"></div>
+      <div style="display:flex;gap:8px">
+        <button onclick="editBookingFromDetail()" class="m-btn sec" style="flex:1">Edit</button>
+        <button onclick="deleteDocFromDetail()" class="m-btn sec" style="flex:1;color:var(--red);border-color:var(--red-b)">Delete</button>
       </div>
     </div>
   </div>
@@ -1688,7 +1945,11 @@ function checkTripMode(){
 
   if(start&&now>=start&&(!end||now<=end)){
     // We're on the trip! Trip tab glows
-    document.getElementById('t-trip').querySelector('.tab-ico').textContent='🟢';
+    document.getElementById('t-trip').querySelector('.tab-ico svg circle:last-child')?.setAttribute('fill','#2C5F4A');
+  document.getElementById('t-trip').querySelector('.tab-ico').style.color='var(--accent)';
+  // Add live dot
+  const liveEl=document.getElementById('trip-live-dot');
+  if(!liveEl){const d=document.createElement('span');d.id='trip-live-dot';d.style.cssText='width:6px;height:6px;border-radius:50%;background:var(--warm);position:absolute;top:2px;right:calc(50% - 18px);border:2px solid var(--card)';document.getElementById('t-trip').appendChild(d);}
     renderTripMode(trip,now,start);
   } else if(start){
     const diff=Math.ceil((start-now)/(1000*60*60*24));
@@ -1700,70 +1961,103 @@ function checkTripMode(){
 
 function renderTripMode(trip,now,start){
   const dayNum=Math.floor((now-start)/(1000*60*60*24))+1;
-  document.getElementById('trip-eyebrow').textContent='Day '+dayNum+' · Now travelling';
   // POST-TRIP STATE
-  const tripObj = trips.find(t=>t.id===tripId);
+  const tripObj=trips.find(t=>t.id===tripId);
   if(tripObj?.end_date){
-    const endD = new Date(tripObj.end_date); endD.setHours(23,59,59);
-    if(new Date() > endD){
+    const endD=new Date(tripObj.end_date);endD.setHours(23,59,59);
+    if(new Date()>endD){
       document.getElementById('trip-eyebrow').textContent='Trip complete ✓';
       document.getElementById('trip-mode-h1').textContent=tripObj.title||'Your trip';
       document.getElementById('trip-mode-date').textContent='What a trip!';
-      document.getElementById('wn-card').innerHTML='<div style="background:var(--accent-s);border:1px solid var(--accent-b);border-radius:var(--r);padding:20px;text-align:center"><div style="font-size:36px;margin-bottom:8px">🎉</div><div style="font-family:var(--serif);font-size:18px;font-style:italic;color:var(--ink);margin-bottom:6px">Trip complete!</div><div style="font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:14px">Hope it was incredible. Share your route or start planning the next one.</div><div style="display:flex;gap:8px;justify-content:center"><button onclick="sharePublicLink()" style="padding:10px 16px;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer">Share itinerary</button><button onclick="newTrip()" style="padding:10px 16px;background:var(--card);border:1px solid var(--border);color:var(--ink2);border-radius:var(--rs);font-size:12px;cursor:pointer">Plan next trip</button></div></div>';
+      document.getElementById('wn-card').innerHTML='<div style="background:var(--accent-s);border:1px solid var(--accent-b);border-radius:var(--r);padding:24px;text-align:center"><div style="font-size:40px;margin-bottom:10px">🎉</div><div style="font-family:var(--serif);font-size:20px;font-style:italic;color:var(--ink);margin-bottom:6px">Trip complete!</div><div style="font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:16px">Hope it was incredible. Share your route or plan the next one.</div><div style="display:flex;gap:8px;justify-content:center"><button onclick="sharePublicLink()" style="padding:11px 18px;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer">Share itinerary</button><button onclick="newTrip()" style="padding:11px 18px;background:var(--card);border:1.5px solid var(--b1);color:var(--ink2);border-radius:var(--rs);font-size:12px;cursor:pointer">Plan next trip</button></div></div>';
+      document.getElementById('group-bar').innerHTML='';
+      document.getElementById('trip-day-scroll').innerHTML='';
       return;
     }
   }
+  document.getElementById('trip-eyebrow').textContent='Day '+dayNum+' · Now travelling';
   document.getElementById('trip-mode-h1').textContent=trip.title;
   document.getElementById('trip-mode-date').textContent=now.toLocaleDateString('en-SG',{weekday:'long',day:'numeric',month:'long'});
   document.getElementById('countdown-card').style.display='none';
 
-  // Group status (mock — show self + any members)
+  // ── GROUP BAR ──
   const bar=document.getElementById('group-bar');
   bar.innerHTML='';
-  const addMemberStatus=(init,name,status,isYou)=>{
-    const el=document.createElement('div');
-    el.className='group-member';
-    el.innerHTML=`<div class="gm-av ${isYou?'you':''}">${init}</div><div class="gm-status ${status==='active'?'active':''}">${name}<br>${status}</div>`;
+  const mkMember=(init,name,status,isYou)=>{
+    const el=document.createElement('div');el.className='group-member';
+    el.innerHTML=`<div class="gm-av ${isYou?'you':''}">${init}</div><div class="gm-status ${isYou?'active':''}">${name.split(' ')[0]}<br><span style="font-size:8px">${status}</span></div>`;
     bar.appendChild(el);
   };
-  addMemberStatus(user.email.slice(0,2).toUpperCase(),'You','active',true);
-  members.slice(0,4).forEach(m=>addMemberStatus((m.display_name||'?').slice(0,2).toUpperCase(),m.display_name?.split(' ')[0]||'Crew','in trip',false));
+  mkMember((window._profileData?.display_name||user.email||'?').slice(0,2).toUpperCase(),'You','active ●',true);
+  members.slice(0,4).forEach(m=>mkMember((m.display_name||'?').slice(0,2).toUpperCase(),m.display_name||'Crew','on trip',false));
+  // Ping button
+  const ping=document.createElement('button');
+  ping.style.cssText='margin-left:auto;padding:5px 12px;border-radius:99px;border:1.5px solid var(--b1);background:var(--card);font-size:10px;color:var(--accent);font-weight:600;cursor:pointer;flex-shrink:0;white-space:nowrap';
+  ping.textContent='ping crew';
+  ping.onclick=()=>{shareWhatsApp&&shareWhatsApp();toast('Opening WhatsApp…');};
+  bar.appendChild(ping);
 
-  // Find today's events for current city
+  // ── TODAY'S EVENTS ──
   const todayEvs=events.filter(e=>e.day_number===dayNum).sort((a,b)=>(a.time_slot||'99:99').localeCompare(b.time_slot||'99:99'));
   const nowTime=now.getHours()*60+now.getMinutes();
   const upcoming=todayEvs.filter(e=>{if(!e.time_slot)return true;const[h,m]=e.time_slot.split(':').map(Number);return h*60+m>=nowTime;});
 
-  // What's next card
+  // ── WHAT'S NEXT — cinematic hero ──
   const wnCard=document.getElementById('wn-card');
   if(upcoming.length){
     const next=upcoming[0];
-    // Calculate if they need to leave now (next stop has travel time)
-    let leaveWarning='';
+    let leaveHTML='';
     if(next.time_slot){
       const[nh,nm]=next.time_slot.split(':').map(Number);
       const minsUntil=(nh*60+nm)-nowTime;
-      if(minsUntil>0&&minsUntil<=20) leaveWarning='<div style="font-size:11px;background:rgba(255,255,255,.2);border-radius:6px;padding:4px 9px;margin-top:8px;display:inline-block">⏱ Leave now — '+minsUntil+' min to go</div>';
+      if(minsUntil>0&&minsUntil<=25) leaveHTML=`<div class="wn-leave-chip">⏱ Leave now · ${minsUntil}m</div>`;
     }
-    wnCard.innerHTML=`<div class="wn-card"><div class="wn-time">${next.time_slot||'Up next'}</div><div class="wn-place">${esc(next.emoji||'📍')} ${esc(next.title)}</div><div class="wn-loc">${esc(next.location||'')}</div>${leaveWarning}</div>`;
+    wnCard.innerHTML=`
+      <div class="wn-hero-card">
+        <div class="wn-eyebrow-row">
+          <div class="wn-live-dot"></div>
+          <div class="wn-eyebrow-txt">What's next</div>
+        </div>
+        <span class="wn-hero-ico">${next.emoji||'📍'}</span>
+        <div class="wn-hero-name">${esc(next.title)}</div>
+        <div class="wn-hero-loc">${esc(next.location||next.city||'')}</div>
+        <div class="wn-hero-footer">
+          <div class="wn-time-chip">${next.time_slot||'Up next'}</div>
+          ${leaveHTML}
+          <div class="wn-map-chip" onclick="openMap()">🗺 Map</div>
+        </div>
+      </div>`;
   } else {
-    wnCard.innerHTML=`<div class="wn-empty">🌙 All done for today — enjoy your evening!</div>`;
+    wnCard.innerHTML=`<div style="background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:20px;text-align:center;box-shadow:var(--sh)"><div style="font-size:28px;margin-bottom:6px">🌙</div><div style="font-family:var(--serif);font-size:15px;font-style:italic;color:var(--ink2)">All done for today</div><div style="font-size:12px;color:var(--muted);margin-top:4px">Enjoy your evening</div></div>`;
   }
 
-  // Day timeline
+  // ── TIMELINE — enhanced ──
   const scroll=document.getElementById('trip-day-scroll');
   scroll.innerHTML='';
   if(!todayEvs.length){
-    scroll.innerHTML=`<div class="empty" style="padding:32px 24px"><div class="empty-ico">🗓</div><div class="empty-h">Day ${dayNum} is empty</div><div class="empty-p">Add stops in the Plan tab or use quick add above.</div></div>`;
+    scroll.innerHTML=`<div class="empty" style="padding:24px"><div class="empty-ico">🗓</div><div class="empty-h">Day ${dayNum} is empty</div><div class="empty-p">Add stops in the Plan tab or use quick add above.</div></div>`;
     return;
   }
-  todayEvs.forEach(ev=>{
+  todayEvs.forEach((ev,i)=>{
     const isDone=ev.time_slot&&(()=>{const[h,m]=ev.time_slot.split(':').map(Number);return h*60+m<nowTime;})();
-    const isCurrent=upcoming[0]?.id===ev.id;
-    const el=document.createElement('div');
-    el.className='trip-ev'+(isDone?' done':'')+(isCurrent?' current':'');
-    el.innerHTML=`<div class="trip-ev-time">${ev.time_slot||'—'}</div><div class="trip-ev-ico">${ev.emoji||'📍'}</div><div class="trip-ev-info"><div class="trip-ev-name">${esc(ev.title)}</div><div class="trip-ev-loc">${esc(ev.location||'')}</div></div>`;
-    scroll.appendChild(el);
+    const isNow=upcoming[0]?.id===ev.id;
+    const isLast=i===todayEvs.length-1;
+    const row=document.createElement('div');
+    row.className='tl-row';
+    row.innerHTML=`
+      <div class="tl-time-col">${ev.time_slot||'—'}</div>
+      <div class="tl-spine">
+        <div class="tl-node ${isDone?'done':isNow?'now':''}"></div>
+        ${!isLast?'<div class="tl-spine-line"></div>':''}
+      </div>
+      <div class="tl-content">
+        <div class="tl-card ${isDone?'tl-done':isNow?'tl-now':''}">
+          <div class="tl-card-name">${ev.emoji||'📍'} ${esc(ev.title)}</div>
+          ${ev.location?`<div class="tl-card-loc">${esc(ev.location)}</div>`:''}
+          ${isNow?`<div style="font-size:10px;color:var(--accent);font-weight:600;margin-top:3px">← You are here</div>`:''}
+        </div>
+      </div>`;
+    scroll.appendChild(row);
   });
 }
 
@@ -1838,55 +2132,254 @@ async function loadCards(){
   renderCards();renderClusters();
 }
 
+function addSwipe(el, card){
+  const THRESH=72, CONFIRM=110;
+  let startX=0, startY=0, dx=0, dragging=false, dir=0;
+  const inner=el.querySelector('.swipe-inner');
+  const bgL=el.querySelector('.swipe-bg-left');
+  const bgR=el.querySelector('.swipe-bg-right');
+  if(!inner) return;
+
+  function onStart(e){
+    const t=e.touches?e.touches[0]:e;
+    startX=t.clientX; startY=t.clientY; dx=0; dragging=true; dir=0;
+    inner.style.transition='none';
+  }
+  function onMove(e){
+    if(!dragging) return;
+    const t=e.touches?e.touches[0]:e;
+    dx=t.clientX-startX;
+    const dy=t.clientY-startY;
+    if(Math.abs(dy)>Math.abs(dx)&&Math.abs(dx)<10){dragging=false;return;}
+    e.preventDefault();
+    const clamped=Math.max(-CONFIRM-20,Math.min(CONFIRM+20,dx));
+    inner.style.transform=`translateX(${clamped}px)`;
+    const pct=Math.min(1,Math.abs(clamped)/THRESH);
+    if(clamped<0){bgL.style.opacity=pct;bgR.style.opacity=0;}
+    else{bgR.style.opacity=pct;bgL.style.opacity=0;}
+  }
+  function onEnd(){
+    if(!dragging) return;
+    dragging=false;
+    inner.style.transition='transform .2s ease';
+    bgL.style.transition='opacity .2s';bgR.style.transition='opacity .2s';
+    if(dx < -THRESH){
+      // Swipe left — delete
+      inner.style.transform='translateX(-110%)';
+      bgL.style.opacity=1;
+      setTimeout(()=>{
+        el.style.maxHeight=el.offsetHeight+'px';
+        el.style.transition='max-height .25s ease, opacity .2s';
+        el.style.opacity='0';
+        setTimeout(()=>{el.style.maxHeight='0';el.style.overflow='hidden';},50);
+        setTimeout(()=>{ deleteCard(card.id); },280);
+      },120);
+    } else if(dx > THRESH){
+      // Swipe right — add to itinerary
+      inner.style.transform='translateX(110%)';
+      bgR.style.opacity=1;
+      setTimeout(()=>{
+        inner.style.transform='translateX(0)';
+        bgR.style.opacity=0;
+        quickAddCardToTrip(card);
+      },200);
+    } else {
+      inner.style.transform='translateX(0)';
+      bgL.style.opacity=0;bgR.style.opacity=0;
+    }
+  }
+  // Long press to cycle booking status
+  let lpTimer=null;
+  el.addEventListener('touchstart',e=>{lpTimer=setTimeout(()=>{const inner=el.querySelector('[data-card-id]');if(inner) cycleBookingStatus(inner.dataset.cardId);},600);},{passive:true});
+  el.addEventListener('touchend',()=>clearTimeout(lpTimer));
+  el.addEventListener('touchmove',()=>clearTimeout(lpTimer),{passive:true});
+  el.addEventListener('touchstart',onStart,{passive:true});
+  el.addEventListener('touchmove',onMove,{passive:false});
+  el.addEventListener('touchend',onEnd);
+}
+
+async function quickAddCardToTrip(card){
+  const now=new Date();now.setHours(0,0,0,0);
+  const trip=trips.find(t=>t.id===tripId);
+  const start=trip?.start_date?new Date(trip.start_date+'T00:00:00'):now;
+  const dayNum=Math.max(1,Math.floor((now-start)/(1000*60*60*24))+1);
+  const{data,error}=await sb.from('itinerary_events').insert({
+    trip_id:tripId,day_number:dayNum,
+    title:card.title,emoji:card.emoji||'📍',
+    city:card.city||'',location:card.location||'',
+    tags:card.tags||[],is_highlight:false,sort_order:events.length,time_slot:null
+  }).select().single();
+  if(error){toast('Could not add: '+error.message);return;}
+  events.push(data);
+  toast(`✓ ${card.emoji||'📍'} ${card.title} added to Day ${dayNum}`);
+  renderClusters();
+}
+
 function renderCards(){
   const scroll=document.getElementById('card-scroll');
   const filtered=cardFilter==='all'?cards:cards.filter(c=>(c.tags||[]).includes(cardFilter));
-  document.getElementById('card-count').textContent=filtered.length?`${filtered.length} place${filtered.length!==1?'s':''}`:'Saved places';
+  const real=filtered.filter(c=>!c._opt);
+  document.getElementById('card-count').textContent=real.length?`${real.length} place${real.length!==1?'s':''}`:'Saved places';
   scroll.innerHTML='';
-  if(!filtered.length){
+
+  // Optimistic loading card
+  const opts=filtered.filter(c=>c._opt);
+  opts.forEach(c=>{
+    const el=document.createElement('div');el.className='parse-card';
+    el.innerHTML=`<div class="parse-spin"></div><div class="parse-txt"><strong>Identifying…</strong><br>${esc((c.raw||'').slice(0,50))}</div>`;
+    scroll.appendChild(el);
+  });
+
+  if(!real.length&&!opts.length){
     scroll.innerHTML=`<div class="empty"><div class="empty-ico">🌍</div><div class="empty-h">No places yet</div><div class="empty-p">Paste any link or describe a place above — Porter extracts and structures it instantly.</div></div>`;
     return;
   }
-  filtered.forEach((c,i)=>{
-    if(c._opt){
-      const el=document.createElement('div');el.className='parse-card';
-      el.innerHTML=`<div class="parse-spin"></div><div class="parse-txt"><strong>Identifying…</strong><br>${esc((c.raw||'').slice(0,50))}</div>`;
-      scroll.insertBefore(el,scroll.firstChild);return;
-    }
-    const el=document.createElement('div');el.className='icard';
-    el.style.animationDelay=(Math.min(i,8)*.045)+'s';
-    const bg=c.color||'#C8DFC8',bg2=darken(bg);
+
+  // ── HERO CARD (first place, full bleed) ──
+  if(real.length>0){
+    const c=real[0];
+    const bg=c.color||'#C8DFC8';
     const reacted=myReactions.has(c.id);
     const reactions=c.reaction_count||0;
-    const addedBy=c.added_by_name||'Unknown';
-    const timeAgo=getTimeAgo(c.created_at);
-    el.innerHTML=`
-      <div class="card-hero" style="background:linear-gradient(135deg,${bg} 0%,${bg2} 100%)">
-        <span style="position:relative;z-index:1;filter:drop-shadow(0 3px 10px rgba(0,0,0,.2))">${c.emoji||'📍'}</span>
-        <div class="hero-shine"></div><div class="hero-fade"></div>
-        <button class="card-del" onclick="event.stopPropagation();deleteCard('${c.id}')">✕</button>
-      </div>
-      <div class="card-body">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
-          <div class="card-name">${esc(c.title)}</div>
-          <button style="background:none;border:none;cursor:pointer;font-size:13px;color:var(--muted);padding:2px;flex-shrink:0" onclick="event.stopPropagation();openEditCard('${c.id}')" title="Edit">✏️</button>
+    const addedBy=c.added_by_name||user?.email?.split('@')[0]||'You';
+    const isCrewPick=reactions>=2;
+    const hero=document.createElement('div');
+    hero.className='icard';
+    hero.style.cssText='margin:12px 20px 0;border-radius:var(--r)';
+    hero.innerHTML=`
+      <div class="card-hero" style="background:linear-gradient(145deg,${bg} 0%,${darken(bg)} 100%);height:180px">
+        <span style="position:relative;z-index:1;font-size:64px;filter:drop-shadow(0 4px 16px rgba(0,0,0,.25))">${c.emoji||'📍'}</span>
+        <div class="card-hero-overlay"></div>
+        ${isCrewPick?`<div class="crew-pick-badge">🔥 Crew pick</div>`:''}
+        <button class="card-edit-hero" onclick="event.stopPropagation();openEditCard('${c.id}')">✏️</button>
+        <button class="card-del-hero" onclick="event.stopPropagation();deleteCard('${c.id}')">✕</button>
+        <div class="card-hero-meta">
+          ${c.description?`<div class="card-desc-hero">${esc(c.description)}</div>`:''}
+          <div class="card-hero-name">${esc(c.title)}</div>
+          <div class="card-hero-loc">📍 ${esc(c.city||c.location||'')}</div>
+          ${getBookingBadge(c,'hero')}
+          <div class="card-tags-hero">${(c.tags||[]).map(t=>`<span class="tag t-${t}" style="background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.25)">${t}</span>`).join('')}</div>
+          <div class="card-hero-actions">
+            <div style="display:flex;align-items:center;gap:5px">
+              <button class="card-hero-react ${reacted?'reacted':''}" onclick="event.stopPropagation();toggleReaction('${c.id}',this)">
+                👍${reactions>0?` <strong>${reactions}</strong>`:''}
+              </button>
+              ${isCrewPick?`<span style="font-size:9px;color:rgba(255,255,255,.7)">everyone loves this</span>`:''}
+            </div>
+            <div class="card-crew-badge">${esc(addedBy)} · ${getTimeAgo(c.created_at)}</div>
+          </div>
+          ${c.booking_status==='needs'?`<button onclick="event.stopPropagation();openBookingAction('${c.id}')" style="margin-top:8px;width:100%;padding:8px;border-radius:8px;border:none;background:var(--warm);color:#fff;font-size:11px;font-weight:700;cursor:pointer">⚠ Book this — tap to find link</button>`:''}
+          ${c.booking_status==='online'?`<button onclick="event.stopPropagation();openBookingAction('${c.id}')" style="margin-top:8px;width:100%;padding:8px;border-radius:8px;border:none;background:#1E40AF;color:#fff;font-size:11px;font-weight:700;cursor:pointer">🔗 Book online →</button>`:''}
         </div>
-        ${c.location?`<div class="card-loc"><span>📍</span><span>${esc(c.location)}</span></div>`:''}
-        ${c.description?`<div class="card-desc">${esc(c.description)}</div>`:''}
-        <div class="card-tags">${(c.tags||[]).map(t=>`<span class="tag t-${t}">${t}</span>`).join('')}</div>
-      </div>
-      <div class="card-footer">
-        <div class="card-contributor">
-          <div class="contributor-dot">${esc(addedBy.slice(0,2).toUpperCase())}</div>
-          <span>${esc(addedBy)} · ${timeAgo}</span>
-        </div>
-        <button class="reaction-btn ${reacted?'reacted':''}" onclick="toggleReaction('${c.id}',this)" title="${reactions>0?reactions+' vote'+(reactions!==1?'s':''):'Vote for this'}">
-          👍 ${reactions>0?`<strong style="font-size:12px">${reactions}</strong>`:''}
-        </button>
-        ${reactions>=2?`<span style="background:var(--accent-s);border:1px solid var(--accent-b);border-radius:var(--pill);padding:2px 7px;font-size:9px;font-weight:700;color:var(--accent)">Crew pick ✓</span>`:''}
       </div>`;
-    scroll.appendChild(el);
-  });
+    scroll.appendChild(hero);
+  }
+
+  // ── STRIP LABEL ──
+  if(real.length>1){
+    const lbl=document.createElement('div');
+    lbl.style.cssText='display:flex;align-items:center;gap:8px;padding:10px 20px 6px;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;flex-shrink:0';
+    lbl.innerHTML=`<span>${real.length-1} more place${real.length-1!==1?'s':''}</span><span style="flex:1;height:1px;background:var(--b1)"></span><span style="color:var(--accent);cursor:pointer;font-size:11px" onclick="goTab('plan')">Plan →</span>`;
+    scroll.appendChild(lbl);
+  }
+
+  // ── VERTICAL SWIPEABLE LIST (remaining cards) ──
+  if(real.length>1){
+    const strip=document.createElement('div');
+    strip.style.cssText='display:flex;flex-direction:column;gap:0;';
+    real.slice(1).forEach((c,i)=>{
+      const bg=c.color||'#C8DFC8';
+      const reacted=myReactions.has(c.id);
+      const reactions=c.reaction_count||0;
+      const addedBy=c.added_by_name||'You';
+      const el=document.createElement('div');
+      el.className='strip-card';
+      el.style.animationDelay=(i*.04)+'s';
+      const wrapper=document.createElement('div');
+      wrapper.className='swipe-wrapper';
+      wrapper.innerHTML=`
+        <div class="swipe-bg-left"><div style="text-align:center"><div class="swipe-icon">✕</div><div class="swipe-lbl">Remove</div></div></div>
+        <div class="swipe-bg-right"><div style="text-align:center"><div class="swipe-icon">✓</div><div class="swipe-lbl">Add to plan</div></div></div>
+        <div class="swipe-inner">
+          <div class="strip-card" style="margin:0;border-radius:0;border-left:none;border-right:none;border-top:none">
+            <div class="strip-card-ico" style="background:linear-gradient(135deg,${bg},${darken(bg)})">${c.emoji||'📍'}</div>
+            <div class="strip-card-body">
+              <div class="strip-card-name">${esc(c.title)}</div>
+              <div class="strip-card-loc">${esc(c.city||c.location||'')}</div>
+              <div class="strip-card-footer">
+                <div style="display:flex;align-items:center;gap:5px">${getBookingBadge(c,'strip')}<span class="strip-card-who">${esc(addedBy.split('@')[0])}</span></div>
+                <div class="strip-card-react ${reacted?'on':''}" onclick="event.stopPropagation();toggleReaction('${c.id}',this)">👍${reactions>0?' '+reactions:''}</div>
+              </div>
+            </div>
+            <div style="font-size:13px;color:var(--b2);padding:0 4px 0 0;flex-shrink:0">⋯</div>
+          </div>
+        </div>`;
+      wrapper.querySelector('.swipe-inner').addEventListener('click',()=>openEditCard(c.id));
+      addSwipe(wrapper, c);
+      strip.appendChild(wrapper);
+    });
+    scroll.appendChild(strip);
+    scroll.style.paddingBottom='100px';
+  }
+}
+
+function getBookingBadge(card, context){
+  const status=card.booking_status||'';
+  if(!status) return '';
+  const labels={
+    needs:'⚠ Book this',
+    online:'🔗 Book online',
+    free:'✓ Walk in',
+    booked:'✓ Booked'
+  };
+  const cls={needs:'bs-needs',online:'bs-online',free:'bs-free',booked:'bs-booked'};
+  if(context==='hero'){
+    return `<div style="position:absolute;top:10px;right:10px;z-index:10"><span class="bs-badge ${cls[status]||''}">${labels[status]||''}</span></div>`;
+  }
+  if(context==='strip'&&status){
+    return `<span class="bs-badge ${cls[status]||''}" style="font-size:9px;padding:2px 7px">${labels[status]||''}</span>`;
+  }
+  return '';
+}
+
+function cycleBookingStatus(cardId){
+  const card=cards.find(c=>c.id===cardId);if(!card) return;
+  const cycle=['','needs','online','free','booked'];
+  const next=cycle[(cycle.indexOf(card.booking_status||'')+1)%cycle.length];
+  card.booking_status=next;
+  sb.from('inspiration_cards').update({booking_status:next}).eq('id',cardId);
+  renderCards();
+  const labels={needs:'⚠ Book this',online:'🔗 Book online',free:'✓ Walk in',booked:'✓ Booked','':''};
+  toast(labels[next]||'Status cleared');
+}
+
+async function openBookingAction(cardId){
+  const card=cards.find(c=>c.id===cardId);if(!card) return;
+  if(card.booking_url){window.open(card.booking_url,'_blank');return;}
+  // Ask Porter AI to find the booking link
+  const trip=trips.find(t=>t.id===tripId);
+  toast('✦ Finding booking link…');
+  try{
+    const res=await fetch(AI_PROXY,{method:'POST',headers:AI_H,body:JSON.stringify({
+      model:AI_MODEL,max_tokens:120,
+      system:'Return ONLY a JSON object: {"url":"booking URL or null","note":"1 sentence tip"}. No markdown.',
+      messages:[{role:'user',content:`Find the official booking/reservation URL for: ${card.title} in ${card.city||card.location||trip?.destination||''}. Return direct booking page, not Google.`}]
+    })});
+    const d=await res.json();
+    const txt=(d.content?.find(b=>b.type==='text')?.text||'').trim();
+    const match=txt.match(/\{[\s\S]*\}/);
+    if(match){
+      const parsed=JSON.parse(match[0]);
+      if(parsed.url&&parsed.url!=='null'){
+        card.booking_url=parsed.url;
+        await sb.from('inspiration_cards').update({booking_url:parsed.url,booking_status:'online'}).eq('id',cardId);
+        window.open(parsed.url,'_blank');
+        toast('✓ Opened booking page');
+      } else {
+        toast(parsed.note||'No direct link found — search manually');
+      }
+    }
+  }catch(e){toast('Could not find link');}
 }
 
 function darken(hex){
@@ -1977,7 +2470,7 @@ async function captureToTrip(raw){
     const res=await fetch(AI_PROXY,{method:'POST',headers:AI_H,body:JSON.stringify({
       model:AI_MODEL,max_tokens:350,
       system:`Extract travel places into JSON. Return ONLY valid JSON, no markdown:
-{"title":"2-5 word name","city":"City name only e.g. Bangkok","country":"Country name only e.g. Thailand","location":"Full address or venue, City, Country","emoji":"one emoji","tags":["1-3 of: food/nature/stay/culture/beach/adventure/nightlife"],"description":"One sentence max 80 chars","color":"hex: #C8DFC8 nature #C8D8E8 beach #E8C8C8 food #DCDCD0 culture #D4C8E0 nightlife #C8DCE0 adventure #F0E8D0 stay"}`,
+{"title":"2-5 word name","city":"City name only e.g. Bangkok","country":"Country name only e.g. Thailand","location":"Full address or venue, City, Country","emoji":"one emoji","tags":["1-3 action tags from: eat/drinks/sleep/explore/hike/swim/dance/shop/spa/race/visit/watch — use what people would say e.g. eat here not food"],"booking_status":"needs|free|online (needs=reservation required, free=walk-in no booking, online=can book via link)","booking_url":"direct booking URL if known else null","description":"One sentence max 80 chars","color":"hex: #C8DFC8 nature #C8D8E8 beach #E8C8C8 food #DCDCD0 culture #D4C8E0 nightlife #C8DCE0 adventure #F0E8D0 stay"}`,
       messages:[{role:'user',content:`Place: "${raw}"`}]
     })});
     if(!res.ok) throw new Error('HTTP '+res.status);
@@ -1994,6 +2487,12 @@ async function captureToTrip(raw){
   }
   cards=cards.filter(c=>c.id!==optId);
   const derivedCity=parsed?.city||(parsed?.location||raw).split(',')[0].trim().slice(0,60)||'';
+  // Derive booking status from AI or tags
+  const bookable=['eat','drinks','sleep','dance','watch','race','spa'];
+  const freeEntry=['explore','hike','swim','shop','visit'];
+  const derivedStatus=parsed?.booking_status||
+    (parsed?.tags||[]).some(t=>bookable.includes(t))?'needs':
+    (parsed?.tags||[]).some(t=>freeEntry.includes(t))?'free':'needs';
   const payload={
     trip_id:tripId,added_by:user.id,
     title:parsed?.title||raw.slice(0,60),
@@ -2004,6 +2503,7 @@ async function captureToTrip(raw){
     description:parsed?.description||'',
     color:parsed?.color||'#D4CFC4',
     source_url:raw.startsWith('http')?raw:null,
+    booking_status:derivedStatus,
     added_to_trip:false,
   };
   let{data,error}=await sb.from('inspiration_cards').insert(payload).select().single();
@@ -2090,186 +2590,428 @@ function renderClusters(){
 // ═══════════════════════════════════
 // PLANNER
 // ═══════════════════════════════════
+// ═══════════════════════════════════
+// CALENDAR PLANNER ENGINE
+// ═══════════════════════════════════
+const PX_PER_HOUR = 60;
+const CAL_START = 6;  // 6am
+const CAL_END   = 24; // midnight
+const SNAP_MIN  = 15; // snap to 15-min slots
+let calView = 'day';  // 'day' | 'trip'
+let calDragState = null;
+let blackouts = []; // [{id,type,day,startH,endH,label}]
+let selectedUnscheduled = null;
+
+function setCalView(v){
+  calView=v;
+  document.getElementById('cal-view-day').style.background=v==='day'?'var(--accent)':'transparent';
+  document.getElementById('cal-view-day').style.color=v==='day'?'#fff':'var(--muted)';
+  document.getElementById('cal-view-trip').style.background=v==='trip'?'var(--accent)':'transparent';
+  document.getElementById('cal-view-trip').style.color=v==='trip'?'#fff':'var(--muted)';
+  renderCalendar();
+}
+
 function openPlanner(city){
-  curCity=city;curDay=1;selectedCard=null;copilotCache={};
-  // Initialise day persistence for this city
-  if(!window._maxDays) window._maxDays={};
-  const key=tripId+'_'+city;
-  const evMax=events.filter(e=>e.city===city).length?Math.max(...events.filter(e=>e.city===city).map(e=>e.day_number)):1;
-  window._maxDays[key]=Math.max(window._maxDays[key]||1,evMax);
+  curCity=city; curDay=1; selectedCard=null; selectedUnscheduled=null; copilotCache={};
   document.getElementById('planner-city').textContent=city;
-  document.getElementById('planner-sub').textContent='Tap a place · tap a slot to add';
   showClusters(false);
   document.getElementById('planner').classList.add('on');
-  renderPlanner();
+  // Default blackout: sleep each day
+  ensureDefaultBlackouts();
+  renderCalendar();
 }
+
 function backToClusters(){
-  curCity=null;selectedCard=null;
+  curCity=null; selectedCard=null; selectedUnscheduled=null;
   document.getElementById('planner').classList.remove('on');
-  showClusters(true);renderClusters();
+  showClusters(true); renderClusters();
 }
+
 function showClusters(yes){
   const cv=document.getElementById('clusters-view');
-  cv.style.display=yes?'flex':'none';cv.style.flexDirection='column';cv.style.flex='1';cv.style.overflow='hidden';cv.style.minHeight='0';
+  cv.style.display=yes?'flex':'none';
+  cv.style.flexDirection='column';cv.style.flex='1';cv.style.overflow='hidden';cv.style.minHeight='0';
 }
-function renderPlanner(){renderSidebar();renderDayBar();renderDaySummary();renderTimeline();}
 
-function renderSidebar(){
-  const sb2=document.getElementById('sidebar');
-  sb2.innerHTML='<div class="sb-lbl">Tap to select</div>';
+function ensureDefaultBlackouts(){
+  // Add sleep blocks for each trip day if not already there
+  const trip=trips.find(t=>t.id===tripId);
+  const totalDays=getTotalDays();
+  for(let d=1;d<=totalDays;d++){
+    const key='sleep_'+d;
+    if(!blackouts.find(b=>b.id===key)){
+      blackouts.push({id:key,type:'sleep',day:d,startH:23,endH:30,label:'😴 Sleep'});
+      // Also early morning
+      const key2='sleep_am_'+d;
+      if(!blackouts.find(b=>b.id===key2)){
+        blackouts.push({id:key2,type:'sleep',day:d,startH:0,endH:7,label:'😴 Sleep'});
+      }
+    }
+  }
+}
+
+function getTotalDays(){
+  const trip=trips.find(t=>t.id===tripId);
+  if(trip?.start_date&&trip?.end_date){
+    return Math.max(1,Math.ceil((new Date(trip.end_date)-new Date(trip.start_date))/86400000)+1);
+  }
+  const maxEv=events.filter(e=>e.city===curCity).length?Math.max(...events.filter(e=>e.city===curCity).map(e=>e.day_number)):1;
+  return Math.max(maxEv,curDay,3);
+}
+
+function timeToY(timeStr){
+  if(!timeStr) return null;
+  const [h,m]=(timeStr||'00:00').split(':').map(Number);
+  return (h+m/60-CAL_START)*PX_PER_HOUR;
+}
+
+function yToTime(y){
+  const totalMins=(y/PX_PER_HOUR+CAL_START)*60;
+  const snapped=Math.round(totalMins/SNAP_MIN)*SNAP_MIN;
+  const h=Math.floor(snapped/60);
+  const m=snapped%60;
+  if(h<CAL_START||h>=CAL_END) return null;
+  return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+}
+
+function renderCalendar(){
+  const totalH=(CAL_END-CAL_START)*PX_PER_HOUR;
+  const cityEvs=events.filter(e=>e.city===curCity).sort((a,b)=>(a.time_slot||'').localeCompare(b.time_slot||''));
+  const totalDays=getTotalDays();
+  const days=calView==='trip'?Array.from({length:totalDays},(_,i)=>i+1):[curDay];
+
+  // ── Day headers ──
+  const hdRow=document.getElementById('cal-day-headers');
+  hdRow.innerHTML='';
+  const colW=calView==='trip'?Math.max(100,Math.floor((window.innerWidth||390)/Math.min(days.length,3.5))):((document.getElementById('cal-wrap')?.offsetWidth||390)-44);
+  days.forEach(d=>{
+    const trip=trips.find(t=>t.id===tripId);
+    let dateStr='';
+    if(trip?.start_date){
+      const dt=new Date(trip.start_date+'T00:00:00');
+      dt.setDate(dt.getDate()+d-1);
+      dateStr=dt.toLocaleDateString('en-SG',{weekday:'short',day:'numeric',month:'short'});
+    }
+    const hd=document.createElement('div');
+    hd.style.cssText=`width:${colW}px;flex-shrink:0;padding:6px 8px;text-align:center;border-right:1px solid var(--b1);cursor:${calView==='trip'?'pointer':'default'}`;
+    hd.innerHTML=`<div style="font-size:9px;font-weight:700;color:${d===curDay?'var(--accent)':'var(--muted)'};letter-spacing:.06em;text-transform:uppercase">Day ${d}${calView==='trip'?'':''}</div>${dateStr?`<div style="font-size:8px;color:var(--muted)">${dateStr}</div>`:''}`;
+    if(calView==='trip') hd.onclick=()=>{curDay=d;renderCalendar();};
+    hdRow.appendChild(hd);
+    hdRow.style.width=(colW*days.length)+'px';
+  });
+
+  // ── Time gutter ──
+  const gutter=document.getElementById('cal-gutter');
+  gutter.innerHTML='';gutter.style.height=totalH+'px';
+  for(let h=CAL_START;h<CAL_END;h++){
+    const y=(h-CAL_START)*PX_PER_HOUR;
+    const lbl=document.createElement('div');
+    lbl.style.cssText=`position:absolute;top:${y-8}px;right:6px;font-size:8px;color:var(--muted);font-weight:500;line-height:1`;
+    lbl.textContent=h===12?'12pm':h>12?`${h-12}pm`:`${h}am`;
+    gutter.appendChild(lbl);
+  }
+
+  // ── Columns container ──
+  const cols=document.getElementById('cal-cols');
+  cols.innerHTML='';cols.style.height=totalH+'px';
+  cols.style.width=(colW*days.length)+'px';
+
+  // Shared hour grid lines (behind all columns)
+  for(let h=CAL_START;h<=CAL_END;h++){
+    const y=(h-CAL_START)*PX_PER_HOUR;
+    const ln=document.createElement('div');
+    ln.className='hour-line';ln.style.top=y+'px';
+    cols.appendChild(ln);
+    if(h<CAL_END){
+      const hl=document.createElement('div');
+      hl.className='half-line';hl.style.top=(y+30)+'px';
+      cols.appendChild(hl);
+      // Quarter lines (lighter)
+      const q1=document.createElement('div');q1.style.cssText=`position:absolute;left:0;right:0;top:${y+15}px;border-top:1px dotted #EEE8DF;z-index:2;pointer-events:none`;cols.appendChild(q1);
+      const q2=document.createElement('div');q2.style.cssText=`position:absolute;left:0;right:0;top:${y+45}px;border-top:1px dotted #EEE8DF;z-index:2;pointer-events:none`;cols.appendChild(q2);
+    }
+  }
+
+  // ── Day columns ──
+  days.forEach((d,di)=>{
+    const col=document.createElement('div');
+    col.style.cssText=`position:absolute;top:0;left:${di*colW}px;width:${colW}px;height:${totalH}px;border-right:1px solid var(--b1);${d===curDay&&calView==='trip'?'background:rgba(44,95,74,.025)':''}`;
+    col.dataset.day=d;
+
+    // Tap empty column to add stop at that time
+    col.addEventListener('click',e=>{
+      if(calDragState) return;
+      const rect=col.getBoundingClientRect();
+      const y=e.clientY-rect.top;
+      const snappedTime=yToTime(y);
+      if(!snappedTime) return;
+      if(selectedUnscheduled){
+        addEventFromCard(selectedUnscheduled,d,snappedTime);
+        return;
+      }
+      // Quick add prompt
+      evDay=d;
+      const timeEl=document.getElementById('ev-time');
+      if(timeEl) timeEl.value=snappedTime;
+      openModal('ev-modal');
+      setTimeout(()=>document.getElementById('ev-title').focus(),200);
+    });
+
+    // Blackout blocks for this day
+    const dayBlackouts=blackouts.filter(b=>b.day===d);
+    dayBlackouts.forEach(bo=>{
+      const startY=Math.max(0,(bo.startH-CAL_START)*PX_PER_HOUR);
+      const endY=Math.min(totalH,(bo.endH-CAL_START)*PX_PER_HOUR);
+      if(endY<=startY) return;
+      const boEl=document.createElement('div');
+      boEl.className=`blackout-block blackout-${bo.type}`;
+      boEl.style.cssText=`top:${startY}px;height:${endY-startY}px;left:2px;right:2px`;
+      boEl.innerHTML=`<span class="blackout-lbl">${bo.label}</span><button onclick="event.stopPropagation();removeBlackout('${bo.id}')" style="position:absolute;top:3px;right:4px;background:rgba(255,255,255,.6);border:none;border-radius:50%;width:14px;height:14px;cursor:pointer;font-size:8px;display:flex;align-items:center;justify-content:center;padding:0;line-height:1">×</button>`;
+      col.appendChild(boEl);
+    });
+
+    // Events for this day + city
+    const dayEvs=cityEvs.filter(e=>e.day_number===d);
+    dayEvs.forEach(ev=>{
+      const y=ev.time_slot?timeToY(ev.time_slot):null;
+      if(y===null||y<0||y>totalH) return; // unscheduled shown elsewhere
+      const dur=ev.duration_mins||60;
+      const h=Math.max(28,dur/60*PX_PER_HOUR);
+      const evEl=document.createElement('div');
+      evEl.className='cal-ev';
+      evEl.dataset.evId=ev.id;
+      evEl.dataset.day=d;
+      evEl.style.cssText=`top:${y}px;height:${h}px;left:4px;right:4px;z-index:10;background:linear-gradient(145deg,${ev.color||'#C8DCC8'},${darken(ev.color||'#C8DCC8')})`;
+      evEl.innerHTML=`
+        <div class="cal-ev-time">${ev.time_slot||''}</div>
+        <div style="display:flex;align-items:center;gap:4px;margin-top:1px">
+          <span class="cal-ev-emoji">${ev.emoji||'📍'}</span>
+          <span class="cal-ev-name">${esc(ev.title)}</span>
+        </div>
+        ${ev.is_locked?'<div style="position:absolute;top:4px;right:6px;font-size:9px">🔒</div>':''}
+        ${h>40?'<div class="cal-resize" data-ev-id="'+ev.id+'"></div>':''}`;
+
+      // Long press = edit
+      let lpTimer=null;
+      evEl.addEventListener('touchstart',()=>{lpTimer=setTimeout(()=>{openEditEvent(ev.id);},600);},{passive:true});
+      evEl.addEventListener('touchend',()=>clearTimeout(lpTimer));
+      evEl.addEventListener('touchmove',()=>clearTimeout(lpTimer),{passive:true});
+
+      // Touch drag
+      if(!ev.is_locked) addCalDrag(evEl, ev, col, cols, colW, days);
+
+      // Resize handle
+      const resizeHandle=evEl.querySelector('.cal-resize');
+      if(resizeHandle) addResizeDrag(resizeHandle, ev);
+
+      col.appendChild(evEl);
+    });
+
+    // Drop preview ghost
+    const preview=document.createElement('div');
+    preview.className='drop-preview';preview.style.height='54px';preview.style.top='0';
+    preview.id='drop-preview-'+d;
+    preview.textContent='+ Drop here';
+    col.appendChild(preview);
+
+    cols.appendChild(col);
+  });
+
+  // Now line
+  const now=new Date();
+  const nowH=now.getHours()+now.getMinutes()/60;
+  if(nowH>=CAL_START&&nowH<CAL_END){
+    const y=(nowH-CAL_START)*PX_PER_HOUR;
+    const nl=document.createElement('div');
+    nl.className='now-line';nl.style.top=y+'px';
+    nl.innerHTML='<div class="now-dot"></div><div class="now-bar"></div>';
+    cols.appendChild(nl);
+  }
+
+  // ── Unscheduled strip ──
+  renderUnscheduledStrip(cityEvs);
+
+  // Scroll to 8am by default
+  setTimeout(()=>{
+    const body=document.getElementById('cal-body');
+    if(body&&body.scrollTop===0) body.scrollTop=Math.max(0,(8-CAL_START)*PX_PER_HOUR-20);
+  },50);
+}
+
+function renderUnscheduledStrip(cityEvs){
+  const strip=document.getElementById('unscheduled-strip');
+  if(!strip) return;
+  strip.innerHTML='<span style="font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;flex-shrink:0">Unplaced</span>';
+  const scheduled=new Set(cityEvs.filter(e=>e.time_slot).map(e=>e.card_id).filter(Boolean));
   const cityCards=cards.filter(c=>{
     if(c._opt) return false;
     const city=c.city||(c.location||'').split(',')[0].trim()||'Unplaced';
     return city===curCity;
   });
-  const usedIds=new Set(events.filter(e=>e.city===curCity).map(e=>e.card_id).filter(Boolean));
-  if(!cityCards.length){sb2.innerHTML+=`<div style="font-size:11px;color:var(--muted);padding:8px 4px;line-height:1.6">No places for <b>${esc(curCity)}</b> yet.<br><br>Capture some first.</div>`;return;}
-  cityCards.forEach(c=>{
-    const isSel=selectedCard?.id===c.id,isUsed=usedIds.has(c.id);
-    const el=document.createElement('div');
-    el.className='place-tile'+(isSel?' sel':'')+(isUsed?' used':'');
-    el.innerHTML=`<div class="pt-ico">${c.emoji||'📍'}</div><div class="pt-name">${esc(c.title)}</div><div class="pt-loc">${esc(c.city||(c.location||'').split(',')[0])}</div>`;
-    el.onclick=()=>{
-      selectedCard=isSel?null:{id:c.id,title:c.title,emoji:c.emoji,location:c.location,tags:c.tags};
-      document.getElementById('planner-sub').textContent=selectedCard?`"${c.title.slice(0,20)}" selected — tap a slot`:'Tap a place · tap a slot to add';
-      renderSidebar();renderTimeline();
+  const unscheduled=cityCards.filter(c=>!scheduled.has(c.id));
+  const noTime=cityEvs.filter(e=>!e.time_slot);
+  let any=false;
+  unscheduled.forEach(card=>{
+    const chip=document.createElement('div');
+    chip.className='us-chip'+(selectedUnscheduled?.id===card.id?' sel':'');
+    chip.innerHTML=`<span>${card.emoji||'📍'}</span><span style="font-size:10px;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(card.title)}</span>`;
+    chip.onclick=()=>{
+      selectedUnscheduled=selectedUnscheduled?.id===card.id?null:{id:card.id,title:card.title,emoji:card.emoji,location:card.location,tags:card.tags,color:card.color};
+      renderUnscheduledStrip(cityEvs);
+      if(selectedUnscheduled) toast('Tap the timeline to place '+card.title);
     };
-    sb2.appendChild(el);
+    strip.appendChild(chip);
+    any=true;
+  });
+  if(!any) strip.innerHTML+='<span style="font-size:10px;color:var(--muted);font-style:italic">All placed ✓</span>';
+}
+
+async function addEventFromCard(card, day, timeStr){
+  const evPayload={
+    trip_id:tripId,day_number:day,city:curCity,card_id:card.id,
+    title:card.title,location:card.location||curCity,emoji:card.emoji||'📍',
+    tags:card.tags||[],color:card.color||'#C8DCC8',
+    is_highlight:false,sort_order:events.length,time_slot:timeStr,duration_mins:60
+  };
+  const{data,error}=await sb.from('itinerary_events').insert(evPayload).select().single();
+  if(error){toast('Could not add: '+error.message);return;}
+  events.push(data);
+  selectedUnscheduled=null;
+  toast(`${card.emoji||'📍'} ${card.title} → Day ${day} ${timeStr}`);
+  renderCalendar();
+}
+
+function addCalDrag(evEl, ev, col, cols, colW, days){
+  let startY=0, startX=0, startTop=0, startDay=ev.day_number, origTop=0;
+  let active=false, lpBlocked=false;
+
+  evEl.addEventListener('touchstart',e=>{
+    const t=e.touches[0];
+    startY=t.clientY; startX=t.clientX;
+    origTop=parseInt(evEl.style.top);
+    startTop=origTop; startDay=ev.day_number;
+    active=false; lpBlocked=false;
+  },{passive:true});
+
+  evEl.addEventListener('touchmove',e=>{
+    const t=e.touches[0];
+    const dy=t.clientY-startY;
+    const dx=t.clientX-startX;
+    if(!active&&Math.abs(dy)<4&&Math.abs(dx)<4) return;
+    e.preventDefault(); active=true; lpBlocked=true;
+    evEl.classList.add('dragging');
+    const rawY=origTop+dy;
+    const snappedY=Math.round(rawY/30)*30;
+    const clampedY=Math.max(0,Math.min((CAL_END-CAL_START)*PX_PER_HOUR-28,snappedY));
+    evEl.style.top=clampedY+'px';
+
+    // Horizontal: which day column?
+    const colsRect=cols.getBoundingClientRect();
+    const relX=t.clientX-colsRect.left+cols.parentElement.scrollLeft;
+    const newDayIdx=Math.max(0,Math.min(days.length-1,Math.floor(relX/colW)));
+    const newDay=days[newDayIdx];
+
+    // Show preview in target col if different day
+    days.forEach(d=>{
+      const p=document.getElementById('drop-preview-'+d);
+      if(!p) return;
+      if(d===newDay&&newDay!==ev.day_number){
+        p.style.top=clampedY+'px';p.style.height=(ev.duration_mins||60)/60*PX_PER_HOUR+'px';
+        p.classList.add('show');
+      } else {p.classList.remove('show');}
+    });
+  },{passive:false});
+
+  evEl.addEventListener('touchend',async e=>{
+    evEl.classList.remove('dragging');
+    days.forEach(d=>{document.getElementById('drop-preview-'+d)?.classList.remove('show');});
+    if(!active) return;
+    const finalTop=parseInt(evEl.style.top);
+    const newTime=yToTime(finalTop);
+
+    // Which day?
+    const touch=e.changedTouches[0];
+    const colsRect=cols.getBoundingClientRect();
+    const relX=touch.clientX-colsRect.left+cols.parentElement.scrollLeft;
+    const newDayIdx=Math.max(0,Math.min(days.length-1,Math.floor(relX/colW)));
+    const newDay=days[newDayIdx];
+
+    if(!newTime){evEl.style.top=origTop+'px';return;}
+    ev.time_slot=newTime;
+    ev.day_number=newDay;
+    await sb.from('itinerary_events').update({time_slot:newTime,day_number:newDay}).eq('id',ev.id);
+    renderCalendar();
   });
 }
 
-function renderDayBar(){
-  const bar=document.getElementById('day-bar');bar.innerHTML='';
-  const cityEvs=events.filter(e=>e.city===curCity);
-  // maxDay: highest of (events, curDay, stored max). Never shrinks when events deleted.
-  const evMax=cityEvs.length?Math.max(...cityEvs.map(e=>e.day_number)):1;
-  if(!window._maxDays) window._maxDays={};
-  const key=tripId+'_'+curCity;
-  window._maxDays[key]=Math.max(window._maxDays[key]||1, evMax, curDay);
-  const maxDay=window._maxDays[key];
-  for(let d=1;d<=maxDay;d++){
-    const el=document.createElement('div');
-    el.className='day-pill'+(d===curDay?' on':'')+(copilotCache[d]?' warn':'');
-    el.textContent='Day '+d;el.onclick=()=>{curDay=d;renderDayBar();renderDaySummary();renderTimeline();};
-    bar.appendChild(el);
-  }
-  const add=document.createElement('div');add.className='day-pill';
-  add.style.cssText='border-style:dashed;color:var(--green2);border-color:var(--green2)';
-  add.textContent='+ Day';
-  add.onclick=()=>{curDay=maxDay+1;renderDayBar();renderDaySummary();renderTimeline();toast('Day '+(maxDay+1)+' added');};
-  bar.appendChild(add);
-}
-
-function renderDaySummary(){
-  const summary=document.getElementById('day-summary');summary.innerHTML='';
-  const dayEvs=events.filter(e=>e.city===curCity&&e.day_number===curDay).sort((a,b)=>(a.time_slot||'99').localeCompare(b.time_slot||'99'));
-  if(!dayEvs.length){summary.innerHTML='<span style="color:var(--muted);font-size:11px">Empty day — tap a place to add</span>';return;}
-  const timedEvs=dayEvs.filter(e=>e.time_slot);
-  const first=timedEvs[0]?.time_slot,last=timedEvs[timedEvs.length-1]?.time_slot;
-  const locked=dayEvs.filter(e=>e.is_locked).length;
-  const stats=[
-    {label:'Stops',val:dayEvs.length},
-    first&&last?{label:'Hours',val:`${first}–${last}`}:null,
-    locked?{label:'Locked',val:locked+'🔒'}:null,
-  ].filter(Boolean);
-  stats.forEach(s=>{
-    const el=document.createElement('div');el.className='day-stat';
-    el.innerHTML=`<b>${s.val}</b> ${s.label}`;
-    summary.appendChild(el);
+function addResizeDrag(handle, ev){
+  let startY=0, startDur=0;
+  handle.addEventListener('touchstart',e=>{
+    e.stopPropagation();
+    startY=e.touches[0].clientY;
+    startDur=ev.duration_mins||60;
+  },{passive:true});
+  handle.addEventListener('touchmove',e=>{
+    e.stopPropagation(); e.preventDefault();
+    const dy=e.touches[0].clientY-startY;
+    const newDur=Math.max(15,Math.round((startDur+dy/PX_PER_HOUR*60)/15)*15);
+    const evEl=handle.closest('.cal-ev');
+    if(evEl) evEl.style.height=Math.max(28,newDur/60*PX_PER_HOUR)+'px';
+    ev.duration_mins=newDur;
+  },{passive:false});
+  handle.addEventListener('touchend',async e=>{
+    e.stopPropagation();
+    await sb.from('itinerary_events').update({duration_mins:ev.duration_mins}).eq('id',ev.id);
   });
 }
 
-function renderTimeline(){
-  const tl=document.getElementById('timeline');tl.innerHTML='';
-  const dayEvs=events.filter(e=>e.city===curCity&&e.day_number===curDay).sort((a,b)=>{
-    if(a.time_slot&&b.time_slot) return a.time_slot.localeCompare(b.time_slot);
-    if(a.time_slot) return -1;if(b.time_slot) return 1;
-    return a.sort_order-b.sort_order;
-  });
-  const sections=[
-    {id:'morning',label:'Morning',from:'00:00',to:'12:00'},
-    {id:'afternoon',label:'Afternoon',from:'12:00',to:'18:00'},
-    {id:'evening',label:'Evening',from:'18:00',to:'24:00'},
-    {id:'flex',label:'Unscheduled',from:null,to:null},
+function openEditEvent(id){
+  const ev=events.find(e=>e.id===id);if(!ev) return;
+  // Reuse ev-modal but pre-fill
+  document.getElementById('ev-title').value=ev.title||'';
+  document.getElementById('ev-loc').value=ev.location||'';
+  document.getElementById('ev-time').value=ev.time_slot||'';
+  evDay=ev.day_number;
+  openModal('ev-modal');
+}
+
+function addBlackoutSheet(){
+  const types=[
+    {id:'sleep',emoji:'😴',label:'Sleep',startH:23,endH:30},
+    {id:'gym',emoji:'🏋️',label:'Training / Gym',startH:7,endH:9},
+    {id:'chill',emoji:'☕',label:'Chill & buffer',startH:14,endH:16},
   ];
-  let anyContent=false;
-  sections.forEach(sec=>{
-    const secEvs=sec.from===null?dayEvs.filter(e=>!e.time_slot):dayEvs.filter(e=>e.time_slot&&e.time_slot>=sec.from&&e.time_slot<sec.to);
-    if(!secEvs.length&&!selectedCard) return;
-    anyContent=true;
-    const lbl=document.createElement('div');lbl.className='tl-label';lbl.textContent=sec.label;tl.appendChild(lbl);
-    secEvs.forEach((ev,i)=>tl.appendChild(makeEvRow(ev,i===secEvs.length-1&&!selectedCard)));
-    if(selectedCard){const slot=makeDropSlot(sec.id);tl.appendChild(slot);}
-  });
-  if(!anyContent){
-    if(selectedCard){
-      sections.forEach(sec=>{
-        const lbl=document.createElement('div');lbl.className='tl-label';lbl.textContent=sec.label;tl.appendChild(lbl);
-        tl.appendChild(makeDropSlot(sec.id));
-      });
-    } else {
-      tl.innerHTML=`<div class="empty" style="padding-top:28px"><div class="empty-ico">🗓</div><div class="empty-h">Day ${curDay} is empty</div><div class="empty-p">Tap a place on the left, then tap a time slot to add it.</div></div>`;
-    }
-  }
-  const addBtn=document.createElement('button');addBtn.className='add-stop-btn';addBtn.textContent='+ Add stop manually';
-  addBtn.onclick=()=>{evDay=curDay;openModal('ev-modal');setTimeout(()=>document.getElementById('ev-title').focus(),200);};
-  tl.appendChild(addBtn);
+  const html=types.map(t=>`
+    <div onclick="addBlackout('${t.id}','${t.emoji} ${t.label}',${t.startH},${t.endH})" style="display:flex;align-items:center;gap:12px;padding:13px 15px;border-radius:var(--rs);border:1.5px solid var(--b1);background:var(--cream);cursor:pointer;margin-bottom:7px">
+      <span style="font-size:22px">${t.emoji}</span>
+      <div><div style="font-weight:600;font-size:14px">${t.label}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">${t.startH>23?'11pm':t.startH+':00'} → ${t.endH>=24?'7am':t.endH+':00'} · Day ${curDay}</div></div>
+    </div>`).join('');
+  const bg=document.createElement('div');
+  bg.className='modal-bg on';bg.id='blackout-sheet';
+  bg.innerHTML=`<div class="modal"><div class="modal-h">Block time — Day ${curDay}</div>${html}<button class="m-btn sec" onclick="document.getElementById('blackout-sheet').remove()" style="width:100%;margin-top:4px">Cancel</button></div>`;
+  bg.onclick=e=>{if(e.target===bg)bg.remove();};
+  document.querySelector('.shell').appendChild(bg);
 }
 
-async function reorderEvents(dragId, targetId){
-  // city column may not exist — fall back to day_number only
-  const dayEvs=events.filter(e=>e.day_number===curDay&&(e.city===curCity||!e.city||e.city===null)).sort((a,b)=>(a.sort_order||0)-(b.sort_order||0));
-  const dragIdx=dayEvs.findIndex(e=>e.id===dragId);
-  const targetIdx=dayEvs.findIndex(e=>e.id===targetId);
-  if(dragIdx<0||targetIdx<0) return;
-  const moved=dayEvs.splice(dragIdx,1)[0];
-  dayEvs.splice(targetIdx,0,moved);
-  dayEvs.forEach((ev,i)=>ev.sort_order=i);
-  renderTimeline();
-  await Promise.all(dayEvs.map(ev=>sb.from('itinerary_events').update({sort_order:ev.sort_order}).eq('id',ev.id)));
+function addBlackout(type,label,startH,endH){
+  document.getElementById('blackout-sheet')?.remove();
+  const id=type+'_'+curDay+'_'+Date.now();
+  blackouts.push({id,type,day:curDay,startH,endH,label});
+  renderCalendar();
+  toast('Block added to Day '+curDay);
 }
 
-function makeDropSlot(sectionId){
-  const el=document.createElement('div');
-  el.className='drop-slot'+(selectedCard?' ready':'');
-  el.textContent=selectedCard?'↓ Tap to add here':'+ Drop a place here';
-  el.onclick=()=>{if(selectedCard) placeCard(sectionId);};
-  return el;
+function removeBlackout(id){
+  blackouts=blackouts.filter(b=>b.id!==id);
+  renderCalendar();
 }
 
-function makeEvRow(ev,isLast){
-  const row=document.createElement('div');row.className='ev-row';
-  row.draggable=!ev.is_locked;
-  row.dataset.evId=ev.id;
-  row.addEventListener('dragstart',e=>{if(ev.is_locked){e.preventDefault();return;}e.dataTransfer.setData('text/plain',ev.id);row.classList.add('dragging');});
-  row.addEventListener('dragend',()=>row.classList.remove('dragging'));
-  row.addEventListener('dragover',e=>{e.preventDefault();row.classList.add('drag-over');});
-  row.addEventListener('dragleave',()=>row.classList.remove('drag-over'));
-  row.addEventListener('drop',e=>{e.preventDefault();row.classList.remove('drag-over');const dragId=e.dataTransfer.getData('text/plain');if(dragId&&dragId!==ev.id) reorderEvents(dragId,ev.id);});
-  const isLocked=ev.is_locked;
-  const addedBy=ev.added_by_name||(ev.added_by===user?.id?user.email?.split('@')[0]:'');
-  row.innerHTML=`
-    <div class="drag-handle" draggable="false">⠿</div>
-    <div class="ev-time-col"><span class="ev-time-lbl">${ev.time_slot||''}</span></div>
-    <div class="ev-line"><div class="ev-dot ${isLocked?'locked':''}"></div>${!isLast?'<div class="ev-track"></div>':''}</div>
-    <div class="ev-card ${ev.is_highlight?'hi':''} ${isLocked?'locked-card':''}">
-      <div class="ev-name">${esc(ev.emoji||'📍')} ${esc(ev.title)}</div>
-      ${ev.location?`<div class="ev-loc">${esc(ev.location)}</div>`:''}
-      <div class="ev-tags">${(ev.tags||[]).map(t=>`<span class="tag t-${t}">${t}</span>`).join('')}</div>
-      ${addedBy?`<div class="ev-who">Added by ${esc(addedBy)}</div>`:''}
-      ${vault.some(v=>v.name.toLowerCase().includes(ev.title.toLowerCase().slice(0,8)))?`<div class="ev-who" style="color:var(--accent);font-style:normal">📎 Booking on file</div>`:''}
-      <input class="ev-time-in" type="time" value="${ev.time_slot||''}" placeholder="Set time"
-        onchange="updateEvTime('${ev.id}',this.value)" onclick="event.stopPropagation()">
-      <div class="ev-actions" style="display:flex;gap:3px;align-items:center">
-        <button class="ev-del-btn" style="font-size:10px;width:22px;height:22px;opacity:.6" onclick="event.stopPropagation();moveEventDay('${ev.id}',-1)" title="Move to previous day">◀</button>
-        <button class="ev-del-btn" style="font-size:10px;width:22px;height:22px;opacity:.6" onclick="event.stopPropagation();moveEventDay('${ev.id}',1)" title="Move to next day">▶</button>
-        <button class="ev-del-btn" style="font-size:11px;width:22px;height:22px;color:var(--accent);font-weight:700" onclick="event.stopPropagation();unplaceEvent('${ev.id}')" title="Return to sidebar — keep the card">↩</button>
-        <button class="ev-lock ${isLocked?'locked':''}" onclick="event.stopPropagation();toggleLock('${ev.id}')" title="${isLocked?'Unlock':'Lock'}">${isLocked?'🔒':'🔓'}</button>
-        <button class="ev-del-btn" style="color:var(--red)" onclick="event.stopPropagation();deleteEvent('${ev.id}')">✕</button>
-      </div>
-    </div>`;
-  return row;
-}
+// Keep these stubs for backward compat with trip mode / other callers
+function renderPlanner(){renderCalendar();}
+function renderDayBar(){}
+function renderDaySummary(){}
+function renderTimeline(){renderCalendar();}
+function renderSidebar(){}
 
 async function toggleLock(id){
   const ev=events.find(e=>e.id===id);if(!ev) return;
@@ -2420,25 +3162,123 @@ function updateEmergencyCard(){
 
 function renderVault(docs){
   const list=document.getElementById('doc-list');list.innerHTML='';
-  const BS={sky:'background:#EFF6FF;color:#1E40AF',warn:'background:#FEF3C7;color:#78350F',accent:'background:#E6F0EA;color:#1B4332',muted:'background:#F0EAE0;color:#78716C'};
   if(!docs.length){
     list.innerHTML=`<div class="empty"><div class="empty-ico">📂</div><div class="empty-h">No bookings yet</div><div class="empty-p">Add your flight, hotel, and confirmation numbers — then ask Porter to find anything instantly.</div></div>`;
     return;
   }
   docs.forEach((d,i)=>{
-    const el=document.createElement('div');el.className='doc-item';el.style.animationDelay=(i*.04)+'s';
+    const el=document.createElement('div');
+    el.className='doc-item';el.style.animationDelay=(i*.04)+'s';el.style.cursor='pointer';
+    el.onclick=()=>openBookingDetail(d);
+
+    // Build smart sub-line from rich fields
+    const subParts=[];
+    if(d.booking_time) subParts.push('🕐 '+fmtTime(d.booking_time));
+    if(d.party_size) subParts.push('👥 '+d.party_size);
+    if(d.duration_mins) subParts.push('⏱ '+(d.duration_mins/60)+'hr limit');
+    if(d.res_number) subParts.push('# '+d.res_number);
+    if(d.platform) subParts.push('via '+d.platform);
+    const subLine=subParts.length?subParts.join(' · '):(d.meta_text||'');
+
+    // Day link
+    const dayMatch=events.find(e=>e.title.toLowerCase().includes((d.name||'').toLowerCase().slice(0,8)));
+    const hasAttach=!!(d.attachment_data);
+
     el.innerHTML=`
       <div class="doc-icon">${d.icon||'📄'}</div>
       <div class="doc-info">
-        <div class="doc-name">${esc(d.name)}</div>
-        <div class="doc-meta">${esc(d.meta_text||'')}</div>
-        ${(()=>{const dayMatch=events.find(e=>e.title.toLowerCase().includes(d.name.toLowerCase().slice(0,8)));return dayMatch?`<div style="font-size:10px;color:var(--accent);font-weight:500;margin-top:2px">📅 Linked to Day ${dayMatch.day_number}</div>`:''})()}
+        <div class="doc-name" style="display:flex;align-items:center;gap:6px">
+          ${esc(d.name)}
+          ${hasAttach?'<span style="font-size:9px;background:var(--accent-s);color:var(--accent);border-radius:4px;padding:1px 5px;border:1px solid var(--accent-b)">📎</span>':''}
+        </div>
+        ${subLine?`<div class="doc-meta">${esc(subLine)}</div>`:''}
+        ${dayMatch?`<div style="font-size:10px;color:var(--accent);font-weight:500;margin-top:2px">📅 Day ${dayMatch.day_number}</div>`:''}
         ${d.uploader_name?`<div class="doc-who">Added by ${esc(d.uploader_name)}</div>`:''}
       </div>
-      <span class="doc-badge" style="${BS[d.badge_color]||BS.muted}">${esc(d.doc_type||'Doc')}</span>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <span class="doc-badge" style="background:var(--accent-s);color:var(--accent);border:1px solid var(--accent-b)">${esc(d.doc_type||'Doc')}</span>
+        ${d.booking_time?`<span style="font-size:10px;font-weight:700;color:var(--ink2)">${fmtTime(d.booking_time)}</span>`:''}
+      </div>
       <button class="doc-del" onclick="event.stopPropagation();deleteDoc('${d.id}')">✕</button>`;
     list.appendChild(el);
   });
+}
+
+function fmtTime(t){
+  if(!t) return '';
+  try{
+    const[h,m]=t.split(':').map(Number);
+    const ampm=h>=12?'pm':'am';
+    const h12=h%12||12;
+    return h12+(m>0?':'+String(m).padStart(2,'0'):'')+ampm;
+  }catch{return t;}
+}
+
+let _detailDocId=null;
+
+function openBookingDetail(d){
+  _detailDocId=d.id;
+  document.getElementById('bd-icon').textContent=d.icon||'📄';
+  document.getElementById('bd-name').textContent=d.name||'—';
+  document.getElementById('bd-type').textContent=d.doc_type||'Booking';
+
+  // Build structured grid
+  const grid=document.getElementById('bd-grid');grid.innerHTML='';
+  const cells=[
+    d.booking_time&&{label:'Time',val:fmtTime(d.booking_time),ico:'🕐'},
+    d.party_size&&{label:'Party',val:d.party_size+' '+(d.party_size===1?'person':'people'),ico:'👥'},
+    d.duration_mins&&{label:'Dining limit',val:(d.duration_mins/60)+'hr',ico:'⏱'},
+    d.res_number&&{label:'Reservation #',val:d.res_number,ico:'🎫'},
+    d.platform&&{label:'Booked through',val:d.platform,ico:'🔗'},
+    d.uploader_name&&{label:'Added by',val:d.uploader_name,ico:'👤'},
+  ].filter(Boolean);
+
+  cells.forEach(cell=>{
+    const el=document.createElement('div');
+    el.style.cssText='background:var(--bg);border-radius:var(--rx);padding:10px 12px';
+    el.innerHTML=`<div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">${cell.ico} ${cell.label}</div><div style="font-size:13px;font-weight:600;color:var(--ink)">${esc(cell.val)}</div>`;
+    grid.appendChild(el);
+  });
+
+  // Notes
+  const meta=d.meta_text||'';
+  const notesWrap=document.getElementById('bd-notes-wrap');
+  if(meta&&notesWrap){notesWrap.style.display='block';document.getElementById('bd-notes').textContent=meta;}
+  else if(notesWrap){notesWrap.style.display='none';}
+
+  // Attachment preview
+  const attachWrap=document.getElementById('bd-attach-wrap');
+  if(d.attachment_data&&attachWrap){
+    attachWrap.style.display='block';
+    const prev=document.getElementById('bd-attach-preview');
+    if(d.attachment_data.startsWith('data:image')){
+      prev.innerHTML=`<img src="${d.attachment_data}" style="width:100%;max-height:200px;object-fit:contain;display:block">`;
+    } else {
+      prev.innerHTML=`<div style="padding:16px;text-align:center;font-size:13px;color:var(--muted)">📄 PDF attached<br><span style="font-size:11px">Cannot preview — ref: ${esc(d.res_number||'see details')}</span></div>`;
+    }
+  } else if(attachWrap){attachWrap.style.display='none';}
+
+  document.getElementById('bd-who').textContent=d.uploader_name?'Added by '+d.uploader_name+' · visible to entire crew':'Visible to entire crew';
+  openModal('booking-detail-modal');
+}
+
+function editBookingFromDetail(){
+  closeModal('booking-detail-modal');
+  // Pre-fill add modal with existing doc data
+  const d=vault.find(v=>v.id===_detailDocId);if(!d) return;
+  selDT({classList:{add:()=>{},contains:()=>true,forEach:()=>{}}},d.doc_type||'Other',d.icon||'📄');
+  document.getElementById('doc-name').value=d.name||'';
+  document.getElementById('doc-res-number').value=d.res_number||'';
+  document.getElementById('doc-time').value=d.booking_time||'';
+  document.getElementById('doc-pax').value=d.party_size||'';
+  document.getElementById('doc-platform').value=d.platform||'';
+  document.getElementById('doc-meta').value=d.meta_text||'';
+  openModal('doc-modal');
+}
+
+function deleteDocFromDetail(){
+  closeModal('booking-detail-modal');
+  if(_detailDocId) deleteDoc(_detailDocId);
 }
 
 async function deleteDoc(id){
@@ -2462,10 +3302,11 @@ function switchVaultTab(tab){
 
 async function loadExpenses(){
   if(!tripId) return;
+  // Silently skip if trip_expenses table doesn't exist yet
   try{
-    const{data}=await sb.from('trip_expenses').select('*').eq('trip_id',tripId).order('created_at',{ascending:false});
-    expenses=data||[];
-  }catch(e){expenses=[];}  // table may not exist yet
+    const{data,error}=await sb.from('trip_expenses').select('*').eq('trip_id',tripId).order('created_at',{ascending:false});
+    if(!error) expenses=data||[];
+  }catch(e){ expenses=[]; }
 }
 
 function renderExpenses(){
@@ -2568,7 +3409,7 @@ async function extractFromEmail(){
   try{
     const res=await fetch(AI_PROXY,{method:'POST',headers:AI_H,body:JSON.stringify({
       model:AI_MODEL,max_tokens:200,
-      system:'Extract booking details from this email. Return ONLY JSON: {"type":"Flight|Hotel|Event|Insurance|Transport|Other","name":"booking name/airline/hotel","details":"key details: dates, conf number, address, check-in, flight number, times in 2-3 sentences","emoji":"one emoji"}',
+      system:'Extract booking details from this email. Return ONLY valid JSON, no markdown:\n{"type":"Restaurant|Flight|Hotel|Event|Transport|Other","name":"venue/airline/hotel name","emoji":"one emoji","res_number":"confirmation or reservation number","booking_time":"HH:MM 24h format or null","duration_mins":"dining time limit in minutes as integer or null","party_size":"number of people as integer or null","platform":"booking platform e.g. OpenTable, Klook, airline website, or null","details":"address, dates, check-in, flight number, key details in 1-2 sentences"}',
       messages:[{role:'user',content:`Email: "${text.slice(0,2000)}"`}]
     })});
     const d=await res.json();
@@ -2579,12 +3420,26 @@ async function extractFromEmail(){
     docEmailParsed=parsed;
     docType=parsed.type||'Other';
     docIcon=parsed.emoji||'📄';
+    // Auto-populate all structured fields
+    if(parsed.name) document.getElementById('doc-name').value=parsed.name;
+    if(parsed.res_number) document.getElementById('doc-res-number').value=parsed.res_number;
+    if(parsed.booking_time) document.getElementById('doc-time').value=parsed.booking_time;
+    if(parsed.duration_mins){const sel=document.getElementById('doc-duration');if(sel) sel.value=String(parsed.duration_mins);}
+    if(parsed.party_size){const sel=document.getElementById('doc-pax');if(sel) sel.value=String(parsed.party_size);}
+    if(parsed.platform) document.getElementById('doc-platform').value=parsed.platform;
+    if(parsed.details) document.getElementById('doc-meta').value=parsed.details;
+    // Preview summary
     const preview=document.getElementById('extract-preview');
+    const parts=[];
+    if(parsed.booking_time) parts.push('🕐 '+fmtTime(parsed.booking_time));
+    if(parsed.party_size) parts.push('👥 '+parsed.party_size+' people');
+    if(parsed.duration_mins) parts.push('⏱ '+(parsed.duration_mins/60)+'hr limit');
+    if(parsed.res_number) parts.push('# '+parsed.res_number);
+    if(parsed.platform) parts.push('via '+parsed.platform);
     preview.style.display='block';
-    preview.innerHTML=`<strong>${parsed.emoji||'📄'} ${esc(parsed.name)}</strong><br><span style="color:var(--muted)">${esc(parsed.details)}</span>`;
-    document.getElementById('doc-name').value=parsed.name||'';
-    document.getElementById('doc-meta').value=parsed.details||'';
-    btn.textContent='✓ Extracted — tap Save';
+    preview.innerHTML=`<strong>${parsed.emoji||'📄'} ${esc(parsed.name)}</strong>${parts.length?'<br>'+parts.join(' · '):''}${parsed.details?'<br><span style="color:var(--muted);font-size:11px">'+esc(parsed.details)+'</span>':''}`;
+    switchDocTab('manual'); // switch to manual so they can see & verify filled fields
+    btn.textContent='✓ Extracted — review & save';
   }catch(e){toast('AI extraction failed: '+e.message);}
   btn.disabled=false;
 }
@@ -2595,24 +3450,75 @@ function setVF(el){
 }
 function selDT(el,type,icon){docType=type;docIcon=icon;document.querySelectorAll('.doc-type-btn').forEach(d=>d.classList.remove('on'));el.classList.add('on');}
 
+let docAttachmentData = null; // base64 attachment
+
+function handleAttachment(input){
+  const file=input.files?.[0];if(!file) return;
+  const maxMB=4;
+  if(file.size>maxMB*1024*1024){toast('File too large — max 4MB');return;}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    docAttachmentData=e.target.result; // data URL
+    const ico=document.getElementById('attach-ico');
+    const lbl=document.getElementById('attach-lbl');
+    if(file.type.startsWith('image/')){
+      if(ico) ico.innerHTML=`<img src="${docAttachmentData}" style="width:100%;height:60px;object-fit:cover;border-radius:6px">`;
+      if(lbl) lbl.textContent='✓ '+file.name;
+    } else {
+      if(ico) ico.textContent='📄';
+      if(lbl) lbl.textContent='✓ '+file.name;
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
 async function saveDoc(){
   const name=document.getElementById('doc-name').value.trim();
-  const meta=document.getElementById('doc-meta').value.trim();
+  const meta=document.getElementById('doc-meta')?.value.trim()||'';
+  const resNum=document.getElementById('doc-res-number')?.value.trim()||'';
+  const time=document.getElementById('doc-time')?.value||'';
+  const duration=document.getElementById('doc-duration')?.value||'';
+  const pax=document.getElementById('doc-pax')?.value||'';
+  const platform=document.getElementById('doc-platform')?.value.trim()||'';
   if(!name){toast('Enter a name');return;}
   closeModal('doc-modal');
   const displayName=user.email?.split('@')[0]||'You';
-  const{data,error}=await sb.from('vault_documents').insert({
+  // Build rich meta_text for backward compat
+  const parts=[resNum&&'Ref: '+resNum, time&&'Time: '+time, pax&&'Party: '+pax, duration&&(parseInt(duration)/60)+'hr limit', platform&&'via '+platform, meta].filter(Boolean);
+  const metaText=parts.join(' · ');
+  const payload={
     trip_id:tripId,uploaded_by:user.id,
-    name,doc_type:docType,meta_text:meta,icon:docIcon,badge_color:'muted',
-    uploader_name:displayName
-  }).select().single();
-  if(error){toast('Could not save: '+error.message);return;}
-  vault.unshift(data);renderVault(vault);updateEmergencyCard();
+    name,doc_type:docType,meta_text:metaText,icon:docIcon,badge_color:'muted',
+    uploader_name:displayName,
+    res_number:resNum||null,
+    booking_time:time||null,
+    duration_mins:duration?parseInt(duration):null,
+    party_size:pax?parseInt(pax):null,
+    platform:platform||null,
+    attachment_data:docAttachmentData||null,
+  };
+  // Graceful fallback if new columns don't exist
+  const{data,error}=await sb.from('vault_documents').insert(payload).select().single();
+  if(error){
+    if(error.message?.includes('column')){
+      // Retry with only base columns
+      const{data:d2,error:e2}=await sb.from('vault_documents').insert({
+        trip_id:tripId,uploaded_by:user.id,name,doc_type:docType,
+        meta_text:metaText,icon:docIcon,badge_color:'muted',uploader_name:displayName
+      }).select().single();
+      if(e2){toast('Could not save: '+e2.message);return;}
+      vault.unshift(d2);
+    } else {toast('Could not save: '+error.message);return;}
+  } else {vault.unshift(data);}
+  renderVault(vault);updateEmergencyCard();
   document.getElementById('vault-badge').classList.add('on');
-  toast(name+' saved ✓ · visible to your whole crew');
-  docEmailParsed=null;
+  toast(docIcon+' '+name+' saved · crew can see this');
+  // Reset
+  docEmailParsed=null; docAttachmentData=null;
   document.getElementById('email-paste').value='';
   document.getElementById('extract-preview').style.display='none';
+  const attachIco=document.getElementById('attach-ico');if(attachIco) attachIco.textContent='📎';
+  const attachLbl=document.getElementById('attach-lbl');if(attachLbl) attachLbl.textContent='Tap to attach confirmation screenshot or PDF';
   switchDocTab('manual');
 }
 
