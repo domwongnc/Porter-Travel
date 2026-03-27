@@ -700,6 +700,16 @@ button,input,textarea{font-family:var(--font)}
         <button class="add-btn" id="cap-btn" onclick="capture()">Add</button>
       </div>
     </div>
+    <!-- DISCOVER STRIP -->
+    <div id="discover-strip" style="margin:0 20px 8px;background:linear-gradient(135deg,var(--accent) 0%,#1A4A38 100%);border-radius:var(--r);padding:13px 16px;flex-shrink:0;display:none">
+      <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:5px">✦ Discover places</div>
+      <div style="font-family:var(--serif);font-size:14px;font-style:italic;color:#fff;line-height:1.3;margin-bottom:10px" id="discover-strip-title">Not sure where to start?</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button onclick="openDiscover('top10')" style="padding:5px 11px;border-radius:99px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);font-size:10px;font-weight:600;cursor:pointer;font-family:var(--font)">🗺 Top 10 lists</button>
+        <button onclick="openDiscover('day')" style="padding:5px 11px;border-radius:99px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);font-size:10px;font-weight:600;cursor:pointer;font-family:var(--font)">🌅 Build a day</button>
+        <button onclick="openDiscover('gaps')" style="padding:5px 11px;border-radius:99px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);font-size:10px;font-weight:600;cursor:pointer;font-family:var(--font)">🔍 What am I missing?</button>
+      </div>
+    </div>
     <div class="chips">
       <div class="chip on" data-f="all" onclick="setFilter(this)">All</div>
       <div class="chip" data-f="eat" onclick="setFilter(this)">🍜 Eat</div>
@@ -777,20 +787,20 @@ button,input,textarea{font-family:var(--font)}
         <!-- Day headers (scrolls with grid horizontally) -->
         <div style="display:flex;position:sticky;top:0;z-index:30;background:var(--card);border-bottom:1px solid var(--b1)">
           <div style="width:44px;flex-shrink:0"></div><!-- gutter spacer -->
-          <div id="cal-day-headers" style="display:flex;flex:1;overflow:hidden"></div>
+          <div id="cal-day-headers" style="display:flex;overflow:hidden;flex:1" id="cal-header-scroll"></div>
         </div>
         <!-- Scrollable body -->
-        <div id="cal-body" style="display:flex;overflow-y:auto;overflow-x:auto;flex:1;scrollbar-width:thin;scrollbar-color:var(--b2) transparent">
+        <div id="cal-body" style="display:flex;overflow-y:auto;overflow-x:auto;flex:1;scrollbar-width:thin;scrollbar-color:var(--b2) transparent" onscroll="syncCalScroll(this)">
           <!-- Time gutter (scrolls vertically, fixed left) -->
           <div id="cal-gutter" style="width:44px;flex-shrink:0;position:sticky;left:0;z-index:20;background:var(--card);border-right:1px solid var(--b1)"></div>
           <!-- Day columns -->
-          <div id="cal-cols" style="display:flex;flex:1;position:relative"></div>
+          <div id="cal-cols" style="position:relative;flex-shrink:0"></div>
         </div>
       </div>
       <!-- Add blackout / add stop footer -->
       <div style="display:flex;gap:8px;padding:8px 14px;border-top:1px solid var(--b1);background:var(--card);flex-shrink:0">
         <button onclick="addBlackoutSheet()" style="flex:1;padding:8px;border-radius:var(--rs);border:1.5px dashed var(--b2);background:transparent;font-size:11px;color:var(--muted);cursor:pointer;font-family:var(--font)">+ Block time</button>
-        <button onclick="evDay=curDay;openModal('ev-modal');setTimeout(()=>document.getElementById('ev-title').focus(),200)" style="flex:1;padding:8px;border-radius:var(--rs);border:1.5px solid var(--accent-b);background:var(--accent-s);font-size:11px;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--font)">+ Add stop</button>
+        <button onclick="openSmartAddStop(curDay,null)" style="flex:1;padding:8px;border-radius:var(--rs);border:1.5px solid var(--accent-b);background:var(--accent-s);font-size:11px;color:var(--accent);font-weight:600;cursor:pointer;font-family:var(--font)">+ Add stop</button>
       </div>
     </div>
   </div>
@@ -1007,6 +1017,58 @@ button,input,textarea{font-family:var(--font)}
     </div>
   </div>
 
+  <!-- DISCOVER DRAWER -->
+  <div class="chat-drawer" id="discover-drawer" style="background:var(--cream)">
+    <!-- Header -->
+    <div class="chat-hd" style="flex-direction:column;align-items:stretch;gap:0;padding-bottom:0">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span class="chat-hd-back" onclick="closeDiscover()">←</span>
+        <div class="chat-hd-info">
+          <div class="chat-hd-name" id="discover-title">Discover</div>
+          <div class="chat-hd-sub" id="discover-sub">—</div>
+        </div>
+        <span id="discover-on-list-count" style="font-size:10px;font-weight:600;color:var(--accent);background:var(--accent-s);border:1px solid var(--accent-b);border-radius:99px;padding:3px 9px;white-space:nowrap"></span>
+      </div>
+      <!-- Mode tabs -->
+      <div style="display:flex;gap:0;border-top:1px solid var(--b1)">
+        <button id="disc-tab-top10" onclick="setDiscoverTab('top10')" style="flex:1;padding:8px;border:none;border-bottom:2px solid var(--accent);background:transparent;font-size:11px;font-weight:700;color:var(--accent);cursor:pointer;font-family:var(--font)">Top 10</button>
+        <button id="disc-tab-day" onclick="setDiscoverTab('day')" style="flex:1;padding:8px;border:none;border-bottom:2px solid transparent;background:transparent;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;font-family:var(--font)">Build a day</button>
+        <button id="disc-tab-gaps" onclick="setDiscoverTab('gaps')" style="flex:1;padding:8px;border:none;border-bottom:2px solid transparent;background:transparent;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;font-family:var(--font)">Gaps</button>
+      </div>
+    </div>
+
+    <!-- Top 10 view -->
+    <div id="disc-top10-view" style="flex:1;overflow-y:auto;padding:12px 20px;display:flex;flex-direction:column;gap:8px;scrollbar-width:none">
+      <div id="disc-top10-content"></div>
+    </div>
+
+    <!-- Day builder view -->
+    <div id="disc-day-view" style="flex:1;overflow-y:auto;padding:12px 20px;display:none;flex-direction:column;gap:8px;scrollbar-width:none">
+      <!-- Theme picker (initial state) -->
+      <div id="disc-theme-picker">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">Pick a vibe — Porter picks places that flow together geographically and thematically.</div>
+        <div id="disc-themes" style="display:flex;flex-direction:column;gap:7px"></div>
+      </div>
+      <!-- Day results (after theme picked) -->
+      <div id="disc-day-results" style="display:none;flex-direction:column;gap:0"></div>
+    </div>
+
+    <!-- Gaps view -->
+    <div id="disc-gaps-view" style="flex:1;overflow-y:auto;padding:12px 20px;display:none;flex-direction:column;gap:8px;scrollbar-width:none">
+      <div id="disc-gaps-content"></div>
+    </div>
+
+    <!-- Loading state -->
+    <div id="disc-loading" style="display:none;flex:1;align-items:center;justify-content:center;flex-direction:column;gap:12px">
+      <div style="display:flex;gap:5px">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--accent);animation:blink 1.2s infinite"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--accent);animation:blink 1.2s .2s infinite"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--accent);animation:blink 1.2s .4s infinite"></div>
+      </div>
+      <div id="disc-loading-txt" style="font-size:13px;color:var(--muted)">Porter is researching…</div>
+    </div>
+  </div>
+
   <!-- INVITE MODAL -->
   <div class="modal-bg" id="invite-modal">
     <div class="modal">
@@ -1095,15 +1157,105 @@ button,input,textarea{font-family:var(--font)}
   </div>
 
   <!-- ADD STOP MODAL -->
+  <!-- SMART ADD STOP MODAL -->
   <div class="modal-bg" id="ev-modal">
     <div class="modal">
-      <div class="modal-h">Add a stop</div>
-      <input class="m-in" id="ev-title" placeholder="Place name" autocomplete="off">
-      <input class="m-in" id="ev-loc" placeholder="Location (optional)">
-      <input class="m-in" id="ev-time" type="time">
+      <div class="modal-h" id="ev-modal-title">Add a stop</div>
+      <!-- AI-powered search like Capture -->
+      <div id="ev-add-mode">
+        <div style="background:var(--accent-s);border:1.5px solid var(--accent-b);border-radius:var(--rs);padding:10px 13px;margin-bottom:12px;font-size:12px;color:var(--mid);line-height:1.6">
+          ✦ Type a place — Porter finds it. Or switch to manual if it's a proposal or private event.
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <input class="m-in" id="ev-search" placeholder="e.g. Icebergs, Sydney Tower, morning yoga…" autocomplete="off" style="flex:1;margin-bottom:0" oninput="evSearchPreview(this.value)">
+          <button onclick="switchEvMode('manual')" style="padding:0 12px;border-radius:var(--rx);border:1.5px solid var(--b1);background:var(--bg);color:var(--muted);font-size:11px;cursor:pointer;white-space:nowrap;font-family:var(--font)">Manual</button>
+        </div>
+        <!-- AI preview result -->
+        <div id="ev-search-result" style="display:none;background:var(--card);border-radius:var(--rs);border:1.5px solid var(--accent-b);overflow:hidden;margin-bottom:10px">
+          <div style="display:flex;align-items:center;gap:10px;padding:11px 13px">
+            <div id="ev-result-ico" style="font-size:26px">📍</div>
+            <div style="flex:1">
+              <div id="ev-result-name" style="font-family:var(--serif);font-size:14px;font-style:italic;color:var(--ink)">—</div>
+              <div id="ev-result-loc" style="font-size:11px;color:var(--muted);margin-top:2px">—</div>
+              <div id="ev-result-tags" style="display:flex;gap:4px;margin-top:5px;flex-wrap:wrap"></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:0;border-top:1px solid var(--b1)">
+            <button onclick="confirmEvResult()" style="flex:2;padding:10px;border:none;background:var(--accent);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font)">✓ That's it — add</button>
+            <button onclick="rejectEvResult()" style="flex:1;padding:10px;border:none;border-left:1px solid var(--b1);background:var(--bg);color:var(--muted);font-size:11px;cursor:pointer;font-family:var(--font)">Not this →</button>
+          </div>
+        </div>
+        <!-- Searching indicator -->
+        <div id="ev-searching" style="display:none;font-size:12px;color:var(--muted);text-align:center;padding:8px">✦ Searching…</div>
+        <div class="m-label" style="margin-top:4px">Time (optional)</div>
+        <input class="m-in" id="ev-time" type="time">
+      </div>
+
+      <!-- Manual mode -->
+      <div id="ev-manual-mode" style="display:none">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <button onclick="switchEvMode('ai')" style="padding:4px 10px;border-radius:99px;border:1px solid var(--b1);background:var(--bg);color:var(--muted);font-size:11px;cursor:pointer;font-family:var(--font)">← AI search</button>
+          <span style="font-size:11px;color:var(--muted)">Manual entry</span>
+        </div>
+        <div class="m-label">Name</div>
+        <input class="m-in" id="ev-title" placeholder="e.g. Team dinner, Flight to Melbourne" autocomplete="off">
+        <div class="m-label">Location / notes</div>
+        <input class="m-in" id="ev-loc" placeholder="Address, notes, or leave blank">
+        <div class="m-label">Time</div>
+        <input class="m-in" id="ev-time-manual" type="time">
+      </div>
+
       <div class="m-btns">
         <button class="m-btn sec" onclick="closeModal('ev-modal')">Cancel</button>
-        <button class="m-btn pri" onclick="saveManualStop()">Add stop</button>
+        <button class="m-btn pri" id="ev-save-btn" onclick="saveSmartStop()">Add stop</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT EVENT MODAL (tap existing event) -->
+  <div class="modal-bg" id="edit-ev-modal">
+    <div class="modal">
+      <div class="modal-h" id="edit-ev-name-hd">Edit stop</div>
+      <div class="m-label">Name</div>
+      <input class="m-in" id="edit-ev-title" placeholder="Place name">
+      <div class="m-label">Location</div>
+      <input class="m-in" id="edit-ev-loc" placeholder="Address or area">
+      <div class="m-label">Time</div>
+      <input class="m-in" id="edit-ev-time" type="time">
+      <div class="m-label">Duration</div>
+      <select class="m-in" id="edit-ev-dur">
+        <option value="30">30 min</option>
+        <option value="60" selected>1 hour</option>
+        <option value="90">1.5 hours</option>
+        <option value="120">2 hours</option>
+        <option value="180">3 hours</option>
+        <option value="240">4 hours</option>
+        <option value="360">6 hours</option>
+      </select>
+      <!-- Booking link if any -->
+      <div id="edit-ev-booking-wrap" style="display:none;background:var(--accent-s);border:1px solid var(--accent-b);border-radius:var(--rx);padding:10px 13px;margin-bottom:10px">
+        <div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:4px">🔗 Booking</div>
+        <div id="edit-ev-booking-info" style="font-size:11px;color:var(--mid)"></div>
+        <button onclick="openBookingForEvent()" style="margin-top:6px;padding:5px 12px;border-radius:99px;background:var(--accent);color:#fff;border:none;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font)">Open booking →</button>
+      </div>
+      <div class="m-btns">
+        <button class="m-btn sec" onclick="deleteEventFromModal()" style="color:var(--red);border-color:var(--red-b)">Delete</button>
+        <button class="m-btn pri" onclick="saveEditEvent()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT BLACKOUT MODAL -->
+  <div class="modal-bg" id="edit-blackout-modal">
+    <div class="modal">
+      <div class="modal-h" id="edit-bo-title">Edit block</div>
+      <div class="m-label">Start time</div>
+      <input class="m-in" id="edit-bo-start" type="time">
+      <div class="m-label">End time</div>
+      <input class="m-in" id="edit-bo-end" type="time">
+      <div class="m-btns">
+        <button class="m-btn sec" onclick="deleteBlackoutFromModal()" style="color:var(--red);border-color:var(--red-b)">Remove</button>
+        <button class="m-btn pri" onclick="saveEditBlackout()">Save</button>
       </div>
     </div>
   </div>
@@ -1668,7 +1820,7 @@ function renderMembersStrip(){
   countEl.className='member-count';
   countEl.textContent=members.length?`${members.length+1} in crew · `:'Solo trip · ';
   const invEl=document.createElement('span');
-  invEl.style.cssText='font-size:11px;color:var(--green2);cursor:pointer;font-weight:600';
+  invEl.style.cssText='font-size:11px;color:var(--accent-b);cursor:pointer;font-weight:600';
   invEl.textContent='+ Invite';
   invEl.onclick=()=>openModal('invite-modal');
   strip.appendChild(countEl);
@@ -1691,12 +1843,12 @@ function renderInviteModal(){
   list.innerHTML='';
   // Self
   const selfRow=document.createElement('div');
-  selfRow.style.cssText='display:flex;align-items:center;gap:8px;padding:8px;background:var(--amber-s);border-radius:var(--rx)';
+  selfRow.style.cssText='display:flex;align-items:center;gap:8px;padding:8px;background:var(--accent-s);border-radius:var(--rx)';
   selfRow.innerHTML=`<div class="member-av you" style="width:28px;height:28px;font-size:10px">${user.email.slice(0,2).toUpperCase()}</div><div><div style="font-size:13px;font-weight:500">${user.email.split('@')[0]}</div><div style="font-size:11px;color:var(--muted)">Trip organiser (you)</div></div>`;
   list.appendChild(selfRow);
   members.forEach(m=>{
     const row=document.createElement('div');
-    row.style.cssText='display:flex;align-items:center;gap:8px;padding:8px;background:var(--sand);border-radius:var(--rx)';
+    row.style.cssText='display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg);border-radius:var(--rx)';
     row.innerHTML=`<div class="member-av" style="width:28px;height:28px;font-size:10px">${(m.display_name||'?').slice(0,2).toUpperCase()}</div><div><div style="font-size:13px;font-weight:500">${m.display_name||'Member'}</div><div style="font-size:11px;color:var(--muted)">Joined ${new Date(m.joined_at).toLocaleDateString()}</div></div>`;
     list.appendChild(row);
   });
@@ -1945,11 +2097,10 @@ function checkTripMode(){
 
   if(start&&now>=start&&(!end||now<=end)){
     // We're on the trip! Trip tab glows
-    document.getElementById('t-trip').querySelector('.tab-ico svg circle:last-child')?.setAttribute('fill','#2C5F4A');
-  document.getElementById('t-trip').querySelector('.tab-ico').style.color='var(--accent)';
-  // Add live dot
-  const liveEl=document.getElementById('trip-live-dot');
-  if(!liveEl){const d=document.createElement('span');d.id='trip-live-dot';d.style.cssText='width:6px;height:6px;border-radius:50%;background:var(--warm);position:absolute;top:2px;right:calc(50% - 18px);border:2px solid var(--card)';document.getElementById('t-trip').appendChild(d);}
+    const tripTabIco=document.getElementById('t-trip')?.querySelector('.tab-ico');
+  if(tripTabIco) tripTabIco.style.color='var(--accent)';
+  const existLiveDot=document.getElementById('trip-live-dot');
+  if(!existLiveDot){const d=document.createElement('span');d.id='trip-live-dot';d.style.cssText='width:6px;height:6px;border-radius:50%;background:var(--warm);position:absolute;top:2px;right:calc(50% - 18px);border:2px solid var(--card)';document.getElementById('t-trip')?.appendChild(d);}
     renderTripMode(trip,now,start);
   } else if(start){
     const diff=Math.ceil((start-now)/(1000*60*60*24));
@@ -2360,11 +2511,11 @@ async function openBookingAction(cardId){
   const trip=trips.find(t=>t.id===tripId);
   toast('✦ Finding booking link…');
   try{
-    const res=await fetch(AI_PROXY,{method:'POST',headers:AI_H,body:JSON.stringify({
+    const res=await fetchWithRetry({
       model:AI_MODEL,max_tokens:120,
       system:'Return ONLY a JSON object: {"url":"booking URL or null","note":"1 sentence tip"}. No markdown.',
       messages:[{role:'user',content:`Find the official booking/reservation URL for: ${card.title} in ${card.city||card.location||trip?.destination||''}. Return direct booking page, not Google.`}]
-    })});
+    });
     const d=await res.json();
     const txt=(d.content?.find(b=>b.type==='text')?.text||'').trim();
     const match=txt.match(/\{[\s\S]*\}/);
@@ -2467,14 +2618,13 @@ async function captureToTrip(raw){
   cards.unshift({id:optId,_opt:true,raw});renderCards();
   let parsed=null;
   try{
-    const res=await fetch(AI_PROXY,{method:'POST',headers:AI_H,body:JSON.stringify({
+    const res=await fetchWithRetry({
       model:AI_MODEL,max_tokens:350,
       system:`Extract travel places into JSON. Return ONLY valid JSON, no markdown:
 {"title":"2-5 word name","city":"City name only e.g. Bangkok","country":"Country name only e.g. Thailand","location":"Full address or venue, City, Country","emoji":"one emoji","tags":["1-3 action tags from: eat/drinks/sleep/explore/hike/swim/dance/shop/spa/race/visit/watch — use what people would say e.g. eat here not food"],"booking_status":"needs|free|online (needs=reservation required, free=walk-in no booking, online=can book via link)","booking_url":"direct booking URL if known else null","description":"One sentence max 80 chars","color":"hex: #C8DFC8 nature #C8D8E8 beach #E8C8C8 food #DCDCD0 culture #D4C8E0 nightlife #C8DCE0 adventure #F0E8D0 stay"}`,
       messages:[{role:'user',content:`Place: "${raw}"`}]
-    })});
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const d=await res.json();
+    });
+    const d=res;
     if(d.error) throw new Error(d.error.message);
     const txt=(d.content?.find(b=>b.type==='text')?.text||'').trim();
     const match=txt.match(/\{[\s\S]*\}/);
@@ -2741,20 +2891,26 @@ function renderCalendar(){
     // Tap empty column to add stop at that time
     col.addEventListener('click',e=>{
       if(calDragState) return;
+      // If tap landed on an event block, edit it instead
+      const evBlock=e.target.closest('.cal-ev');
+      if(evBlock){
+        const evId=evBlock.dataset.evId;
+        if(evId) openEditEventModal(evId);
+        return;
+      }
+      // If tap landed on a blackout block, edit it
+      const boBlock=e.target.closest('.blackout-block');
+      if(boBlock) return; // handled by its own click
       const rect=col.getBoundingClientRect();
-      const y=e.clientY-rect.top;
+      const y=e.clientY-rect.top+document.getElementById('cal-body').scrollTop;
       const snappedTime=yToTime(y);
       if(!snappedTime) return;
       if(selectedUnscheduled){
         addEventFromCard(selectedUnscheduled,d,snappedTime);
         return;
       }
-      // Quick add prompt
-      evDay=d;
-      const timeEl=document.getElementById('ev-time');
-      if(timeEl) timeEl.value=snappedTime;
-      openModal('ev-modal');
-      setTimeout(()=>document.getElementById('ev-title').focus(),200);
+      // Open smart add stop sheet pre-filled with time
+      openSmartAddStop(d,snappedTime);
     });
 
     // Blackout blocks for this day
@@ -2766,7 +2922,8 @@ function renderCalendar(){
       const boEl=document.createElement('div');
       boEl.className=`blackout-block blackout-${bo.type}`;
       boEl.style.cssText=`top:${startY}px;height:${endY-startY}px;left:2px;right:2px`;
-      boEl.innerHTML=`<span class="blackout-lbl">${bo.label}</span><button onclick="event.stopPropagation();removeBlackout('${bo.id}')" style="position:absolute;top:3px;right:4px;background:rgba(255,255,255,.6);border:none;border-radius:50%;width:14px;height:14px;cursor:pointer;font-size:8px;display:flex;align-items:center;justify-content:center;padding:0;line-height:1">×</button>`;
+      boEl.innerHTML=`<span class="blackout-lbl">${bo.label}</span>`;
+      addBlackoutInteraction(boEl, bo);
       col.appendChild(boEl);
     });
 
@@ -2836,6 +2993,11 @@ function renderCalendar(){
     const body=document.getElementById('cal-body');
     if(body&&body.scrollTop===0) body.scrollTop=Math.max(0,(8-CAL_START)*PX_PER_HOUR-20);
   },50);
+}
+
+function syncCalScroll(el){
+  const hdr=document.getElementById('cal-day-headers');
+  if(hdr) hdr.scrollLeft=el.scrollLeft;
 }
 
 function renderUnscheduledStrip(cityEvs){
@@ -2965,15 +3127,205 @@ function addResizeDrag(handle, ev){
   });
 }
 
-function openEditEvent(id){
-  const ev=events.find(e=>e.id===id);if(!ev) return;
-  // Reuse ev-modal but pre-fill
-  document.getElementById('ev-title').value=ev.title||'';
-  document.getElementById('ev-loc').value=ev.location||'';
-  document.getElementById('ev-time').value=ev.time_slot||'';
-  evDay=ev.day_number;
+// ── Smart add stop ──
+let evSearchTimer=null, evSearchResult=null, evCurrentMode='ai';
+let _editingEvId=null, _editingBoId=null;
+
+function openSmartAddStop(day, presetTime){
+  evDay=day;
+  switchEvMode('ai');
+  document.getElementById('ev-search').value='';
+  document.getElementById('ev-search-result').style.display='none';
+  document.getElementById('ev-searching').style.display='none';
+  document.getElementById('ev-time').value=presetTime||'';
+  document.getElementById('ev-modal-title').textContent='Add a stop · Day '+day+(presetTime?' · '+fmtTime(presetTime):'');
+  evSearchResult=null;
   openModal('ev-modal');
+  setTimeout(()=>document.getElementById('ev-search').focus(),200);
 }
+
+function switchEvMode(mode){
+  evCurrentMode=mode;
+  document.getElementById('ev-add-mode').style.display=mode==='ai'?'block':'none';
+  document.getElementById('ev-manual-mode').style.display=mode==='manual'?'block':'none';
+}
+
+function evSearchPreview(val){
+  clearTimeout(evSearchTimer);
+  document.getElementById('ev-search-result').style.display='none';
+  document.getElementById('ev-searching').style.display='none';
+  if(!val||val.length<3) return;
+  evSearchTimer=setTimeout(()=>runEvSearch(val),700);
+}
+
+async function runEvSearch(val){
+  const searching=document.getElementById('ev-searching');
+  if(searching) searching.style.display='block';
+  const trip=trips.find(t=>t.id===tripId);
+  const dest=trip?.destination||trip?.title||curCity||'';
+  try{
+    const d=await fetchWithRetry({
+      model:AI_MODEL,max_tokens:200,
+      system:'Return ONLY valid JSON, no markdown: {"name":"exact place name","location":"Suburb, City, Country","emoji":"one emoji","tags":["1-2 from: eat/drinks/sleep/explore/hike/swim/dance/shop/spa/visit/watch"],"description":"1 sentence","color":"hex color"}',
+      messages:[{role:'user',content:`Find this place in ${dest}: "${val}". Return the most likely specific match.`}]
+    });
+    if(searching) searching.style.display='none';
+    const txt=(d.content?.find(b=>b.type==='text')?.text||'').trim();
+    const match=txt.match(/\{[\s\S]*\}/);
+    if(!match) return;
+    const parsed=JSON.parse(match[0]);
+    evSearchResult=parsed;
+    document.getElementById('ev-result-ico').textContent=parsed.emoji||'📍';
+    document.getElementById('ev-result-name').textContent=parsed.name||val;
+    document.getElementById('ev-result-loc').textContent='📍 '+(parsed.location||dest);
+    const tagsEl=document.getElementById('ev-result-tags');
+    tagsEl.innerHTML=(parsed.tags||[]).map(t=>`<span class="tag t-${t}" style="font-size:10px">${t}</span>`).join('');
+    document.getElementById('ev-search-result').style.display='block';
+  }catch(e){
+    if(searching) searching.style.display='none';
+  }
+}
+
+async function confirmEvResult(){
+  if(!evSearchResult) return;
+  closeModal('ev-modal');
+  const time=document.getElementById('ev-time').value;
+  const ev={emoji:evSearchResult.emoji||'📍',title:evSearchResult.name,location:evSearchResult.location||'',city:evSearchResult.location?.split(',')[0]||curCity,tags:evSearchResult.tags||[],color:evSearchResult.color||'#C8DCC8'};
+  await addEventFromCard(ev,evDay,time||null);
+}
+
+async function rejectEvResult(){
+  evSearchResult=null;
+  document.getElementById('ev-search-result').style.display='none';
+  const q=document.getElementById('ev-search').value;
+  document.getElementById('ev-search').value='';
+  document.getElementById('ev-search').focus();
+  toast('Try a different name or switch to Manual');
+}
+
+async function saveSmartStop(){
+  if(evCurrentMode==='ai'){
+    if(evSearchResult){ confirmEvResult(); return; }
+    const q=document.getElementById('ev-search').value.trim();
+    if(q){ await runEvSearch(q); if(evSearchResult){ confirmEvResult(); return;} }
+    toast('Type a place name to search');
+    return;
+  }
+  // Manual mode
+  const title=document.getElementById('ev-title').value.trim();
+  const loc=document.getElementById('ev-loc').value.trim();
+  const time=document.getElementById('ev-time-manual').value||document.getElementById('ev-time').value;
+  if(!title){toast('Enter a name');return;}
+  closeModal('ev-modal');
+  await addEventFromCard({emoji:'📍',title,location:loc||curCity,city:curCity,tags:[],color:'#C8DCC8'},evDay,time||null);
+}
+
+// ── Edit existing event ──
+function openEditEventModal(id){
+  const ev=events.find(e=>e.id===id);if(!ev) return;
+  _editingEvId=id;
+  document.getElementById('edit-ev-name-hd').textContent=ev.emoji+' '+ev.title;
+  document.getElementById('edit-ev-title').value=ev.title||'';
+  document.getElementById('edit-ev-loc').value=ev.location||'';
+  document.getElementById('edit-ev-time').value=ev.time_slot||'';
+  document.getElementById('edit-ev-dur').value=String(ev.duration_mins||60);
+  // Check for linked booking
+  const linked=vault.find(v=>v.name?.toLowerCase().includes((ev.title||'').toLowerCase().slice(0,10))||ev.title?.toLowerCase().includes((v.name||'').toLowerCase().slice(0,10)));
+  const bwrap=document.getElementById('edit-ev-booking-wrap');
+  if(linked&&bwrap){
+    bwrap.style.display='block';
+    document.getElementById('edit-ev-booking-info').textContent=[linked.booking_time&&'🕐 '+fmtTime(linked.booking_time),linked.res_number&&'# '+linked.res_number,linked.party_size&&linked.party_size+' people'].filter(Boolean).join(' · ')||linked.meta_text||'';
+    bwrap._linkedId=linked.id;
+  } else if(bwrap){bwrap.style.display='none';}
+  openModal('edit-ev-modal');
+}
+
+async function saveEditEvent(){
+  if(!_editingEvId) return;
+  const ev=events.find(e=>e.id===_editingEvId);if(!ev) return;
+  const title=document.getElementById('edit-ev-title').value.trim();
+  const loc=document.getElementById('edit-ev-loc').value.trim();
+  const time=document.getElementById('edit-ev-time').value;
+  const dur=parseInt(document.getElementById('edit-ev-dur').value)||60;
+  ev.title=title;ev.location=loc;ev.time_slot=time||null;ev.duration_mins=dur;
+  await sb.from('itinerary_events').update({title,location:loc,time_slot:time||null,duration_mins:dur}).eq('id',_editingEvId);
+  closeModal('edit-ev-modal');
+  renderCalendar();
+  toast('✓ Updated');
+}
+
+async function deleteEventFromModal(){
+  if(!_editingEvId) return;
+  await sb.from('itinerary_events').delete().eq('id',_editingEvId);
+  events=events.filter(e=>e.id!==_editingEvId);
+  closeModal('edit-ev-modal');
+  renderCalendar();toast('Removed');
+}
+
+function openBookingForEvent(){
+  const bwrap=document.getElementById('edit-ev-booking-wrap');
+  if(bwrap?._linkedId) openBookingDetail(vault.find(v=>v.id===bwrap._linkedId));
+}
+
+// ── Blackout drag + edit ──
+function openEditBlackout(id){
+  const bo=blackouts.find(b=>b.id===id);if(!bo) return;
+  _editingBoId=id;
+  document.getElementById('edit-bo-title').textContent=bo.label+' · Day '+bo.day;
+  // Convert hours to HH:MM
+  const toTime=h=>{const hh=Math.floor(h%24);return String(hh).padStart(2,'0')+':00';};
+  document.getElementById('edit-bo-start').value=toTime(bo.startH);
+  document.getElementById('edit-bo-end').value=toTime(bo.endH>=24?bo.endH-24:bo.endH);
+  openModal('edit-blackout-modal');
+}
+
+function saveEditBlackout(){
+  if(!_editingBoId) return;
+  const bo=blackouts.find(b=>b.id===_editingBoId);if(!bo) return;
+  const startVal=document.getElementById('edit-bo-start').value;
+  const endVal=document.getElementById('edit-bo-end').value;
+  if(startVal){const[h,m]=startVal.split(':').map(Number);bo.startH=h+m/60;}
+  if(endVal){const[h,m]=endVal.split(':').map(Number);bo.endH=h+m/60;}
+  closeModal('edit-blackout-modal');
+  renderCalendar();toast('Block updated');
+}
+
+function deleteBlackoutFromModal(){
+  if(!_editingBoId) return;
+  blackouts=blackouts.filter(b=>b.id!==_editingBoId);
+  closeModal('edit-blackout-modal');
+  renderCalendar();toast('Block removed');
+}
+
+// ── Make blackout blocks draggable + tappable to edit ──
+function addBlackoutInteraction(boEl, bo){
+  let startY=0,origStart=bo.startH,active=false;
+  boEl.addEventListener('click',e=>{
+    if(active) return;
+    if(e.target.tagName==='BUTTON') return;
+    openEditBlackout(bo.id);
+  });
+  boEl.addEventListener('touchstart',e=>{
+    startY=e.touches[0].clientY;origStart=bo.startH;active=false;
+  },{passive:true});
+  boEl.addEventListener('touchmove',e=>{
+    e.preventDefault();active=true;
+    const dy=e.touches[0].clientY-startY;
+    const dh=dy/PX_PER_HOUR;
+    const dur=bo.endH-bo.startH;
+    const newStart=Math.max(0,Math.min(23,origStart+dh));
+    bo.startH=newStart;bo.endH=newStart+dur;
+    const startY2=Math.max(0,(bo.startH-CAL_START)*PX_PER_HOUR);
+    const endY=Math.min((CAL_END-CAL_START)*PX_PER_HOUR,(bo.endH-CAL_START)*PX_PER_HOUR);
+    boEl.style.top=startY2+'px';boEl.style.height=Math.max(20,endY-startY2)+'px';
+  },{passive:false});
+  boEl.addEventListener('touchend',()=>{
+    if(active) renderCalendar();
+  });
+}
+
+function openEditEvent(id){ openEditEventModal(id); }
+
 
 function addBlackoutSheet(){
   const types=[
@@ -3042,7 +3394,7 @@ async function placeCard(section){
   }
   if(error){toast('Could not add: '+error.message);return;}
   events.push(data);selectedCard=null;copilotCache[curDay]=undefined;
-  document.getElementById('planner-sub').textContent='Tap a place · tap a slot to add';
+  // planner-sub removed; ='Tap a place · tap a slot to add';
   renderSidebar();renderDayBar();renderDaySummary();renderTimeline();
   toast(`${c.emoji||'📍'} ${c.title} added to Day ${curDay}`);
 }
@@ -3083,21 +3435,7 @@ async function deleteEvent(id){
   renderSidebar();renderDayBar();renderDaySummary();renderTimeline();toast('Removed');
 }
 
-async function saveManualStop(){
-  const title=document.getElementById('ev-title').value.trim();
-  const loc=document.getElementById('ev-loc').value.trim();
-  const time=document.getElementById('ev-time').value;
-  if(!title){toast('Enter a place name');return;}
-  closeModal('ev-modal');
-  const cityEvs=events.filter(e=>e.city===curCity&&e.day_number===evDay);
-  const displayName=user.email?.split('@')[0]||'You';
-  const manPayload={trip_id:tripId,day_number:evDay,city:curCity,title,location:loc||curCity,emoji:'📍',tags:[],time_slot:time||null,is_highlight:false,sort_order:cityEvs.length};
-  let{data,error}=await sb.from('itinerary_events').insert(manPayload).select().single();
-  if(error&&error.message?.includes('column')){delete manPayload.city;const r2=await sb.from('itinerary_events').insert(manPayload).select().single();data=r2.data;error=r2.error;}
-  if(error){toast('Error: '+error.message);return;}
-  events.push(data);renderSidebar();renderDayBar();renderDaySummary();renderTimeline();
-  toast(title+' added ✓');
-}
+// saveManualStop replaced by saveSmartStop
 
 // Co-pilot
 async function runCopilot(){
@@ -3106,12 +3444,11 @@ async function runCopilot(){
   document.getElementById('copilot-txt').textContent='🧭 Checking…';
   document.getElementById('copilot-bar').classList.add('on');
   try{
-    const res=await fetch(AI_PROXY,{method:'POST',headers:AI_H,body:JSON.stringify({
+    const d=await fetchWithRetry({
       model:AI_MODEL,max_tokens:80,
       system:'Audit a travel day for one issue: conflicts, venue closures (e.g. Chatuchak weekends only), unrealistic pacing. ONE warning under 18 words. No issues: reply OK',
       messages:[{role:'user',content:`Audit Day ${curDay} in ${curCity}: ${JSON.stringify(dayEvs.map(e=>({time:e.time_slot,place:e.title})))}`}]
-    })});
-    const d=await res.json();
+    });
     const txt=(d.content?.find(b=>b.type==='text')?.text||'').trim();
     if(txt&&txt!=='OK'){copilotCache[curDay]=txt;document.getElementById('copilot-txt').textContent='🧭 '+txt;renderDayBar();}
     else{document.getElementById('copilot-bar').classList.remove('on');toast('✓ Day '+curDay+' looks good');}
@@ -3369,21 +3706,21 @@ async function ragSearch(){
   userMsg.innerHTML='<div class="rag-bubble">'+esc(q)+'</div>';
   thread.appendChild(userMsg);
   const typingMsg=document.createElement('div');typingMsg.className='rag-msg porter';
-  typingMsg.innerHTML='<div class="rag-bubble" style="padding:8px 14px"><div style="display:flex;gap:4px"><div style="width:5px;height:5px;border-radius:50%;background:var(--ghost);animation:blink 1.2s infinite"></div><div style="width:5px;height:5px;border-radius:50%;background:var(--ghost);animation:blink 1.2s .2s infinite"></div><div style="width:5px;height:5px;border-radius:50%;background:var(--ghost);animation:blink 1.2s .4s infinite"></div></div></div>';
+  typingMsg.innerHTML='<div class="rag-bubble" style="padding:8px 14px"><div style="display:flex;gap:4px"><div style="width:5px;height:5px;border-radius:50%;background:var(--muted);animation:blink 1.2s infinite"></div><div style="width:5px;height:5px;border-radius:50%;background:var(--muted);animation:blink 1.2s .2s infinite"></div><div style="width:5px;height:5px;border-radius:50%;background:var(--muted);animation:blink 1.2s .4s infinite"></div></div></div>';
   thread.appendChild(typingMsg);thread.scrollTop=thread.scrollHeight;
   const ctx=vault.map(d=>`[${d.doc_type}] ${d.name}: ${d.meta_text||''}`).join('\n');
   if(!ctx){typingMsg.innerHTML='<div class="rag-porter-lbl">✦ Porter</div><div class="rag-bubble">No bookings added yet.</div>';btn.disabled=false;return;}
   try{
-    const res=await fetch(AI_PROXY,{method:'POST',headers:AI_H,body:JSON.stringify({
+    const res=await fetchWithRetry({
       model:AI_MODEL,max_tokens:250,
       system:`Answer using ONLY these bookings. Quote exact confirmation numbers and times. If not found: "I don't have that."
 
 BOOKINGS:
 ${ctx}`,
       messages:[...ragHistory.slice(-6),{role:'user',content:q}]
-    })});
+    });
     if(!res.ok) throw new Error('HTTP '+res.status);
-    const d=await res.json();if(d.error) throw new Error(d.error.message);
+    const d=res;if(d.error) throw new Error(d.error.message);
     const answer=d.content?.find(b=>b.type==='text')?.text||'No answer.';
     ragHistory.push({role:'user',content:q},{role:'assistant',content:answer});
     typingMsg.innerHTML='<div class="rag-porter-lbl">✦ Porter</div><div class="rag-bubble">'+esc(answer).replace(/\n/g,'<br>')+'</div>';
@@ -3407,12 +3744,12 @@ async function extractFromEmail(){
   const btn=document.getElementById('extract-btn');
   btn.disabled=true;btn.textContent='Extracting…';
   try{
-    const res=await fetch(AI_PROXY,{method:'POST',headers:AI_H,body:JSON.stringify({
+    const res=await fetchWithRetry({
       model:AI_MODEL,max_tokens:200,
       system:'Extract booking details from this email. Return ONLY valid JSON, no markdown:\n{"type":"Restaurant|Flight|Hotel|Event|Transport|Other","name":"venue/airline/hotel name","emoji":"one emoji","res_number":"confirmation or reservation number","booking_time":"HH:MM 24h format or null","duration_mins":"dining time limit in minutes as integer or null","party_size":"number of people as integer or null","platform":"booking platform e.g. OpenTable, Klook, airline website, or null","details":"address, dates, check-in, flight number, key details in 1-2 sentences"}',
       messages:[{role:'user',content:`Email: "${text.slice(0,2000)}"`}]
-    })});
-    const d=await res.json();
+    });
+    const d=res;
     const raw=(d.content?.find(b=>b.type==='text')?.text||'').trim();
     const match=raw.match(/\{[\s\S]*\}/);
     if(!match) throw new Error('Could not parse');
@@ -3866,15 +4203,12 @@ async function estimateTravelTimesAI(evs) {
   if (evs.length < 2) return;
   const pairs = evs.slice(1).map((ev, i) => ({ from: evs[i].title, to: ev.title }));
   try {
-    const res = await fetch(AI_PROXY, {
-      method: 'POST', headers: AI_H,
-      body: JSON.stringify({
+    const res = await fetchWithRetry({
         model: AI_MODEL, max_tokens: 300,
         system: 'Estimate travel times between tourist spots. Return ONLY a JSON array: [{"minutes":15,"method":"walk","note":"short stroll"}]. Methods: walk, taxi/Grab, BTS/MRT, tuk-tuk, ferry.',
         messages: [{ role: 'user', content: 'City: ' + curCity + '. Legs: ' + JSON.stringify(pairs) }]
-      })
-    });
-    const d = await res.json();
+      });
+    const d = res;
     const raw = (d.content?.find(b => b.type === 'text')?.text || '').trim();
     const match = raw.match(/\[[\s\S]*?\]/s);
     if (!match) return;
@@ -4019,7 +4353,7 @@ function appendPorterMsg(text, suggestions){
   const msgs = document.getElementById('chat-messages');
 
   // Remove typing indicator if present
-  const typing = document.getElementById('typing-ind');
+  const typing = document.createElement('span');
   if(typing) typing.remove();
 
   const wrapper = document.createElement('div');
@@ -4127,18 +4461,14 @@ async function sendChat(){
   showTyping();
 
   try{
-    const res = await fetch(AI_PROXY, {
-      method:'POST', headers: AI_H,
-      body: JSON.stringify({
+    const res = await fetchWithRetry({
         model: AI_MODEL,
         max_tokens: 600,
         system: buildTripContext(),
         messages: chatHistory.slice(-12) // last 12 turns for context
-      })
-    });
+      });
 
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const d = await res.json();
+    const d = res;
     if(d.error) throw new Error(d.error.message);
 
     const rawText = d.content?.find(b=>b.type==='text')?.text || "I'm not sure — could you rephrase that?";
@@ -4155,7 +4485,7 @@ async function sendChat(){
     appendPorterMsg(rawText, suggestions);
 
   }catch(e){
-    const typing = document.getElementById('typing-ind');
+    const typing = document.createElement('span');
     if(typing) typing.remove();
     appendPorterMsg('Sorry, I had a connection issue. Try again? (' + e.message + ')', []);
   }
@@ -4167,6 +4497,380 @@ async function sendChat(){
 // ═══════════════════════════════════
 // KEYBOARD
 // ═══════════════════════════════════
+// ═══════════════════════════════════
+// DISCOVER ENGINE
+// ═══════════════════════════════════
+const THEMES=[
+  {id:'roadtrip',emoji:'🚗',name:'Roadtrip day',desc:'Drive out — Blue Mountains, Hunter Valley, or coastal highway',color:'linear-gradient(135deg,#8BAA8B,#4A7A4A)'},
+  {id:'wellness',emoji:'🧘',name:'Wellness day',desc:'Coastal walk · spa · healthy lunch · meditation',color:'linear-gradient(135deg,#B8D4C8,#6A9A8A)'},
+  {id:'winddown',emoji:'🌅',name:'Wind-down day',desc:'Relaxed Sunday pace · harbour view · long lunch · jazz bar',color:'linear-gradient(135deg,#C4A0D0,#7A5090)'},
+  {id:'luxury',emoji:'✨',name:'Luxury & self-care',desc:'Fine dining · rooftop bar · designer shopping · spa',color:'linear-gradient(135deg,#C4A050,#8A6820)'},
+  {id:'beach',emoji:'🏄',name:'Beach & surf day',desc:'Bondi to Coogee walk · surf lesson · fish & chips at sunset',color:'linear-gradient(135deg,#70A8D0,#2060A0)'},
+  {id:'culture',emoji:'🎨',name:'Culture & arts day',desc:'Galleries · historic precinct · live music · local markets',color:'linear-gradient(135deg,#C0A0D0,#7050A0)'},
+  {id:'foodie',emoji:'🍷',name:'Foodie day',desc:'Morning market · long lunch · wine bar · late night eats',color:'linear-gradient(135deg,#D4A880,#A06040)'},
+];
+
+const TOP10_CATEGORIES=[
+  {id:'beaches',emoji:'🏖',name:'Beaches & coastal walks',query:'top 10 beaches and coastal walks in {dest}'},
+  {id:'food',emoji:'🍷',name:'Food & dining',query:'top 10 restaurants and food experiences in {dest}'},
+  {id:'wildlife',emoji:'🐨',name:'Wildlife & nature',query:'top 10 wildlife and nature experiences in {dest}'},
+  {id:'daytrips',emoji:'🚗',name:'Day trips & drives',query:'top 10 day trips and scenic drives from {dest}'},
+  {id:'wellness',emoji:'💆',name:'Wellness & self-care',query:'top 10 wellness spa and self-care experiences in {dest}'},
+  {id:'culture',emoji:'🏛',name:'Culture & history',query:'top 10 cultural and historic sights in {dest}'},
+  {id:'nightlife',emoji:'🌙',name:'Nightlife & bars',query:'top 10 bars rooftops and nightlife in {dest}'},
+  {id:'hidden',emoji:'💎',name:'Hidden gems',query:'top 10 hidden gems off the beaten path in {dest}'},
+];
+
+let discoverMode='top10';
+
+function showDiscoverStrip(){
+  const trip=trips.find(t=>t.id===tripId);
+  const dest=trip?.destination||trip?.title||'';
+  const strip=document.getElementById('discover-strip');
+  if(!strip) return;
+  strip.style.display='block';
+  if(dest){
+    document.getElementById('discover-strip-title').textContent=`Discover ${dest.split(',')[0]}`;
+  }
+}
+
+function openDiscover(mode){
+  document.getElementById('discover-drawer').classList.add('on');
+  const trip=trips.find(t=>t.id===tripId);
+  const dest=trip?.destination||trip?.title||'Unknown destination';
+  document.getElementById('discover-title').textContent='Discover '+dest.split(',')[0];
+  document.getElementById('discover-sub').textContent=dest;
+  setDiscoverTab(mode||'top10');
+}
+
+function closeDiscover(){
+  document.getElementById('discover-drawer').classList.remove('on');
+}
+
+function setDiscoverTab(tab){
+  discoverMode=tab;
+  ['top10','day','gaps'].forEach(t=>{
+    const btn=document.getElementById('disc-tab-'+t);
+    const view=document.getElementById('disc-'+t+'-view');
+    if(!btn||!view) return;
+    const isOn=t===tab;
+    btn.style.borderBottomColor=isOn?'var(--accent)':'transparent';
+    btn.style.color=isOn?'var(--accent)':'var(--muted)';
+    btn.style.fontWeight=isOn?'700':'600';
+    view.style.display=isOn?'flex':'none';
+    view.style.flexDirection='column';
+  });
+  if(tab==='top10') renderTop10Categories();
+  if(tab==='day') renderThemePicker();
+  if(tab==='gaps') runGapAnalysis();
+  updateOnListCount();
+}
+
+function updateOnListCount(){
+  const n=cards.filter(c=>!c._opt).length;
+  const el=document.getElementById('discover-on-list-count');
+  if(el) el.textContent=n?n+' on your list':'';
+}
+
+function isOnList(title){
+  const t=title.toLowerCase();
+  return cards.filter(c=>!c._opt).some(c=>(c.title||'').toLowerCase().includes(t.slice(0,12))||t.includes((c.title||'').toLowerCase().slice(0,10)));
+}
+
+function renderTop10Categories(){
+  const container=document.getElementById('disc-top10-content');
+  if(!container) return;
+  container.innerHTML='';
+  const trip=trips.find(t=>t.id===tripId);
+  const dest=trip?.destination||trip?.title||'';
+  TOP10_CATEGORIES.forEach(cat=>{
+    const div=document.createElement('div');
+    div.style.cssText='background:var(--card);border-radius:var(--rs);border:1px solid var(--b1);padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:11px;margin-bottom:7px;transition:all .15s';
+    div.innerHTML=`<span style="font-size:22px">${cat.emoji}</span><div style="flex:1"><div style="font-weight:600;font-size:13px;color:var(--ink)">${cat.name}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">10 places in ${dest.split(',')[0]}</div></div><span style="font-size:16px;color:var(--muted)">›</span>`;
+    div.onclick=()=>runTop10(cat,dest);
+    container.appendChild(div);
+  });
+}
+
+async function runTop10(cat,dest){
+  showDiscLoading('Finding the best '+cat.name.toLowerCase()+' in '+dest.split(',')[0]+'…');
+  const prompt=`List the top 10 ${cat.name.toLowerCase()} in ${dest}. 
+Return ONLY valid JSON array, no markdown:
+[{"name":"Place name","location":"Suburb, City","emoji":"one emoji","why":"1 sentence why it's special","tags":["1-2 tags from: eat/drinks/sleep/explore/hike/swim/dance/shop/spa/visit/watch"],"booking_status":"needs|free|online"}]`;
+  const places=await runDiscoverAI(prompt,'top10_'+cat.id);
+  hideDiscLoading();
+  if(!places) return;
+  renderDiscoverList(places,cat.name+' in '+dest.split(',')[0],true);
+}
+
+function renderThemePicker(){
+  const picker=document.getElementById('disc-theme-picker');
+  const results=document.getElementById('disc-day-results');
+  if(!picker||!results) return;
+  picker.style.display='block';results.style.display='none';
+  results.innerHTML='';
+  const container=document.getElementById('disc-themes');
+  if(!container) return;
+  container.innerHTML='';
+  THEMES.forEach(theme=>{
+    const div=document.createElement('div');
+    div.style.cssText='border-radius:var(--rs);overflow:hidden;cursor:pointer;border:1px solid var(--b1)';
+    div.innerHTML=`<div style="height:52px;background:${theme.color};display:flex;align-items:center;padding:0 16px;gap:11px"><span style="font-size:24px">${theme.emoji}</span><div style="flex:1"><div style="font-family:var(--serif);font-size:13px;font-style:italic;color:#fff">${theme.name}</div><div style="font-size:9px;color:rgba(255,255,255,.75);margin-top:2px">${theme.desc}</div></div><span style="font-size:14px;color:rgba(255,255,255,.6)">›</span></div>`;
+    div.onclick=()=>runDayBuilder(theme);
+    container.appendChild(div);
+  });
+  // Custom theme
+  const custom=document.createElement('div');
+  custom.style.cssText='border-radius:var(--rs);border:1.5px dashed var(--b2);padding:14px;text-align:center;cursor:pointer;margin-top:2px';
+  custom.innerHTML='<div style="font-size:14px;margin-bottom:4px">✦</div><div style="font-size:13px;font-weight:600;color:var(--ink)">Custom theme</div><div style="font-size:11px;color:var(--muted);margin-top:3px">Tell Porter what kind of day you want</div>';
+  custom.onclick=()=>{
+    const vibe=prompt('What kind of day? (e.g. "street art and coffee", "wine country escape", "old town exploration")');
+    if(vibe) runDayBuilder({id:'custom',emoji:'✦',name:vibe,desc:vibe,color:'linear-gradient(135deg,var(--accent),#1A4A38)'});
+  };
+  container.appendChild(custom);
+}
+
+async function runDayBuilder(theme){
+  const trip=trips.find(t=>t.id===tripId);
+  const dest=trip?.destination||trip?.title||'';
+  showDiscLoading('Building your '+theme.name.toLowerCase()+' in '+dest.split(',')[0]+'…');
+  const existingList=cards.filter(c=>!c._opt).map(c=>`- ${c.title} (${c.city||c.location||'?'})`).join('\n');
+  const prompt=`Build a "${theme.name}" day itinerary in ${dest}. Theme: ${theme.desc}.\n${existingList?'User already has these places saved:\n'+existingList+'\nMark these as ON_LIST in the response.':''}\nReturn ONLY valid JSON array of 6-8 places in the order to visit them, no markdown:\n[{"name":"Place name","location":"Suburb, City","emoji":"one emoji","why":"1 sentence why it fits this day","time":"suggested time e.g. 8:00am","tags":["1-2 tags"],"booking_status":"needs|free|online","on_list":true|false,"dont_miss":true|false}]\nAlso flag 1-2 places with dont_miss:true that are unmissable but not commonly known.`;
+  const places=await runDiscoverAI(prompt,'day_'+theme.id);
+  hideDiscLoading();
+  if(!places) return;
+  // Show results
+  const picker=document.getElementById('disc-theme-picker');
+  const results=document.getElementById('disc-day-results');
+  if(picker) picker.style.display='none';
+  if(results){results.style.display='flex';results.style.flexDirection='column';}
+  renderDayResults(places, theme, dest);
+}
+
+function renderDayResults(places, theme, dest){
+  const results=document.getElementById('disc-day-results');
+  if(!results) return;
+  results.innerHTML='';
+  // Back button
+  const back=document.createElement('div');
+  back.style.cssText='display:flex;align-items:center;gap:8px;margin-bottom:10px;cursor:pointer';
+  back.innerHTML=`<span style="font-size:12px;color:var(--accent);font-weight:600">← Themes</span>`;
+  back.onclick=()=>{results.style.display='none';document.getElementById('disc-theme-picker').style.display='block';};
+  results.appendChild(back);
+  // Theme header
+  const hd=document.createElement('div');
+  hd.style.cssText=`border-radius:var(--r);overflow:hidden;margin-bottom:12px;background:${theme.color};padding:14px 16px`;
+  hd.innerHTML=`<div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.65);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">${theme.emoji} ${theme.name}</div><div style="font-family:var(--serif);font-size:16px;font-style:italic;color:#fff;margin-bottom:10px">${dest.split(',')[0]}</div><button onclick="addAllDiscoverPlaces()" style="padding:7px 16px;border-radius:99px;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font)">Add all to my list →</button>`;
+  results.appendChild(hd);
+  // Gap analysis
+  const hasBookingGap=!places.some(p=>p.booking_status==='needs'&&p.tags?.includes('eat'));
+  const hasMorning=places.some(p=>p.time&&(p.time.includes('7:')||p.time.includes('8:')||p.time.includes('6:')));
+  if(!hasMorning||hasBookingGap){
+    const gap=document.createElement('div');
+    gap.style.cssText='background:#FEF3C7;border:1px solid #FDE68A;border-radius:var(--rs);padding:10px 13px;margin-bottom:10px';
+    const gaps=[];
+    if(!hasMorning) gaps.push('no <strong>morning activity</strong> (early starts feel great in '+dest.split(',')[0]+')');
+    if(hasBookingGap) gaps.push('no <strong>must-book restaurant</strong> — dining spots fill up fast');
+    gap.innerHTML=`<div style="font-size:10px;font-weight:700;color:#92400E;margin-bottom:4px">⚠ You might be missing</div><div style="font-size:11px;color:#78350F;line-height:1.6">${gaps.join(' and ')}.</div>`;
+    results.appendChild(gap);
+  }
+  // Place list
+  places.forEach((p,i)=>{
+    const onList=p.on_list||isOnList(p.name);
+    const dontMiss=p.dont_miss&&!onList;
+    const div=document.createElement('div');
+    div.style.cssText=`background:${dontMiss?'#FEF9C3':onList?'var(--accent-s)':'var(--card)'};border:1.5px solid ${dontMiss?'#FDE68A':onList?'var(--accent-b)':'var(--b1)'};border-radius:var(--rs);overflow:hidden;margin-bottom:7px`;
+    div.innerHTML=`
+      <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px">
+        <div style="width:20px;height:20px;border-radius:50%;background:${onList?'var(--accent)':dontMiss?'#D4A020':'var(--b1)'};color:${onList||dontMiss?'#fff':'var(--muted)'};font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">${i+1}</div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:2px">
+            <span style="font-size:13px">${p.emoji||'📍'}</span>
+            <span style="font-family:var(--serif);font-size:13px;font-style:italic;color:var(--ink)">${esc(p.name)}</span>
+            ${onList?'<span style="background:var(--accent);color:#fff;border-radius:4px;font-size:8px;font-weight:700;padding:2px 6px;letter-spacing:.04em">ON LIST</span>':''}
+            ${dontMiss?'<span style="background:#FDE68A;color:#92400E;border-radius:4px;font-size:8px;font-weight:700;padding:2px 6px">⭐ TOP PICK</span>':''}
+          </div>
+          ${p.time?`<div style="font-size:10px;color:var(--muted);margin-bottom:3px">🕐 ${p.time}</div>`:''}
+          <div style="font-size:11px;color:var(--muted);line-height:1.5">${esc(p.why||p.location||'')}</div>
+        </div>
+        ${!onList?`<button onclick="addDiscoverPlace(${JSON.stringify(p).replace(/"/g,'&quot;')})" style="padding:5px 11px;border-radius:99px;border:1.5px solid var(--accent-b);background:var(--accent-s);color:var(--accent);font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:var(--font)">+ Add</button>`:'<div style="font-size:16px;color:var(--accent);flex-shrink:0">✓</div>'}
+      </div>`;
+    results.appendChild(div);
+  });
+}
+
+async function runGapAnalysis(){
+  const trip=trips.find(t=>t.id===tripId);
+  const dest=trip?.destination||trip?.title||'';
+  if(!cards.filter(c=>!c._opt).length){
+    document.getElementById('disc-gaps-content').innerHTML='<div style="text-align:center;padding:32px;font-size:13px;color:var(--muted)">Add some places first — then Porter can identify what you are missing.</div>';
+    return;
+  }
+  showDiscLoading('Analysing your list for gaps…');
+  const myList=cards.filter(c=>!c._opt).map(c=>`- ${c.title} (${c.city||c.location||'?'}) [${(c.tags||[]).join(',')}]`).join('\n');
+  const prompt='Analyse this travel list for '+dest+' and identify what is missing:\n'+myList+'\nReturn ONLY valid JSON, no markdown:\n{"has":["2-3 things they have covered, in short phrases"],"missing":[{"category":"missing category name","why":"1 sentence why it matters","suggestions":[{"name":"Place name","emoji":"one emoji","location":"Suburb","why":"1 sentence","booking_status":"needs|free|online"}]}],"verdict":"1 encouraging sentence about their list"}';
+  const result=await runDiscoverAI(prompt,'gaps');
+  hideDiscLoading();
+  if(!result) return;
+  renderGapAnalysis(result,dest);
+}
+
+function renderGapAnalysis(data,dest){
+  const container=document.getElementById('disc-gaps-content');
+  if(!container) return;
+  container.innerHTML='';
+  // Verdict
+  const verdict=document.createElement('div');
+  verdict.style.cssText='background:var(--accent-s);border:1px solid var(--accent-b);border-radius:var(--rs);padding:11px 14px;margin-bottom:12px';
+  verdict.innerHTML=`<div style="font-size:10px;font-weight:700;color:var(--accent);margin-bottom:3px">✦ Porter's take</div><div style="font-size:12px;color:var(--mid);line-height:1.6">${esc(data.verdict||'')}</div>`;
+  container.appendChild(verdict);
+  // Has
+  if(data.has?.length){
+    const has=document.createElement('div');has.style.cssText='margin-bottom:12px';
+    has.innerHTML=`<div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px">What you've covered ✓</div>${data.has.map(h=>`<div style="display:flex;align-items:center;gap:7px;padding:5px 0;font-size:12px;color:var(--ink2)"><span style="color:var(--accent);font-size:14px">✓</span>${esc(h)}</div>`).join('')}`;
+    container.appendChild(has);
+  }
+  // Missing
+  (data.missing||[]).forEach(gap=>{
+    const gapDiv=document.createElement('div');
+    gapDiv.style.cssText='margin-bottom:14px';
+    gapDiv.innerHTML=`<div style="display:flex;align-items:center;gap:7px;margin-bottom:7px"><div style="width:6px;height:6px;border-radius:50%;background:var(--warm);flex-shrink:0"></div><div style="font-size:12px;font-weight:700;color:var(--ink)">${esc(gap.category)}</div></div><div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.5">${esc(gap.why)}</div>`;
+    (gap.suggestions||[]).forEach(s=>{
+      const sDiv=document.createElement('div');
+      sDiv.style.cssText='background:var(--card);border-radius:var(--rs);border:1px solid var(--b1);padding:10px 12px;display:flex;align-items:center;gap:10px;margin-bottom:6px';
+      sDiv.innerHTML=`<span style="font-size:20px;flex-shrink:0">${s.emoji||'📍'}</span><div style="flex:1;min-width:0"><div style="font-family:var(--serif);font-size:12px;font-style:italic;color:var(--ink)">${esc(s.name)}</div><div style="font-size:10px;color:var(--muted);margin-top:2px">${esc(s.why||s.location||'')}</div></div><button onclick="addDiscoverPlace(${JSON.stringify(s).replace(/"/g,'&quot;')})" style="padding:5px 11px;border-radius:99px;border:1.5px solid var(--accent-b);background:var(--accent-s);color:var(--accent);font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:var(--font)">+ Add</button>`;
+      gapDiv.appendChild(sDiv);
+    });
+    container.appendChild(gapDiv);
+  });
+}
+
+// Cache for AI results (don't re-fetch on tab switch)
+const discoverCache={};
+
+async function fetchWithRetry(body, maxRetries=3){
+  for(let attempt=0; attempt<maxRetries; attempt++){
+    try{
+      const res=await fetch(AI_PROXY,{method:'POST',headers:AI_H,body:JSON.stringify(body)});
+      const d=await res.json();
+      if(res.status===529||d.error?.message?.includes('overloaded')){
+        if(attempt<maxRetries-1){
+          toast('Porter is busy — retrying in '+(attempt+1)*4+'s…');
+          await new Promise(r=>setTimeout(r,(attempt+1)*4000));
+          continue;
+        }
+        throw new Error('AI is busy right now — try again in a moment');
+      }
+      if(d.error) throw new Error(d.error.message);
+      return d;
+    }catch(e){
+      if(attempt===maxRetries-1) throw e;
+      await new Promise(r=>setTimeout(r,2000));
+    }
+  }
+}
+
+async function runDiscoverAI(prompt, cacheKey){
+  if(discoverCache[cacheKey]) return discoverCache[cacheKey];
+  try{
+    const d=await fetchWithRetry({
+      model:AI_MODEL,max_tokens:1500,
+      system:'You are a travel expert with deep local knowledge. Return ONLY valid JSON arrays or objects as specified. No markdown, no explanation.',
+      messages:[{role:'user',content:prompt}]
+    });
+    const txt=(d.content?.find(b=>b.type==='text')?.text||'').trim();
+    const match=txt.match(/[\[{][\s\S]*[\]}]/);
+    if(!match) throw new Error('No JSON in response');
+    const parsed=JSON.parse(match[0]);
+    discoverCache[cacheKey]=parsed;
+    return parsed;
+  }catch(e){
+    toast('Porter AI: '+e.message);
+    return null;
+  }
+}
+
+function renderDiscoverList(places, title, showCats){
+  const container=document.getElementById('disc-top10-content');
+  if(!container) return;
+  container.innerHTML='';
+  // Back button
+  const back=document.createElement('div');
+  back.style.cssText='display:flex;align-items:center;gap:6px;margin-bottom:12px;cursor:pointer';
+  back.innerHTML='<span style="font-size:12px;color:var(--accent);font-weight:600">← Categories</span>';
+  back.onclick=()=>renderTop10Categories();
+  container.appendChild(back);
+  // Title
+  const hd=document.createElement('div');
+  hd.style.cssText='font-family:var(--serif);font-size:18px;font-style:italic;color:var(--ink);margin-bottom:12px;line-height:1.2';
+  hd.textContent=title;
+  container.appendChild(hd);
+  (Array.isArray(places)?places:[]).forEach((p,i)=>{
+    const onList=p.on_list||isOnList(p.name);
+    const div=document.createElement('div');
+    div.style.cssText=`background:${onList?'var(--accent-s)':'var(--card)'};border:1.5px solid ${onList?'var(--accent-b)':'var(--b1)'};border-radius:var(--rs);overflow:hidden;margin-bottom:7px`;
+    div.innerHTML=`
+      <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px">
+        <div style="font-size:20px;flex-shrink:0;margin-top:1px">${p.emoji||'📍'}</div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:2px">
+            <span style="font-family:var(--serif);font-size:13px;font-style:italic;color:var(--ink)">${esc(p.name)}</span>
+            ${onList?'<span style="background:var(--accent);color:#fff;border-radius:4px;font-size:8px;font-weight:700;padding:2px 6px;letter-spacing:.04em">ON LIST</span>':''}
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:2px">📍 ${esc(p.location||'')}</div>
+          <div style="font-size:11px;color:var(--ink2);line-height:1.5">${esc(p.why||'')}</div>
+        </div>
+        ${!onList?`<button onclick="addDiscoverPlace(${JSON.stringify(p).replace(/"/g,'&quot;')})" style="padding:5px 11px;border-radius:99px;border:1.5px solid var(--accent-b);background:var(--accent-s);color:var(--accent);font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:var(--font)">+ Add</button>`:'<div style="font-size:16px;color:var(--accent);flex-shrink:0">✓</div>'}
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+async function addDiscoverPlace(place){
+  if(!tripId){toast('Create a trip first');return;}
+  const payload={
+    trip_id:tripId,added_by:user.id,
+    title:place.name,city:(place.location||'').split(',')[0].trim(),
+    location:place.location||'',emoji:place.emoji||'📍',
+    tags:Array.isArray(place.tags)?place.tags.slice(0,3):[],
+    description:place.why||'',color:'#C8DCC8',
+    booking_status:place.booking_status||'',added_to_trip:false,
+  };
+  const{data,error}=await sb.from('inspiration_cards').insert(payload).select().single();
+  if(error){toast('Could not add: '+error.message);return;}
+  cards.unshift(data);
+  toast('✓ '+place.name+' added to your list');
+  renderCards();renderClusters();updateOnListCount();
+  if(place.booking_status==='needs') setTimeout(()=>toast('💡 '+place.name+' needs a booking — add to Bookings tab'),2000);
+}
+
+async function addAllDiscoverPlaces(){
+  const results=document.getElementById('disc-day-results');
+  if(!results) return;
+  const btns=results.querySelectorAll('button[onclick^="addDiscoverPlace"]');
+  toast('Adding '+btns.length+' places…');
+  for(const btn of btns) btn.click();
+}
+
+function showDiscLoading(msg){
+  ['disc-top10-view','disc-day-view','disc-gaps-view'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display='none';
+  });
+  const ld=document.getElementById('disc-loading');
+  if(ld){ld.style.display='flex';ld.style.flexDirection='column';}
+  const txt=document.getElementById('disc-loading-txt');
+  if(txt) txt.textContent=msg||'Porter is researching…';
+}
+
+function hideDiscLoading(){
+  const ld=document.getElementById('disc-loading');
+  if(ld) ld.style.display='none';
+  const view=document.getElementById('disc-'+discoverMode+'-view');
+  if(view){view.style.display='flex';view.style.flexDirection='column';}
+}
+
+
 document.getElementById('url-in').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();capture();}});
 document.getElementById('a-pw').addEventListener('keydown',e=>{if(e.key==='Enter')doAuth();});
 document.getElementById('vault-q').addEventListener('keydown',e=>{if(e.key==='Enter')ragSearch();});
