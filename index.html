@@ -66,16 +66,16 @@ button,input,textarea{font-family:var(--font)}
 @keyframes rise{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── TOP BAR ── */
-.top-bar{padding:14px 18px 10px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;background:var(--cream);border-bottom:1px solid var(--rule)}
-.wordmark{font-size:16px;font-weight:900;color:var(--ink);letter-spacing:-.03em}
-.wordmark em{opacity:.25;font-style:normal}
+.top-bar{padding:12px 16px 10px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;background:var(--cream);border-bottom:1px solid var(--rule)}
+.wordmark{font-size:15px;font-weight:900;color:var(--ink);letter-spacing:-.03em}
+.wordmark em{opacity:.3;font-style:normal}
 .top-actions{display:flex;align-items:center;gap:8px}
 .icon-btn{width:32px;height:32px;border-radius:7px;background:var(--cream2);border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:all .15s;flex-shrink:0;color:var(--ink)}
 .icon-btn:hover{background:var(--cream3)}
 .icon-btn svg{color:var(--ink)}
-.av-btn{width:32px;height:32px;border-radius:50%;background:var(--ink);color:var(--cream);font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;letter-spacing:.04em;flex-shrink:0}
+.av-btn{width:28px;height:28px;border-radius:50%;background:transparent;color:var(--ink);font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1.5px solid var(--ink);letter-spacing:.04em;flex-shrink:0}
 /* ── ASK BUTTON (top bar right, next to avatar) ── */
-.ask-btn{display:flex;align-items:center;gap:4px;padding:6px 13px;border-radius:99px;background:var(--ink);color:var(--cream);border:none;cursor:pointer;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;flex-shrink:0;transition:opacity .15s;height:32px}
+.ask-btn{display:flex;align-items:center;gap:4px;padding:5px 11px;border-radius:99px;background:var(--ink);color:var(--cream);border:none;cursor:pointer;font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;flex-shrink:0;transition:opacity .15s}
 .ask-btn:hover{opacity:.85}
 .ask-btn .ask-glyph{font-size:11px;opacity:.5}
 /* thin separator between avatar and Ask */
@@ -932,21 +932,24 @@ button,input,textarea{font-family:var(--font)}
       <div class="sizing-nudge" id="sizing-nudge"></div>
       <div class="err-strip" id="plan-err"></div>
       <div class="clusters" id="clusters"></div>
+      <div style="padding:8px 18px;border-top:1px solid var(--rule);flex-shrink:0;display:flex;gap:8px">
+        <button onclick="goTab('vault')" style="flex:1;padding:9px;border-radius:9px;background:var(--cream2);border:1px solid var(--rule);font-size:10px;font-weight:900;color:var(--ink);cursor:pointer;letter-spacing:.04em;text-transform:uppercase;font-family:var(--font)">Bookings →</button>
+      </div>
     </div>
     <div class="planner" id="planner">
       <!-- Planner header -->
-      <div class="planner-hd">
-        <div style="flex:1;min-width:0">
-          <div class="planner-back" onclick="backToClusters()">← Cities</div>
-          <div class="planner-city" id="planner-city">—</div>
+      <div class="top-bar">
+        <div style="min-width:0">
+          <button onclick="backToClusters()" style="font-size:11px;font-weight:700;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--font);padding:0;display:block;margin-bottom:2px">← Cities</button>
+          <div style="font-size:16px;font-weight:900;color:var(--ink);letter-spacing:-.04em;line-height:1" id="planner-city">—</div>
         </div>
-        <div class="planner-acts">
-          <!-- View toggle -->
-          <div style="display:flex;border:1.5px solid var(--rule);border-radius:var(--rx);overflow:hidden;background:var(--cream2)">
-            <button id="cal-view-day" onclick="setCalView('day')" style="padding:5px 10px;border:none;background:var(--ink);color:var(--cream);font-size:10px;font-weight:900;cursor:pointer;font-family:var(--font);letter-spacing:.04em">Day</button>
-            <button id="cal-view-trip" onclick="setCalView('trip')" style="padding:5px 10px;border:none;background:transparent;color:var(--muted);font-size:10px;font-weight:700;cursor:pointer;font-family:var(--font);letter-spacing:.04em">Trip</button>
+        <div class="top-actions">
+          <div style="display:flex;border:1px solid var(--rule);border-radius:7px;overflow:hidden">
+            <button id="cal-view-day" onclick="setCalView('day')" style="padding:5px 10px;border:none;background:var(--ink);color:var(--cream);font-size:9px;font-weight:900;cursor:pointer;font-family:var(--font);letter-spacing:.06em;text-transform:uppercase">Day</button>
+            <button id="cal-view-trip" onclick="setCalView('trip')" style="padding:5px 10px;border:none;background:transparent;color:var(--muted);font-size:9px;font-weight:700;cursor:pointer;font-family:var(--font);letter-spacing:.06em;text-transform:uppercase">Trip</button>
           </div>
-          <div class="icon-btn" onclick="runCopilot()" title="Co-pilot" style="font-size:11px;font-weight:900;letter-spacing:.04em">🧭</div>
+          <button class="icon-btn" onclick="runCopilot()" title="Co-pilot" style="font-size:12px">🧭</button>
+          <button class="av-btn" onclick="openModal('profile-modal')" id="av-btn-planner">?</button>
           <div class="ask-sep"></div>
           <button class="ask-btn" onclick="openChat()"><span class="ask-glyph">✦</span>Ask</button>
         </div>
@@ -980,15 +983,18 @@ button,input,textarea{font-family:var(--font)}
     </div>
   </div>
 
-  <!-- BOOKINGS -->
+  <!-- BOOKINGS (sheet, not a tab — opened from Plan) -->
   <div class="screen" id="s-vault">
-    <div class="book-hd">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <div>
-          <div class="book-h1">Bookings</div>
-          <div class="book-p">Shared with your crew · Ask Porter anything</div>
-        </div>
-        <div class="icon-btn" style="margin-top:4px" onclick="openModal('doc-modal')">+</div>
+    <div class="top-bar">
+      <div>
+        <button onclick="goTab('plan')" style="font-size:11px;font-weight:700;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--font);padding:0;display:block;margin-bottom:2px">← Plan</button>
+        <div style="font-size:16px;font-weight:900;letter-spacing:-.04em;color:var(--ink)">Bookings</div>
+      </div>
+      <div class="top-actions">
+        <button onclick="openModal('doc-modal')" style="font-size:10px;font-weight:900;background:var(--ink);color:var(--cream);border:none;border-radius:7px;padding:6px 12px;cursor:pointer;letter-spacing:.04em;text-transform:uppercase">+ Add</button>
+        <button class="av-btn" onclick="openModal('profile-modal')" id="av-btn-vault">?</button>
+        <div class="ask-sep"></div>
+        <button class="ask-btn" onclick="openChat()"><span class="ask-glyph">✦</span>Ask</button>
       </div>
     </div>
     <div class="emergency-card" id="emergency-card" onclick="toast('All booking details in the list below')">
@@ -1042,16 +1048,15 @@ button,input,textarea{font-family:var(--font)}
 
   <!-- TRIP MODE -->
   <div class="screen" id="s-trip">
-    <div class="top-bar">
-      <div class="wordmark">Porter<em>.</em></div>
-      <div class="top-actions">
-        <button class="av-btn" onclick="openModal('profile-modal')" id="av-btn-trip">?</button>
-        <div class="ask-sep"></div>
-        <button class="ask-btn" onclick="openChat()"><span class="ask-glyph">✦</span>Ask</button>
+    <div class="trip-mode-hd" style="position:relative">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+        <div style="font-size:9px;font-weight:900;color:var(--faint);letter-spacing:.12em;text-transform:uppercase" id="trip-eyebrow">Now travelling</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <button class="av-btn" onclick="openModal('profile-modal')" id="av-btn-trip" style="border-color:var(--rule);color:var(--muted)">?</button>
+          <div class="ask-sep"></div>
+          <button class="ask-btn" onclick="openChat()"><span class="ask-glyph">✦</span>Ask</button>
+        </div>
       </div>
-    </div>
-    <div class="trip-mode-hd">
-      <div class="trip-mode-eyebrow" id="trip-eyebrow">Now travelling</div>
       <div class="trip-mode-h1" id="trip-mode-h1">Today</div>
       <div class="trip-mode-date" id="trip-mode-date">—</div>
     </div>
@@ -1807,7 +1812,7 @@ async function saveProfile(){
   try{
     await sb.from('profiles').upsert({id:user.id,display_name:name||user.email.split('@')[0],avatar_initials:init,country,preferences:prefs},{onConflict:'id'});
     window._profileData={...(window._profileData||{}),display_name:name,avatar_initials:init,country,preferences:prefs};
-    ['av-btn','av-btn-plan','av-btn-trip','av-btn-clusters'].forEach(id=>{const el=document.getElementById(id);if(el) el.textContent=init;});
+    ['av-btn','av-btn-plan','av-btn-trip','av-btn-clusters','av-btn-planner','av-btn-vault'].forEach(id=>{const el=document.getElementById(id);if(el) el.textContent=init;});
   }catch(e){/* non-critical — table may not have all columns yet */}
   // Save theme
   localStorage.setItem('porter_theme',theme);
@@ -4333,7 +4338,7 @@ function showPlanTab(){
 function goTab(tab){
   // Map all old/alias names to screen and tab IDs
   const screenMap={capture:'capture',plan:'plan',vault:'plan',trip:'trip',go:'trip'};
-  const tabMap={capture:'t-capture',plan:'t-plan',vault:'t-plan',trip:'t-trip',go:'t-trip'};
+  const tabMap={capture:'t-capture',plan:'t-plan',vault:'t-plan',trip:'t-trip',go:'t-trip',bookings:'t-plan'};
   showScreen(screenMap[tab]||'capture');
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   const tabId=tabMap[tab];
