@@ -411,6 +411,18 @@ button,input,textarea{font-family:var(--font)}
 .map-title{font-family:var(--serif);font-size:18px;font-style:italic;letter-spacing:-.01em;flex:1;color:var(--ink)}
 #map-container{flex:1;position:relative}
 #mapbox-map{width:100%;height:100%}
+/* EXPENSES */
+.expense-item{background:var(--card);border:1px solid var(--b1);border-radius:var(--rs);padding:10px 13px;display:flex;gap:10px;align-items:center;margin-bottom:7px;box-shadow:var(--sh)}
+.exp-cat{width:34px;height:34px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.exp-info{flex:1;min-width:0}
+.exp-title{font-size:13px;font-weight:500;color:var(--ink)}
+.exp-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.exp-amount{font-family:var(--serif);font-size:16px;font-style:italic;color:var(--ink);font-weight:600;flex-shrink:0}
+.exp-del{width:22px;height:22px;border-radius:50%;background:var(--bg);border:none;font-size:10px;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.exp-del:hover{background:var(--red-s);color:var(--red)}
+.exp-summary{background:var(--accent-s);border:1px solid var(--accent-b);border-radius:var(--rs);padding:11px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.exp-total{font-family:var(--serif);font-size:20px;font-style:italic;color:var(--accent)}
+.exp-breakdown{font-size:11px;color:var(--accent2);line-height:1.6;text-align:right}
 .route-card{position:absolute;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--b1);padding:13px 17px;z-index:500;max-height:50%;overflow-y:auto;box-shadow:0 -4px 20px rgba(0,0,0,.1)}
 .route-hd{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:11px}
 .route-leg{display:flex;align-items:flex-start;gap:11px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--b1)}
@@ -420,6 +432,23 @@ button,input,textarea{font-family:var(--font)}
 .route-leg-name{font-weight:600;font-size:13px;color:var(--ink)}
 .route-leg-meta{font-size:11px;color:var(--muted);margin-top:2px}
 .route-leg-travel{font-size:11px;color:var(--accent);font-weight:500;margin-top:3px}
+/* DRAG REORDER */
+.ev-row.dragging{opacity:.35;transform:scale(.98)}
+.ev-row.drag-over{border-top:2.5px solid var(--accent);margin-top:-1px}
+.drag-handle{cursor:grab;font-size:13px;color:var(--b2);padding:0 3px 0 0;user-select:none;flex-shrink:0;margin-top:6px}
+.drag-handle:active{cursor:grabbing}
+/* EXPENSES */
+.expense-item{background:var(--card);border:1px solid var(--b1);border-radius:var(--rs);padding:10px 13px;display:flex;gap:10px;align-items:center;margin-bottom:7px;box-shadow:var(--sh)}
+.exp-cat{width:34px;height:34px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.exp-info{flex:1;min-width:0}
+.exp-title{font-size:13px;font-weight:500;color:var(--ink)}
+.exp-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.exp-amount{font-family:var(--serif);font-size:15px;font-style:italic;color:var(--ink);font-weight:600;flex-shrink:0}
+.exp-del{width:22px;height:22px;border-radius:50%;background:var(--bg);border:none;font-size:10px;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.exp-del:hover{background:var(--red-s);color:var(--red)}
+.exp-summary{background:var(--accent-s);border:1px solid var(--accent-b);border-radius:var(--rs);padding:11px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.exp-total{font-family:var(--serif);font-size:20px;font-style:italic;color:var(--accent)}
+.exp-breakdown{font-size:11px;color:var(--accent2);line-height:1.6;text-align:right}
 </style>
 
 </head>
@@ -427,33 +456,101 @@ button,input,textarea{font-family:var(--font)}
 <div class="shell">
   <div class="sbar"><span id="clk">9:41</span><span class="sbar-brand">Porter</span><span>v1.2</span></div>
 
-  <!-- AUTH -->
-  <div class="screen on" id="s-auth">
-    <div class="auth-mark">Port<em>er</em></div>
-    <p class="auth-sub">From inspiration to itinerary. Built for groups who travel together.</p>
-    <div class="auth-form">
-      <div class="auth-msg" id="auth-msg"></div>
-      <input class="af" id="a-email" type="email" placeholder="Email address" autocomplete="email">
-      <input class="af" id="a-pw" type="password" placeholder="Password" autocomplete="current-password">
-      <button class="auth-cta" id="a-btn" onclick="doAuth()">Sign in</button>
-      <div class="auth-tog" id="a-tog" onclick="togAuth()">No account? <b>Create one</b></div>
+  <!-- SPLASH / AUTH -->
+  <div class="screen on" id="s-auth" style="background:var(--cream)">
+    <!-- Splash state (shown first) -->
+    <div id="auth-splash" style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:40px 28px;text-align:center">
+      <div style="font-size:56px;margin-bottom:8px">🌍</div>
+      <div class="auth-mark" style="font-size:48px;margin-bottom:6px">Port<em>er</em></div>
+      <p class="auth-sub" style="margin-bottom:40px">From inspiration to itinerary.<br>Built for groups who travel together.</p>
+      <button class="auth-cta" onclick="showAuthForm(false)" style="margin-bottom:10px">Get started — it's free</button>
+      <button class="auth-cta" onclick="showAuthForm(true)" style="background:transparent;color:var(--accent);border:1.5px solid var(--accent-b)">I already have an account</button>
+    </div>
+    <!-- Sign-in / sign-up form (hidden until above tapped) -->
+    <div id="auth-form-wrap" style="display:none;flex-direction:column;flex:1;padding:40px 28px;justify-content:center">
+      <div class="auth-mark" style="text-align:center;margin-bottom:4px">Port<em>er</em></div>
+      <p class="auth-sub" id="auth-form-title" style="margin-bottom:24px">Sign in to your account</p>
+      <div class="auth-form">
+        <div class="auth-msg" id="auth-msg"></div>
+        <input class="af" id="a-name" placeholder="Your name (e.g. Maya)" autocomplete="name" style="display:none">
+        <input class="af" id="a-email" type="email" placeholder="Email address" autocomplete="email">
+        <input class="af" id="a-pw" type="password" placeholder="Password" autocomplete="current-password">
+        <button class="auth-cta" id="a-btn" onclick="doAuth()">Sign in</button>
+        <div class="auth-tog" id="a-tog" onclick="togAuth()">No account? <b>Create one</b></div>
+        <div style="text-align:center;margin-top:4px"><span style="font-size:12px;color:var(--muted);cursor:pointer" onclick="document.getElementById('auth-splash').style.display='flex';document.getElementById('auth-form-wrap').style.display='none'">← Back</span></div>
+      </div>
     </div>
   </div>
 
-  <!-- ONBOARD -->
-  <div class="screen" id="s-onboard">
-    <div class="ob-eyebrow">Welcome to Porter</div>
-    <h1 class="ob-h1">Where are you<br><em>going?</em></h1>
-    <p class="ob-p">Name your trip and invite your crew. Porter handles the rest.</p>
-    <label class="ob-label">Trip name</label>
-    <input class="ob-in" id="ob-name" placeholder="e.g. Thailand with the crew" autocomplete="off">
-    <label class="ob-label">Dates (optional — helps Porter give better advice)</label>
-    <div class="ob-dates">
-      <input class="ob-in" id="ob-start" type="date">
-      <input class="ob-in" id="ob-end" type="date">
+  <!-- ONBOARD — first trip creation (3-step) -->
+  <div class="screen" id="s-onboard" style="background:var(--cream);overflow-y:auto">
+    <!-- Step indicator -->
+    <div style="padding:20px 28px 0;display:flex;gap:5px" id="ob-steps">
+      <div style="flex:1;height:3px;border-radius:2px;background:var(--accent)" id="ob-step-1"></div>
+      <div style="flex:1;height:3px;border-radius:2px;background:var(--b1)" id="ob-step-2"></div>
+      <div style="flex:1;height:3px;border-radius:2px;background:var(--b1)" id="ob-step-3"></div>
     </div>
-    <button class="ob-cta" id="ob-btn" onclick="createFirstTrip()">Start planning</button>
-    <div class="ob-skip" onclick="skipOnboard()">Already have trips? <b>Skip</b></div>
+    <!-- Step 1: destination -->
+    <div id="ob-s1" style="padding:24px 28px;display:flex;flex-direction:column">
+      <div class="ob-eyebrow">Step 1 of 3</div>
+      <h1 class="ob-h1">Where are you<br><em>headed?</em></h1>
+      <p class="ob-p">Porter groups your saved places by city — get this right and everything falls into place.</p>
+      <label class="ob-label">Destination city</label>
+      <input class="ob-in" id="ob-dest" placeholder="e.g. Bangkok, Tokyo, Bali…" autocomplete="off" oninput="suggestDest(this.value)">
+      <div id="ob-dest-suggestions" style="display:flex;flex-direction:column;gap:5px;margin-bottom:8px"></div>
+      <label class="ob-label">Trip name <span style="font-weight:400;color:var(--muted)">(optional — we'll suggest one)</span></label>
+      <input class="ob-in" id="ob-name" placeholder="e.g. Thailand with the crew" autocomplete="off">
+      <label class="ob-label">Dates <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+      <div class="ob-dates">
+        <input class="ob-in" id="ob-start" type="date">
+        <input class="ob-in" id="ob-end" type="date">
+      </div>
+      <button class="ob-cta" onclick="obNext(1)">Continue →</button>
+      <div class="ob-skip" onclick="skipOnboard()">Already have trips? <b>Skip</b></div>
+    </div>
+    <!-- Step 2: travelling with + type -->
+    <div id="ob-s2" style="padding:24px 28px;display:none;flex-direction:column">
+      <div class="ob-eyebrow">Step 2 of 3</div>
+      <h1 class="ob-h1">Who's coming<br><em>with you?</em></h1>
+      <p class="ob-p">This helps Porter give better recommendations and sets up the right crew features.</p>
+      <div id="ob-who-opts" style="display:flex;flex-direction:column;gap:7px;margin-bottom:16px">
+        <div class="ob-who-opt on" data-who="solo" onclick="pickWho(this)" style="background:#EAF2EE;border:1.5px solid #2C5F4A;border-radius:var(--rs);padding:13px 15px;cursor:pointer;display:flex;align-items:center;gap:12px">
+          <div style="font-size:24px">🧍</div><div><div style="font-weight:600;font-size:14px;color:var(--ink)">Just me</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Solo travel — Porter personalises for one</div></div>
+        </div>
+        <div class="ob-who-opt" data-who="partner" onclick="pickWho(this)" style="background:var(--card);border:1.5px solid var(--b1);border-radius:var(--rs);padding:13px 15px;cursor:pointer;display:flex;align-items:center;gap:12px">
+          <div style="font-size:24px">👫</div><div><div style="font-weight:600;font-size:14px;color:var(--ink)">Partner / couple</div><div style="font-size:12px;color:var(--muted);margin-top:2px">Two of you — invite your partner after</div></div>
+        </div>
+        <div class="ob-who-opt" data-who="group" onclick="pickWho(this)" style="background:var(--card);border:1.5px solid var(--b1);border-radius:var(--rs);padding:13px 15px;cursor:pointer;display:flex;align-items:center;gap:12px">
+          <div style="font-size:24px">👥</div><div><div style="font-weight:600;font-size:14px;color:var(--ink)">Group</div><div style="font-size:12px;color:var(--muted);margin-top:2px">3+ people — everyone adds places together</div></div>
+        </div>
+      </div>
+      <button class="ob-cta" onclick="obNext(2)">Continue →</button>
+      <div class="ob-skip" onclick="obBack(2)" style="margin-top:8px">← Back</div>
+    </div>
+    <!-- Step 3: review + create -->
+    <div id="ob-s3" style="padding:24px 28px;display:none;flex-direction:column">
+      <div class="ob-eyebrow">Step 3 of 3</div>
+      <h1 class="ob-h1">Looks good —<br><em>let's go!</em></h1>
+      <div id="ob-review" style="background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:16px;margin-bottom:20px;box-shadow:var(--sh)">
+        <div style="font-family:var(--serif);font-size:20px;font-style:italic;color:var(--ink);margin-bottom:8px" id="ob-review-name">—</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center"><span style="font-size:14px">📍</span><span id="ob-review-dest">—</span></div>
+          <div style="font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center" id="ob-review-dates-row"><span style="font-size:14px">📅</span><span id="ob-review-dates">No dates set</span></div>
+          <div style="font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center"><span style="font-size:14px" id="ob-review-who-ico">🧍</span><span id="ob-review-who">Solo</span></div>
+        </div>
+      </div>
+      <!-- Check for existing cards from same destination -->
+      <div id="ob-existing-wrap" style="display:none;background:var(--accent-s);border:1px solid var(--accent-b);border-radius:var(--rs);padding:13px 15px;margin-bottom:16px">
+        <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px">📌 You've saved places here before</div>
+        <div style="font-size:12px;color:var(--mid);margin-bottom:10px;line-height:1.5" id="ob-existing-txt">—</div>
+        <div style="display:flex;gap:7px">
+          <button onclick="obSetImport(true)" id="ob-import-yes" style="flex:1;padding:9px;border-radius:var(--rx);border:1.5px solid var(--accent);background:var(--accent);color:#fff;font-size:12px;font-weight:600;cursor:pointer">Pull them in ✓</button>
+          <button onclick="obSetImport(false)" id="ob-import-no" style="flex:1;padding:9px;border-radius:var(--rx);border:1.5px solid var(--b1);background:transparent;color:var(--muted);font-size:12px;cursor:pointer">Fresh start</button>
+        </div>
+      </div>
+      <button class="ob-cta" id="ob-btn" onclick="createFirstTrip()">Create my trip 🚀</button>
+      <div class="ob-skip" onclick="obBack(3)" style="margin-top:8px">← Back</div>
+    </div>
   </div>
 
   <!-- CAPTURE -->
@@ -463,7 +560,7 @@ button,input,textarea{font-family:var(--font)}
       <div class="top-actions">
         <div class="icon-btn" onclick="openModal('invite-modal')" title="Invite crew">👥</div>
         <div class="icon-btn" onclick="openModal('trip-actions-modal')" title="Trip options">⋯</div>
-        <button class="av-btn" id="av-btn" onclick="signOut()">?</button>
+        <button class="av-btn" id="av-btn" onclick="openModal('profile-modal')">?</button>
       </div>
     </div>
     <div class="trip-strip" id="trip-strip"></div>
@@ -582,14 +679,28 @@ button,input,textarea{font-family:var(--font)}
         <button class="rag-go" id="rag-btn" onclick="ragSearch()">↑</button>
       </div>
     </div>
-    <div class="vf-bar">
-      <div class="vf-chip on" data-vf="all" onclick="setVF(this)">All</div>
-      <div class="vf-chip" data-vf="Flight" onclick="setVF(this)">✈️ Flights</div>
-      <div class="vf-chip" data-vf="Hotel" onclick="setVF(this)">🏨 Hotels</div>
-      <div class="vf-chip" data-vf="Event" onclick="setVF(this)">🎟 Events</div>
-      <div class="vf-chip" data-vf="Insurance" onclick="setVF(this)">💳 Insurance</div>
+    <!-- Bookings / Expenses tab switcher -->
+    <div style="display:flex;gap:0;margin:0 20px 8px;border:1.5px solid var(--b1);border-radius:var(--rs);overflow:hidden;flex-shrink:0">
+      <button id="vault-tab-docs" class="m-tab on" style="font-size:11px;padding:8px" onclick="switchVaultTab('docs')">📂 Bookings</button>
+      <button id="vault-tab-exp" class="m-tab" style="font-size:11px;padding:8px" onclick="switchVaultTab('exp')">💰 Expenses</button>
     </div>
-    <div class="doc-list" id="doc-list"></div>
+    <!-- Docs view -->
+    <div id="vault-docs-view">
+      <div class="vf-bar">
+        <div class="vf-chip on" data-vf="all" onclick="setVF(this)">All</div>
+        <div class="vf-chip" data-vf="Flight" onclick="setVF(this)">✈️ Flights</div>
+        <div class="vf-chip" data-vf="Hotel" onclick="setVF(this)">🏨 Hotels</div>
+        <div class="vf-chip" data-vf="Event" onclick="setVF(this)">🎟 Events</div>
+        <div class="vf-chip" data-vf="Insurance" onclick="setVF(this)">💳 Insurance</div>
+      </div>
+      <div class="doc-list" id="doc-list"></div>
+    </div>
+    <!-- Expenses view -->
+    <div id="vault-exp-view" style="display:none;flex:1;overflow-y:auto;padding:0 20px 80px;scrollbar-width:none">
+      <div id="exp-summary"></div>
+      <div id="exp-list"></div>
+      <button class="add-stop-btn" onclick="openModal('exp-modal')">+ Add expense</button>
+    </div>
   </div>
 
   <!-- TRIP MODE -->
@@ -636,6 +747,107 @@ button,input,textarea{font-family:var(--font)}
     </div>
     <div class="tab" id="t-trip" onclick="goTab('trip')">
       <div class="tab-ico">🧳</div><div class="tab-lbl">Trip</div>
+    </div>
+  </div>
+
+  <!-- PROFILE MODAL -->
+  <div class="modal-bg" id="profile-modal">
+    <div class="modal">
+      <div class="modal-h">Your profile</div>
+      <!-- Avatar + email -->
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;padding:14px;background:var(--bg);border-radius:var(--rs);border:1px solid var(--b1)">
+        <div id="profile-av" style="width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">?</div>
+        <div>
+          <div id="profile-name-display" style="font-weight:600;font-size:15px;color:var(--ink)">—</div>
+          <div id="profile-email-display" style="font-size:12px;color:var(--muted);margin-top:2px">—</div>
+        </div>
+      </div>
+      <!-- Display name -->
+      <div class="m-label">Display name</div>
+      <input class="m-in" id="profile-name" placeholder="How you appear to your crew">
+      <!-- Country -->
+      <div class="m-label">Home country</div>
+      <input class="m-in" id="profile-country" placeholder="e.g. Singapore">
+      <!-- Preferences -->
+      <div class="m-label">Travel preferences</div>
+      <input class="m-in" id="profile-prefs" placeholder="e.g. vegetarian, budget-conscious, loves rooftops">
+      <!-- Colour scheme -->
+      <div class="m-label">Colour scheme</div>
+      <div style="display:flex;gap:8px;margin-bottom:14px" id="theme-picker">
+        <div class="theme-opt on" data-theme="beige" onclick="pickTheme(this)" style="flex:1;padding:10px 0;border-radius:var(--rx);border:2px solid var(--accent);background:#F2EDE4;text-align:center;font-size:12px;font-weight:600;color:#2C5F4A;cursor:pointer">Beige</div>
+        <div class="theme-opt" data-theme="dark" onclick="pickTheme(this)" style="flex:1;padding:10px 0;border-radius:var(--rx);border:1.5px solid var(--b1);background:#0A0907;text-align:center;font-size:12px;font-weight:600;color:#C4B89A;cursor:pointer">Dark</div>
+        <div class="theme-opt" data-theme="white" onclick="pickTheme(this)" style="flex:1;padding:10px 0;border-radius:var(--rx);border:1.5px solid var(--b1);background:#fff;text-align:center;font-size:12px;font-weight:600;color:#1C1917;cursor:pointer">White</div>
+      </div>
+      <!-- Change password -->
+      <div style="border-top:1px solid var(--b1);margin:4px 0 14px"></div>
+      <div class="m-label">Change password</div>
+      <input class="m-in" id="profile-pw" type="password" placeholder="New password (leave blank to keep current)">
+      <div class="m-btns">
+        <button class="m-btn sec" onclick="closeModal('profile-modal')">Cancel</button>
+        <button class="m-btn pri" onclick="saveProfile()">Save</button>
+      </div>
+      <!-- Sign out -->
+      <button onclick="signOut()" style="width:100%;margin-top:12px;padding:12px;border-radius:var(--rx);border:1.5px solid var(--red-b);background:transparent;color:var(--red);font-size:13px;font-weight:600;cursor:pointer">Sign out</button>
+    </div>
+  </div>
+
+  <!-- TRIP PICKER MODAL (when adding place with multiple trips) -->
+  <div class="modal-bg" id="trip-picker-modal">
+    <div class="modal">
+      <div class="modal-h">Which trip? 🗺</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6">Choose which trip to add this place to.</p>
+      <div id="trip-picker-list" style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px"></div>
+      <button class="m-btn sec" onclick="closeModal('trip-picker-modal')" style="width:100%">Cancel</button>
+    </div>
+  </div>
+
+  <!-- NEW TRIP MODAL — smart 3-option flow -->
+  <div class="modal-bg" id="new-trip-modal">
+    <div class="modal" style="max-height:92svh">
+      <!-- Step A: choose type -->
+      <div id="nt-step-a">
+        <div class="modal-h">New trip</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+          <div class="nt-type-opt on" data-type="fresh" onclick="pickTripType(this)" style="background:var(--accent-s);border:1.5px solid var(--accent);border-radius:var(--rs);padding:13px 15px;cursor:pointer;display:flex;align-items:center;gap:11px">
+            <div style="font-size:22px">✨</div>
+            <div><div style="font-weight:600;font-size:13px;color:var(--ink)">Fresh start</div><div style="font-size:11px;color:var(--muted);margin-top:1px">New destination, blank canvas</div></div>
+            <div style="margin-left:auto;width:18px;height:18px;border-radius:50%;background:var(--accent);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center" id="nt-check-fresh">✓</div>
+          </div>
+          <div class="nt-type-opt" data-type="import" onclick="pickTripType(this)" style="background:var(--card);border:1.5px solid var(--b1);border-radius:var(--rs);padding:13px 15px;cursor:pointer;display:flex;align-items:center;gap:11px">
+            <div style="font-size:22px">📌</div>
+            <div><div style="font-weight:600;font-size:13px;color:var(--ink)">Pull in saved places</div><div style="font-size:11px;color:var(--muted);margin-top:1px">Use cards you've already saved</div></div>
+            <div style="margin-left:auto;width:18px;height:18px;border-radius:50%;background:var(--b1);color:transparent;font-size:10px;display:flex;align-items:center;justify-content:center" id="nt-check-import">✓</div>
+          </div>
+          <div class="nt-type-opt" data-type="clone" onclick="pickTripType(this)" style="background:var(--card);border:1.5px solid var(--b1);border-radius:var(--rs);padding:13px 15px;cursor:pointer;display:flex;align-items:center;gap:11px">
+            <div style="font-size:22px">📋</div>
+            <div><div style="font-weight:600;font-size:13px;color:var(--ink)">Copy a past trip</div><div style="font-size:11px;color:var(--muted);margin-top:1px">Clone an itinerary as a starting point</div></div>
+            <div style="margin-left:auto;width:18px;height:18px;border-radius:50%;background:var(--b1);color:transparent;font-size:10px;display:flex;align-items:center;justify-content:center" id="nt-check-clone">✓</div>
+          </div>
+        </div>
+        <div class="m-label">Destination</div>
+        <input class="m-in" id="nt-dest" placeholder="e.g. Bangkok, Tokyo, Bali…" autocomplete="off" oninput="suggestDestNT(this.value)">
+        <div id="nt-dest-suggs" style="display:flex;flex-direction:column;gap:4px;margin-bottom:4px"></div>
+        <div class="m-label">Trip name</div>
+        <input class="m-in" id="nt-name" placeholder="e.g. Thailand with the crew" autocomplete="off">
+        <div style="display:flex;gap:8px">
+          <div style="flex:1"><div class="m-label">From</div><input class="m-in" id="nt-start" type="date" style="margin-bottom:0"></div>
+          <div style="flex:1"><div class="m-label">To</div><input class="m-in" id="nt-end" type="date" style="margin-bottom:0"></div>
+        </div>
+        <!-- Clone picker — shown when clone selected -->
+        <div id="nt-clone-wrap" style="display:none;margin-top:10px">
+          <div class="m-label">Which trip to copy?</div>
+          <div id="nt-clone-list" style="display:flex;flex-direction:column;gap:6px"></div>
+        </div>
+        <!-- Import summary — shown when import selected -->
+        <div id="nt-import-wrap" style="display:none;margin-top:10px;background:var(--accent-s);border:1px solid var(--accent-b);border-radius:var(--rs);padding:11px 13px">
+          <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:3px" id="nt-import-title">Matching saved places</div>
+          <div style="font-size:11px;color:var(--mid)" id="nt-import-desc">—</div>
+        </div>
+        <div class="m-btns" style="margin-top:12px">
+          <button class="m-btn sec" onclick="closeModal('new-trip-modal')">Cancel</button>
+          <button class="m-btn pri" id="nt-btn" onclick="saveNewTrip()">Create trip →</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -700,8 +912,12 @@ button,input,textarea{font-family:var(--font)}
   <div class="modal-bg" id="edit-card-modal">
     <div class="modal">
       <div class="modal-h">Edit place</div>
+      <div class="m-label">Place name</div>
       <input class="m-in" id="ec-title" placeholder="Place name">
-      <input class="m-in" id="ec-location" placeholder="City, Country">
+      <div class="m-label">City <span style="font-size:10px;color:var(--muted);font-weight:400">(determines which cluster this appears in)</span></div>
+      <input class="m-in" id="ec-city" placeholder="e.g. Bangkok">
+      <div class="m-label">Full address / details</div>
+      <input class="m-in" id="ec-location" placeholder="e.g. Chatuchak, Bangkok, Thailand">
       <div class="m-label" style="margin-bottom:8px">Category tags</div>
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px" id="ec-tags-sel">
         <button class="doc-type-btn" data-tag="food" onclick="toggleCardTag(this)">🍜 Food</button>
@@ -766,6 +982,34 @@ button,input,textarea{font-family:var(--font)}
     </div>
   </div>
 
+  <!-- EXPENSE MODAL -->
+  <div class="modal-bg" id="exp-modal">
+    <div class="modal">
+      <div class="modal-h">Add expense</div>
+      <input class="m-in" id="exp-title" placeholder="What was it? e.g. Dinner at Thip Samai">
+      <div style="display:flex;gap:8px">
+        <input class="m-in" id="exp-amount" type="number" placeholder="Amount" step="0.01" style="flex:1;margin-bottom:0">
+        <select class="m-in" id="exp-currency" style="width:80px;margin-bottom:0">
+          <option>THB</option><option>USD</option><option>SGD</option><option>EUR</option><option>GBP</option>
+        </select>
+      </div>
+      <div style="height:8px"></div>
+      <div class="m-label" style="margin-bottom:8px">Category</div>
+      <div class="doc-types" id="exp-cats">
+        <button class="doc-type-btn on" onclick="selExpCat(this,'food','🍜')">🍜 Food</button>
+        <button class="doc-type-btn" onclick="selExpCat(this,'transport','🚕')">🚕 Transport</button>
+        <button class="doc-type-btn" onclick="selExpCat(this,'stay','🏨')">🏨 Stay</button>
+        <button class="doc-type-btn" onclick="selExpCat(this,'activity','🎟')">🎟 Activity</button>
+        <button class="doc-type-btn" onclick="selExpCat(this,'shopping','🛍')">🛍 Shopping</button>
+        <button class="doc-type-btn" onclick="selExpCat(this,'other','💸')">💸 Other</button>
+      </div>
+      <div class="m-btns">
+        <button class="m-btn sec" onclick="closeModal('exp-modal')">Cancel</button>
+        <button class="m-btn pri" onclick="saveExpense()">Save</button>
+      </div>
+    </div>
+  </div>
+
   <!-- MAP PANEL -->
   <div class="map-panel" id="map-panel">
     <div class="map-hd">
@@ -816,7 +1060,7 @@ const SB_KEY   = 'sb_publishable_PEVbJOaaMmPQf5Dl73CUKw_fouTefQ4';
 // AI calls route through Supabase Edge Function — key never exposed in client
 const AI_MODEL = 'claude-sonnet-4-6';
 const AI_PROXY = 'https://bhmawmiikcyxltfjrnlu.supabase.co/functions/v1/ai';
-const AI_H = { 'Content-Type': 'application/json' };
+const AI_H = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SB_KEY };
 const sb = supabase.createClient(SB_URL, SB_KEY, { auth:{ persistSession:true, autoRefreshToken:true }});
 
 // ═══════════════════════════════════
@@ -828,6 +1072,7 @@ let cardFilter='all', vaultFilter='all', isSignUp=false;
 let curCity=null, curDay=1, evDay=1;
 let selectedCard=null, copilotCache={};
 let docType='Flight', docIcon='✈️';
+let expenses=[]; // {id,trip_id,title,amount,currency,paid_by,category,day_number}
 let docEmailParsed=null; // for email extraction
 let myReactions=new Set(); // card IDs I've reacted to
 let refreshInterval=null;
@@ -855,9 +1100,24 @@ sb.auth.onAuthStateChange((event,session)=>{
   if(event==='INITIAL_SESSION'&&session?.user){ user=session.user; postLogin(); }
 });
 
+function showAuthForm(isSignIn){
+  document.getElementById('auth-splash').style.display='none';
+  document.getElementById('auth-form-wrap').style.display='flex';
+  isSignUp=!isSignIn;
+  const nameEl=document.getElementById('a-name');
+  if(nameEl) nameEl.style.display=isSignUp?'block':'none';
+  document.getElementById('a-btn').textContent=isSignUp?'Create account':'Sign in';
+  document.getElementById('auth-form-title').textContent=isSignUp?'Create your account':'Sign in to your account';
+  document.getElementById('a-tog').innerHTML=isSignUp?'Already have one? <b>Sign in</b>':'No account? <b>Create one</b>';
+  setTimeout(()=>(document.getElementById(isSignUp?'a-name':'a-email')||document.getElementById('a-email')).focus(),200);
+}
+
 function togAuth(){
   isSignUp=!isSignUp;
+  const nameEl=document.getElementById('a-name');
+  if(nameEl) nameEl.style.display=isSignUp?'block':'none';
   document.getElementById('a-btn').textContent=isSignUp?'Create account':'Sign in';
+  document.getElementById('auth-form-title')&&(document.getElementById('auth-form-title').textContent=isSignUp?'Create your account':'Sign in to your account');
   document.getElementById('a-tog').innerHTML=isSignUp?'Already have one? <b>Sign in</b>':'No account? <b>Create one</b>';
   clearAuthMsg();
 }
@@ -865,17 +1125,23 @@ function togAuth(){
 async function doAuth(){
   const email=document.getElementById('a-email').value.trim();
   const pw=document.getElementById('a-pw').value;
+  const nameEl=document.getElementById('a-name');
+  const displayName=(nameEl?.value||'').trim()||email.split('@')[0];
   if(!email||!pw){showAuthMsg('Enter your email and password.','err');return;}
   if(pw.length<6){showAuthMsg('Password must be at least 6 characters.','err');return;}
   const btn=document.getElementById('a-btn');
   btn.disabled=true; btn.textContent='…'; clearAuthMsg();
   try{
     const r=isSignUp
-      ?await sb.auth.signUp({email,password:pw,options:{data:{display_name:email.split('@')[0]}}})
+      ?await sb.auth.signUp({email,password:pw,options:{data:{display_name:displayName}}})
       :await sb.auth.signInWithPassword({email,password:pw});
     if(r.error) throw r.error;
     if(isSignUp&&!r.data.session){showAuthMsg('✓ Check your email to confirm, then sign in.','ok');btn.disabled=false;btn.textContent='Create account';return;}
     user=r.data.user;
+    // Save display name to profiles on sign-up
+    if(isSignUp&&displayName){
+      try{await sb.from('profiles').upsert({id:user.id,display_name:displayName,avatar_initials:displayName.slice(0,2).toUpperCase()},{onConflict:'id'});}catch(e){}
+    }
     btn.textContent='✓ Loading…';
     await postLogin();
   }catch(err){
@@ -917,8 +1183,111 @@ async function loadProfile(){
     const init=data?.avatar_initials||user.email.slice(0,2).toUpperCase();
     const btn=document.getElementById('av-btn');
     if(btn) btn.textContent=init;
+    // Store for profile modal
+    window._profileData=data||{};
   }catch(e){/* non-critical */}
 }
+
+function openProfileModal(){
+  const p=window._profileData||{};
+  const init=p.avatar_initials||user.email.slice(0,2).toUpperCase();
+  document.getElementById('profile-av').textContent=init;
+  document.getElementById('profile-name-display').textContent=p.display_name||user.email.split('@')[0];
+  document.getElementById('profile-email-display').textContent=user.email||'';
+  document.getElementById('profile-name').value=p.display_name||'';
+  document.getElementById('profile-country').value=p.country||'';
+  document.getElementById('profile-prefs').value=p.preferences||'';
+  // Theme
+  const saved=localStorage.getItem('porter_theme')||'beige';
+  document.querySelectorAll('.theme-opt').forEach(o=>{
+    const isOn=o.dataset.theme===saved;
+    o.style.border=isOn?'2px solid var(--accent)':'1.5px solid var(--b1)';
+  });
+  openModal('profile-modal');
+}
+
+function pickTheme(el){
+  document.querySelectorAll('.theme-opt').forEach(o=>o.style.border='1.5px solid var(--b1)');
+  el.style.border='2px solid var(--accent)';
+  el.style.outline='none';
+}
+
+async function saveProfile(){
+  const name=document.getElementById('profile-name').value.trim();
+  const country=document.getElementById('profile-country').value.trim();
+  const prefs=document.getElementById('profile-prefs').value.trim();
+  const pw=document.getElementById('profile-pw').value;
+  const theme=document.querySelector('.theme-opt[style*="2px solid"]')?.dataset.theme||'beige';
+  const init=(name||user.email).slice(0,2).toUpperCase();
+  // Save to profiles table
+  try{
+    await sb.from('profiles').upsert({id:user.id,display_name:name||user.email.split('@')[0],avatar_initials:init,country,preferences:prefs},{onConflict:'id'});
+    window._profileData={...(window._profileData||{}),display_name:name,avatar_initials:init,country,preferences:prefs};
+    document.getElementById('av-btn').textContent=init;
+  }catch(e){/* non-critical — table may not have all columns yet */}
+  // Save theme
+  localStorage.setItem('porter_theme',theme);
+  applyTheme(theme);
+  // Change password
+  if(pw){
+    const{error}=await sb.auth.updateUser({password:pw});
+    if(error){toast('Password error: '+error.message);return;}
+    toast('Password updated ✓');
+  }
+  closeModal('profile-modal');
+  toast('Profile saved ✓');
+}
+
+function applyTheme(theme){
+  const root=document.documentElement;
+  if(theme==='dark'){
+    root.style.setProperty('--bg','#080706');
+    root.style.setProperty('--card','#141210');
+    root.style.setProperty('--card2','#1A1510');
+    root.style.setProperty('--b1','#1C1A16');
+    root.style.setProperty('--b2','#2A2820');
+    root.style.setProperty('--ink','#F5F0E8');
+    root.style.setProperty('--ink2','#D8D4CC');
+    root.style.setProperty('--muted','#4A4840');
+    root.style.setProperty('--border','#1C1A16');
+    root.style.setProperty('--accent','#C4B89A');
+    root.style.setProperty('--accent2','#8B7A5A');
+    root.style.setProperty('--accent-s','rgba(196,184,154,.1)');
+    root.style.setProperty('--accent-b','#8B7A5A');
+  } else if(theme==='white'){
+    root.style.setProperty('--bg','#FFFFFF');
+    root.style.setProperty('--card','#FFFFFF');
+    root.style.setProperty('--card2','#F8F8F8');
+    root.style.setProperty('--b1','#EBEBEB');
+    root.style.setProperty('--b2','#D9D9D9');
+    root.style.setProperty('--ink','#111111');
+    root.style.setProperty('--ink2','#333333');
+    root.style.setProperty('--muted','#888888');
+    root.style.setProperty('--border','#EBEBEB');
+    root.style.setProperty('--accent','#2C5F4A');
+    root.style.setProperty('--accent2','#4A8C6F');
+    root.style.setProperty('--accent-s','#EAF2EE');
+    root.style.setProperty('--accent-b','#9BCAB0');
+  } else {
+    // beige (default)
+    root.style.setProperty('--bg','#F2EDE4');
+    root.style.setProperty('--card','#FFFFFF');
+    root.style.setProperty('--card2','#FEFAF5');
+    root.style.setProperty('--b1','#E8E0D5');
+    root.style.setProperty('--b2','#D9D0C4');
+    root.style.setProperty('--ink','#1C1917');
+    root.style.setProperty('--ink2','#3C3733');
+    root.style.setProperty('--muted','#A8A29E');
+    root.style.setProperty('--border','#E8E0D5');
+    root.style.setProperty('--accent','#2C5F4A');
+    root.style.setProperty('--accent2','#4A8C6F');
+    root.style.setProperty('--accent-s','#EAF2EE');
+    root.style.setProperty('--accent-b','#9BCAB0');
+  }
+}
+
+// Apply saved theme on load
+(()=>{ const t=localStorage.getItem('porter_theme'); if(t) applyTheme(t); })();
 
 // ═══════════════════════════════════
 // TRIPS
@@ -931,7 +1300,7 @@ async function loadTrips(){
   tripId=trips[0].id;
   document.getElementById('tabs').style.display='flex';
   renderTripStrip();
-  await Promise.all([loadCards(),loadEvents(),loadVault(),loadMembers()]);
+  await Promise.all([loadCards(),loadEvents(),loadVault(),loadMembers(),loadExpenses()]);
   checkTripMode();
   await handleJoinLink();
   goTab('capture');
@@ -956,17 +1325,56 @@ async function selectTrip(id){
   tripId=id;curCity=null;copilotCache={};selectedCard=null;
   document.querySelectorAll('.trip-chip').forEach(c=>c.classList.toggle('on',c.textContent===trips.find(t=>t.id===id)?.title));
   showClusters(true);
-  await Promise.all([loadCards(),loadEvents(),loadVault(),loadMembers()]);
+  await Promise.all([loadCards(),loadEvents(),loadVault(),loadMembers(),loadExpenses()]);
   checkTripMode();
 }
 
 async function newTrip(){
-  const name=prompt('Trip name:');if(!name)return;
-  const{data,error}=await sb.from('trips').insert({owner_id:user.id,title:name}).select().single();
+  // Clear fields and open modal
+  document.getElementById('nt-name').value='';
+  document.getElementById('nt-start').value='';
+  document.getElementById('nt-end').value='';
+  openModal('new-trip-modal');
+  setTimeout(()=>document.getElementById('nt-name').focus(),200);
+}
+
+async function saveNewTrip(){
+  const name=document.getElementById('nt-name').value.trim();
+  const dest=document.getElementById('nt-dest')?.value.trim()||'';
+  if(!name&&!dest){toast('Enter a trip name or destination');return;}
+  const start=document.getElementById('nt-start').value;
+  const end=document.getElementById('nt-end').value;
+  const btn=document.getElementById('nt-btn');
+  btn.disabled=true;btn.textContent='Creating…';
+  const tripName=name||dest.split(',')[0].trim()+' trip';
+  const payload={owner_id:user.id,title:tripName};
+  if(start) payload.start_date=start;
+  if(end) payload.end_date=end;
+  if(dest) payload.destination=dest;
+  const{data,error}=await sb.from('trips').insert(payload).select().single();
+  btn.disabled=false;btn.textContent='Create trip →';
   if(error){toast('Error: '+error.message);return;}
+  // Handle clone
+  if(obTripType==='clone'&&window._ntCloneSourceId){
+    const srcId=window._ntCloneSourceId;
+    const{data:srcEvs}=await sb.from('itinerary_events').select('*').eq('trip_id',srcId);
+    if(srcEvs?.length){const ec=srcEvs.map(({id,created_at,...r})=>({...r,trip_id:data.id}));await sb.from('itinerary_events').insert(ec);}
+    const{data:srcCards}=await sb.from('inspiration_cards').select('*').eq('trip_id',srcId);
+    if(srcCards?.length){const cc=srcCards.map(({id,created_at,...r})=>({...r,trip_id:data.id,reaction_count:0}));await sb.from('inspiration_cards').insert(cc);}
+  }
+  // Handle import matching cards
+  if(obTripType==='import'&&dest){
+    const city=dest.split(',')[0].trim().toLowerCase();
+    const toImport=cards.filter(c=>!c._opt&&(c.city||c.location||'').toLowerCase().includes(city));
+    if(toImport.length){const copies=toImport.map(({id,created_at,...r})=>({...r,trip_id:data.id,reaction_count:0}));await sb.from('inspiration_cards').insert(copies);}
+  }
   trips.unshift(data);tripId=data.id;copilotCache={};
+  window._ntCloneSourceId=null;
+  closeModal('new-trip-modal');
   renderTripStrip();
-  await Promise.all([loadCards(),loadEvents(),loadVault(),loadMembers()]);
+  await Promise.all([loadCards(),loadEvents(),loadVault(),loadMembers(),loadExpenses()]);
+  goTab('capture');
+  toast('✈️ '+tripName+' created!');
 }
 
 // ═══════════════════════════════════
@@ -1058,28 +1466,213 @@ function shareWhatsApp(){
 // ═══════════════════════════════════
 // ONBOARDING
 // ═══════════════════════════════════
+// ── Onboard step navigation ──
+let obTripType='fresh';
+let obWho='solo';
+let obImport=false;
+
+const DEST_SUGGESTIONS=['Bangkok, Thailand','Chiang Mai, Thailand','Phuket, Thailand','Krabi, Thailand','Tokyo, Japan','Kyoto, Japan','Osaka, Japan','Bali, Indonesia','Ubud, Indonesia','Singapore','Paris, France','London, UK','Rome, Italy','Barcelona, Spain','Amsterdam, Netherlands','New York, USA','Los Angeles, USA','Sydney, Australia','Dubai, UAE','Seoul, South Korea','Hong Kong','Taipei, Taiwan','Hanoi, Vietnam','Ho Chi Minh City, Vietnam','Kuala Lumpur, Malaysia','Penang, Malaysia'];
+
+function suggestDest(val){
+  const box=document.getElementById('ob-dest-suggestions');
+  if(!box) return;
+  box.innerHTML='';
+  if(!val||val.length<2) return;
+  const matches=DEST_SUGGESTIONS.filter(d=>d.toLowerCase().includes(val.toLowerCase())).slice(0,4);
+  matches.forEach(d=>{
+    const el=document.createElement('div');
+    el.style.cssText='background:var(--accent-s);border:1px solid var(--accent-b);border-radius:7px;padding:8px 11px;font-size:12px;color:var(--accent);font-weight:500;cursor:pointer;display:flex;align-items:center;gap:8px';
+    el.innerHTML='📍 '+d;
+    el.onclick=()=>{
+      document.getElementById('ob-dest').value=d;
+      // Auto-fill trip name
+      const nameIn=document.getElementById('ob-name');
+      if(!nameIn.value) nameIn.value=d.split(',')[0]+' trip';
+      box.innerHTML='';
+    };
+    box.appendChild(el);
+  });
+}
+
+function suggestDestNT(val){
+  const box=document.getElementById('nt-dest-suggs');
+  if(!box) return;
+  box.innerHTML='';
+  if(!val||val.length<2) return;
+  const matches=DEST_SUGGESTIONS.filter(d=>d.toLowerCase().includes(val.toLowerCase())).slice(0,3);
+  matches.forEach(d=>{
+    const el=document.createElement('div');
+    el.style.cssText='background:var(--accent-s);border:1px solid var(--accent-b);border-radius:7px;padding:7px 10px;font-size:11px;color:var(--accent);font-weight:500;cursor:pointer';
+    el.textContent='📍 '+d;
+    el.onclick=()=>{
+      document.getElementById('nt-dest').value=d;
+      const nameIn=document.getElementById('nt-name');
+      if(!nameIn.value) nameIn.value=d.split(',')[0]+' trip';
+      box.innerHTML='';
+      checkNTImport(d);
+    };
+    box.appendChild(el);
+  });
+}
+
+function checkNTImport(dest){
+  if(!dest||obTripType!=='import') return;
+  const city=dest.split(',')[0].trim().toLowerCase();
+  const matches=cards.filter(c=>!c._opt&&(c.city||c.location||'').toLowerCase().includes(city));
+  const wrap=document.getElementById('nt-import-wrap');
+  if(!wrap) return;
+  if(matches.length){
+    wrap.style.display='block';
+    document.getElementById('nt-import-title').textContent=matches.length+' saved place'+(matches.length!==1?'s':'')+' match '+dest.split(',')[0];
+    document.getElementById('nt-import-desc').textContent=matches.slice(0,3).map(c=>c.emoji+' '+c.title).join(' · ')+(matches.length>3?' +'+( matches.length-3)+' more':'');
+  } else {
+    wrap.style.display='none';
+  }
+}
+
+function pickTripType(el){
+  document.querySelectorAll('.nt-type-opt').forEach(o=>{
+    const t=o.dataset.type;
+    o.style.background='var(--card)';o.style.border='1.5px solid var(--b1)';
+    const chk=document.getElementById('nt-check-'+t);
+    if(chk){chk.style.background='var(--b1)';chk.style.color='transparent';}
+  });
+  el.style.background='var(--accent-s)';el.style.border='1.5px solid var(--accent)';
+  const chk=document.getElementById('nt-check-'+el.dataset.type);
+  if(chk){chk.style.background='var(--accent)';chk.style.color='#fff';}
+  obTripType=el.dataset.type;
+  document.getElementById('nt-clone-wrap').style.display=obTripType==='clone'?'block':'none';
+  document.getElementById('nt-import-wrap').style.display='none';
+  if(obTripType==='clone'){
+    const list=document.getElementById('nt-clone-list');
+    list.innerHTML='';
+    trips.forEach(t=>{
+      const btn=document.createElement('button');
+      btn.style.cssText='width:100%;text-align:left;padding:10px 12px;border-radius:var(--rs);border:1.5px solid var(--b1);background:var(--cream);cursor:pointer;font-family:var(--font);font-size:13px;font-weight:500;color:var(--ink);margin-bottom:4px;display:flex;align-items:center;gap:8px';
+      btn.innerHTML=(t.destination?'📍 ':'✈️ ')+esc(t.title)+'<span style="font-size:11px;color:var(--muted);margin-left:auto">'+(t.start_date?new Date(t.start_date+'T00:00:00').toLocaleDateString('en-SG',{month:'short',year:'numeric'}):'')+'</span>';
+      btn.onclick=()=>{
+        document.querySelectorAll('#nt-clone-list button').forEach(b=>b.style.border='1.5px solid var(--b1)');
+        btn.style.border='1.5px solid var(--accent)';
+        window._ntCloneSourceId=t.id;
+        document.getElementById('nt-name').value=t.title+' (copy)';
+      };
+      list.appendChild(btn);
+    });
+  }
+  if(obTripType==='import'){
+    const dest=document.getElementById('nt-dest')?.value||'';
+    checkNTImport(dest);
+  }
+}
+
+function pickWho(el){
+  document.querySelectorAll('.ob-who-opt').forEach(o=>{
+    o.style.background='var(--card)';o.style.border='1.5px solid var(--b1)';
+  });
+  el.style.background='var(--accent-s)';el.style.border='1.5px solid var(--accent)';
+  obWho=el.dataset.who;
+}
+
+function obSetImport(doImport){
+  obImport=doImport;
+  document.getElementById('ob-import-yes').style.background=doImport?'var(--accent)':'var(--accent-s)';
+  document.getElementById('ob-import-yes').style.color=doImport?'#fff':'var(--accent)';
+  document.getElementById('ob-import-no').style.background=!doImport?'var(--card)':'transparent';
+  document.getElementById('ob-import-no').style.fontWeight=!doImport?'600':'400';
+}
+
+function obNext(fromStep){
+  if(fromStep===1){
+    const dest=document.getElementById('ob-dest').value.trim();
+    if(!dest){toast('Enter a destination first');return;}
+    // Auto-fill name if blank
+    const nameIn=document.getElementById('ob-name');
+    if(!nameIn.value) nameIn.value=dest.split(',')[0].trim()+' trip';
+    // Update steps
+    document.getElementById('ob-step-1').style.background='var(--accent)';
+    document.getElementById('ob-step-2').style.background='var(--accent)';
+    document.getElementById('ob-s1').style.display='none';
+    document.getElementById('ob-s2').style.display='flex';
+  } else if(fromStep===2){
+    // Build review
+    const dest=document.getElementById('ob-dest').value.trim();
+    const name=document.getElementById('ob-name').value.trim();
+    const start=document.getElementById('ob-start').value;
+    const end=document.getElementById('ob-end').value;
+    document.getElementById('ob-review-name').textContent=name||dest+' trip';
+    document.getElementById('ob-review-dest').textContent=dest;
+    document.getElementById('ob-review-dates').textContent=start?((new Date(start+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short'}))+' → '+(end?new Date(end+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short'}):'open')):'No dates set';
+    const whoMap={solo:'🧍 Solo',partner:'👫 Partner trip',group:'👥 Group trip'};
+    const whoIcoMap={solo:'🧍',partner:'👫',group:'👥'};
+    document.getElementById('ob-review-who').textContent=whoMap[obWho]||'Solo';
+    document.getElementById('ob-review-who-ico').textContent=whoIcoMap[obWho]||'🧍';
+    // Check for existing cards in same destination
+    const city=dest.split(',')[0].trim().toLowerCase();
+    const existingFromOtherTrips=cards.filter(c=>!c._opt&&(c.city||c.location||'').toLowerCase().includes(city));
+    // Actually check all trips' cards — but we only have current trip's cards loaded
+    // Show existing cards wrap if any match
+    if(existingFromOtherTrips.length){
+      document.getElementById('ob-existing-wrap').style.display='block';
+      document.getElementById('ob-existing-txt').textContent=existingFromOtherTrips.length+' places from your saved list match '+dest.split(',')[0]+'. Pull them into the new trip?';
+      obImport=false; // default no
+    } else {
+      document.getElementById('ob-existing-wrap').style.display='none';
+    }
+    document.getElementById('ob-step-3').style.background='var(--accent)';
+    document.getElementById('ob-s2').style.display='none';
+    document.getElementById('ob-s3').style.display='flex';
+  }
+}
+
+function obBack(fromStep){
+  if(fromStep===2){
+    document.getElementById('ob-step-2').style.background='var(--b1)';
+    document.getElementById('ob-s2').style.display='none';
+    document.getElementById('ob-s1').style.display='flex';
+  } else if(fromStep===3){
+    document.getElementById('ob-step-3').style.background='var(--b1)';
+    document.getElementById('ob-s3').style.display='none';
+    document.getElementById('ob-s2').style.display='flex';
+  }
+}
+
 async function createFirstTrip(){
   const name=document.getElementById('ob-name').value.trim();
-  if(!name){toast('Give your trip a name first');return;}
+  const dest=document.getElementById('ob-dest').value.trim();
+  if(!name&&!dest){toast('Enter a destination or trip name');return;}
   const btn=document.getElementById('ob-btn');
   const start=document.getElementById('ob-start').value;
   const end=document.getElementById('ob-end').value;
   btn.disabled=true;btn.textContent='Creating…';
-  const{data,error}=await sb.from('trips').insert({owner_id:user.id,title:name,start_date:start||null,end_date:end||null}).select().single();
-  if(error){toast('Error: '+error.message);btn.disabled=false;btn.textContent='Start planning';return;}
+  const tripName=name||dest.split(',')[0].trim()+' trip';
+  const{data,error}=await sb.from('trips').insert({owner_id:user.id,title:tripName,start_date:start||null,end_date:end||null,destination:dest||null}).select().single();
+  if(error){toast('Error: '+error.message);btn.disabled=false;btn.textContent='Create my trip 🚀';return;}
   trips=[data];tripId=data.id;
+  // Import matching cards if requested
+  if(obImport){
+    const city=dest.split(',')[0].trim().toLowerCase();
+    const toImport=cards.filter(c=>!c._opt&&(c.city||c.location||'').toLowerCase().includes(city));
+    if(toImport.length){
+      const copies=toImport.map(({id,created_at,...r})=>({...r,trip_id:data.id,reaction_count:0}));
+      await sb.from('inspiration_cards').insert(copies);
+    }
+  }
   document.getElementById('tabs').style.display='flex';
   renderTripStrip();
-  await Promise.all([loadCards(),loadEvents(),loadVault(),loadMembers()]);
+  await Promise.all([loadCards(),loadEvents(),loadVault(),loadMembers(),loadExpenses()]);
   checkTripMode();
   goTab('capture');
-  toast('✈️ '+name+' — start capturing places!');
+  // Show invite banner for group trips
+  if(obWho==='group'||obWho==='partner'){
+    setTimeout(()=>openModal('invite-modal'),600);
+  }
+  toast('✈️ '+tripName+' created!');
 }
 
 async function skipOnboard(){
   const{data}=await sb.from('trips').select('*').order('created_at',{ascending:false});
-  if(data?.length){trips=data;tripId=trips[0].id;document.getElementById('tabs').style.display='flex';renderTripStrip();await Promise.all([loadCards(),loadEvents(),loadVault(),loadMembers()]);checkTripMode();goTab('capture');}
-  else toast('Enter a trip name above');
+  if(data?.length){trips=data;tripId=trips[0].id;document.getElementById('tabs').style.display='flex';renderTripStrip();await Promise.all([loadCards(),loadEvents(),loadVault(),loadMembers(),loadExpenses()]);checkTripMode();goTab('capture');}
+  else toast('Enter a destination above');
 }
 
 // ═══════════════════════════════════
@@ -1236,6 +1829,12 @@ async function loadCards(){
   const{data,error}=await sb.from('inspiration_cards').select('*').eq('trip_id',tripId).order('created_at',{ascending:false});
   if(error){showErr('cap-err','Could not load places: '+error.message);return;}
   cards=data||[];
+  // One-time normalisation: fill city field from location for legacy cards
+  cards.forEach(card=>{
+    if(!card.city && card.location){
+      card.city=card.location.split(',')[0].trim().slice(0,60);
+    }
+  });
   renderCards();renderClusters();
 }
 
@@ -1281,9 +1880,10 @@ function renderCards(){
           <div class="contributor-dot">${esc(addedBy.slice(0,2).toUpperCase())}</div>
           <span>${esc(addedBy)} · ${timeAgo}</span>
         </div>
-        <button class="reaction-btn ${reacted?'reacted':''}" onclick="toggleReaction('${c.id}',this)">
-          👍 ${reactions>0?reactions:''}
+        <button class="reaction-btn ${reacted?'reacted':''}" onclick="toggleReaction('${c.id}',this)" title="${reactions>0?reactions+' vote'+(reactions!==1?'s':''):'Vote for this'}">
+          👍 ${reactions>0?`<strong style="font-size:12px">${reactions}</strong>`:''}
         </button>
+        ${reactions>=2?`<span style="background:var(--accent-s);border:1px solid var(--accent-b);border-radius:var(--pill);padding:2px 7px;font-size:9px;font-weight:700;color:var(--accent)">Crew pick ✓</span>`:''}
       </div>`;
     scroll.appendChild(el);
   });
@@ -1328,14 +1928,45 @@ function setFilter(el){
 function autosize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,90)+'px';}
 
 // ── AI CAPTURE ──
+function showTripPicker(onSelect){
+  const list=document.getElementById('trip-picker-list');
+  list.innerHTML='';
+  trips.forEach(t=>{
+    const btn=document.createElement('button');
+    btn.style.cssText='width:100%;padding:13px 16px;border-radius:var(--rs);border:1.5px solid var(--b1);background:var(--cream);text-align:left;cursor:pointer;display:flex;align-items:center;gap:10px;font-family:var(--font);transition:all .15s';
+    btn.onmouseover=()=>btn.style.borderColor='var(--accent-b)';
+    btn.onmouseout=()=>btn.style.borderColor='var(--b1)';
+    const isActive=t.id===tripId;
+    btn.innerHTML=`<div style="flex:1"><div style="font-weight:600;font-size:14px;color:var(--ink)">${esc(t.title)}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">${t.start_date?new Date(t.start_date+'T00:00:00').toLocaleDateString('en-SG',{month:'short',year:'numeric'})+' · ':''}</div></div>${isActive?'<div style="font-size:10px;color:var(--accent);font-weight:600">Active</div>':''}`;
+    btn.onclick=()=>{ closeModal('trip-picker-modal'); onSelect(t.id); };
+    list.appendChild(btn);
+  });
+  openModal('trip-picker-modal');
+}
+
 async function capture(){
   const input=document.getElementById('url-in');
   const btn=document.getElementById('cap-btn');
   const val=input.value.trim();
   if(!val) return;
   if(!tripId){toast('Create a trip first');return;}
+  // If 2+ trips, ask which one (only if they explicitly have trips to choose from)
+  if(trips.length>1){
+    const raw2=val;
+    showTripPicker(async(selectedTripId)=>{
+      const prevTripId=tripId;
+      tripId=selectedTripId;
+      await captureToTrip(raw2);
+      tripId=prevTripId; // restore active trip
+    });
+    return;
+  }
   btn.disabled=true;btn.textContent='…';
   const raw=val;input.value='';input.style.height='42px';
+}
+
+async function captureToTrip(raw){
+  // actual capture — tripId must already be set to target trip
   hideErr('cap-err');
   // Optimistic
   const optId='_opt_'+Date.now();
@@ -1346,7 +1977,7 @@ async function capture(){
     const res=await fetch(AI_PROXY,{method:'POST',headers:AI_H,body:JSON.stringify({
       model:AI_MODEL,max_tokens:350,
       system:`Extract travel places into JSON. Return ONLY valid JSON, no markdown:
-{"title":"2-5 word name","location":"City, Country","emoji":"one emoji","tags":["1-3 of: food/nature/stay/culture/beach/adventure/nightlife"],"description":"One sentence max 80 chars","color":"hex: #C8DFC8 nature #C8D8E8 beach #E8C8C8 food #DCDCD0 culture #D4C8E0 nightlife #C8DCE0 adventure #F0E8D0 stay"}`,
+{"title":"2-5 word name","city":"City name only e.g. Bangkok","country":"Country name only e.g. Thailand","location":"Full address or venue, City, Country","emoji":"one emoji","tags":["1-3 of: food/nature/stay/culture/beach/adventure/nightlife"],"description":"One sentence max 80 chars","color":"hex: #C8DFC8 nature #C8D8E8 beach #E8C8C8 food #DCDCD0 culture #D4C8E0 nightlife #C8DCE0 adventure #F0E8D0 stay"}`,
       messages:[{role:'user',content:`Place: "${raw}"`}]
     })});
     if(!res.ok) throw new Error('HTTP '+res.status);
@@ -1363,10 +1994,13 @@ async function capture(){
   }
   cards=cards.filter(c=>c.id!==optId);
   const displayName=user.email?.split('@')[0]||'You';
+  // Derive canonical city: use AI's city field, else first part of location
+  const derivedCity=parsed?.city||(parsed?.location||raw).split(',')[0].trim().slice(0,60)||'';
   const payload={
     trip_id:tripId,added_by:user.id,
     title:parsed?.title||raw.slice(0,60),
-    location:parsed?.location||'',
+    city:derivedCity,
+    location:parsed?.location||parsed?.city||raw.slice(0,100),
     emoji:parsed?.emoji||'📍',
     tags:Array.isArray(parsed?.tags)?parsed.tags.slice(0,3):[],
     description:parsed?.description||'',
@@ -1402,7 +2036,7 @@ function renderClusters(){
   container.innerHTML='';
   const cityMap={};
   cards.filter(c=>!c._opt).forEach(c=>{
-    const city=(c.location||'').split(',')[0].trim()||'Unplaced';
+    const city=c.city||(c.location||'').split(',')[0].trim()||'Unplaced';
     if(!cityMap[city]) cityMap[city]=[];
     cityMap[city].push(c);
   });
@@ -1464,6 +2098,11 @@ function renderClusters(){
 // ═══════════════════════════════════
 function openPlanner(city){
   curCity=city;curDay=1;selectedCard=null;copilotCache={};
+  // Initialise day persistence for this city
+  if(!window._maxDays) window._maxDays={};
+  const key=tripId+'_'+city;
+  const evMax=events.filter(e=>e.city===city).length?Math.max(...events.filter(e=>e.city===city).map(e=>e.day_number)):1;
+  window._maxDays[key]=Math.max(window._maxDays[key]||1,evMax);
   document.getElementById('planner-city').textContent=city;
   document.getElementById('planner-sub').textContent='Tap a place · tap a slot to add';
   showClusters(false);
@@ -1486,7 +2125,7 @@ function renderSidebar(){
   sb2.innerHTML='<div class="sb-lbl">Tap to select</div>';
   const cityCards=cards.filter(c=>{
     if(c._opt) return false;
-    const city=(c.location||'').split(',')[0].trim()||'Unplaced';
+    const city=c.city||(c.location||'').split(',')[0].trim()||'Unplaced';
     return city===curCity;
   });
   const usedIds=new Set(events.filter(e=>e.city===curCity).map(e=>e.card_id).filter(Boolean));
@@ -1495,7 +2134,7 @@ function renderSidebar(){
     const isSel=selectedCard?.id===c.id,isUsed=usedIds.has(c.id);
     const el=document.createElement('div');
     el.className='place-tile'+(isSel?' sel':'')+(isUsed?' used':'');
-    el.innerHTML=`<div class="pt-ico">${c.emoji||'📍'}</div><div class="pt-name">${esc(c.title)}</div><div class="pt-loc">${esc((c.location||'').split(',')[0])}</div>`;
+    el.innerHTML=`<div class="pt-ico">${c.emoji||'📍'}</div><div class="pt-name">${esc(c.title)}</div><div class="pt-loc">${esc(c.city||(c.location||'').split(',')[0])}</div>`;
     el.onclick=()=>{
       selectedCard=isSel?null:{id:c.id,title:c.title,emoji:c.emoji,location:c.location,tags:c.tags};
       document.getElementById('planner-sub').textContent=selectedCard?`"${c.title.slice(0,20)}" selected — tap a slot`:'Tap a place · tap a slot to add';
@@ -1508,7 +2147,12 @@ function renderSidebar(){
 function renderDayBar(){
   const bar=document.getElementById('day-bar');bar.innerHTML='';
   const cityEvs=events.filter(e=>e.city===curCity);
-  const maxDay=cityEvs.length?Math.max(...cityEvs.map(e=>e.day_number)):1;
+  // maxDay: highest of (events, curDay, stored max). Never shrinks when events deleted.
+  const evMax=cityEvs.length?Math.max(...cityEvs.map(e=>e.day_number)):1;
+  if(!window._maxDays) window._maxDays={};
+  const key=tripId+'_'+curCity;
+  window._maxDays[key]=Math.max(window._maxDays[key]||1, evMax, curDay);
+  const maxDay=window._maxDays[key];
   for(let d=1;d<=maxDay;d++){
     const el=document.createElement('div');
     el.className='day-pill'+(d===curDay?' on':'')+(copilotCache[d]?' warn':'');
@@ -1578,6 +2222,19 @@ function renderTimeline(){
   tl.appendChild(addBtn);
 }
 
+async function reorderEvents(dragId, targetId){
+  // city column may not exist — fall back to day_number only
+  const dayEvs=events.filter(e=>e.day_number===curDay&&(e.city===curCity||!e.city||e.city===null)).sort((a,b)=>(a.sort_order||0)-(b.sort_order||0));
+  const dragIdx=dayEvs.findIndex(e=>e.id===dragId);
+  const targetIdx=dayEvs.findIndex(e=>e.id===targetId);
+  if(dragIdx<0||targetIdx<0) return;
+  const moved=dayEvs.splice(dragIdx,1)[0];
+  dayEvs.splice(targetIdx,0,moved);
+  dayEvs.forEach((ev,i)=>ev.sort_order=i);
+  renderTimeline();
+  await Promise.all(dayEvs.map(ev=>sb.from('itinerary_events').update({sort_order:ev.sort_order}).eq('id',ev.id)));
+}
+
 function makeDropSlot(sectionId){
   const el=document.createElement('div');
   el.className='drop-slot'+(selectedCard?' ready':'');
@@ -1588,9 +2245,17 @@ function makeDropSlot(sectionId){
 
 function makeEvRow(ev,isLast){
   const row=document.createElement('div');row.className='ev-row';
+  row.draggable=!ev.is_locked;
+  row.dataset.evId=ev.id;
+  row.addEventListener('dragstart',e=>{if(ev.is_locked){e.preventDefault();return;}e.dataTransfer.setData('text/plain',ev.id);row.classList.add('dragging');});
+  row.addEventListener('dragend',()=>row.classList.remove('dragging'));
+  row.addEventListener('dragover',e=>{e.preventDefault();row.classList.add('drag-over');});
+  row.addEventListener('dragleave',()=>row.classList.remove('drag-over'));
+  row.addEventListener('drop',e=>{e.preventDefault();row.classList.remove('drag-over');const dragId=e.dataTransfer.getData('text/plain');if(dragId&&dragId!==ev.id) reorderEvents(dragId,ev.id);});
   const isLocked=ev.is_locked;
   const addedBy=ev.added_by_name||(ev.added_by===user?.id?user.email?.split('@')[0]:'');
   row.innerHTML=`
+    <div class="drag-handle" draggable="false">⠿</div>
     <div class="ev-time-col"><span class="ev-time-lbl">${ev.time_slot||''}</span></div>
     <div class="ev-line"><div class="ev-dot ${isLocked?'locked':''}"></div>${!isLast?'<div class="ev-track"></div>':''}</div>
     <div class="ev-card ${ev.is_highlight?'hi':''} ${isLocked?'locked-card':''}">
@@ -1598,15 +2263,15 @@ function makeEvRow(ev,isLast){
       ${ev.location?`<div class="ev-loc">${esc(ev.location)}</div>`:''}
       <div class="ev-tags">${(ev.tags||[]).map(t=>`<span class="tag t-${t}">${t}</span>`).join('')}</div>
       ${addedBy?`<div class="ev-who">Added by ${esc(addedBy)}</div>`:''}
+      ${vault.some(v=>v.name.toLowerCase().includes(ev.title.toLowerCase().slice(0,8)))?`<div class="ev-who" style="color:var(--accent);font-style:normal">📎 Booking on file</div>`:''}
       <input class="ev-time-in" type="time" value="${ev.time_slot||''}" placeholder="Set time"
         onchange="updateEvTime('${ev.id}',this.value)" onclick="event.stopPropagation()">
-      <div class="ev-actions" style="display:flex;gap:2px">
-        <button class="ev-del-btn" style="font-size:9px;width:18px;height:18px" onclick="event.stopPropagation();moveEventDay('${ev.id}',-1)" title="Move to previous day">◀</button>
-        <button class="ev-del-btn" style="font-size:9px;width:18px;height:18px" onclick="event.stopPropagation();moveEventDay('${ev.id}',1)" title="Move to next day">▶</button>
-        <button class="ev-lock ${isLocked?'locked':''}" onclick="event.stopPropagation();toggleLock('${ev.id}')" title="${isLocked?'Unlock':'Lock'}">
-          ${isLocked?'🔒':'🔓'}
-        </button>
-        <button class="ev-del-btn" onclick="event.stopPropagation();deleteEvent('${ev.id}')">✕</button>
+      <div class="ev-actions" style="display:flex;gap:3px;align-items:center">
+        <button class="ev-del-btn" style="font-size:10px;width:22px;height:22px;opacity:.6" onclick="event.stopPropagation();moveEventDay('${ev.id}',-1)" title="Move to previous day">◀</button>
+        <button class="ev-del-btn" style="font-size:10px;width:22px;height:22px;opacity:.6" onclick="event.stopPropagation();moveEventDay('${ev.id}',1)" title="Move to next day">▶</button>
+        <button class="ev-del-btn" style="font-size:11px;width:22px;height:22px;color:var(--accent);font-weight:700" onclick="event.stopPropagation();unplaceEvent('${ev.id}')" title="Return to sidebar — keep the card">↩</button>
+        <button class="ev-lock ${isLocked?'locked':''}" onclick="event.stopPropagation();toggleLock('${ev.id}')" title="${isLocked?'Unlock':'Lock'}">${isLocked?'🔒':'🔓'}</button>
+        <button class="ev-del-btn" style="color:var(--red)" onclick="event.stopPropagation();deleteEvent('${ev.id}')">✕</button>
       </div>
     </div>`;
   return row;
@@ -1652,16 +2317,27 @@ async function updateEvTime(id,time){
   renderDayBar();renderDaySummary();renderTimeline();
 }
 
+async function unplaceEvent(id){
+  // Remove from itinerary but keep the card — it reappears in sidebar automatically
+  const ev=events.find(e=>e.id===id);if(!ev)return;
+  const{error}=await sb.from('itinerary_events').delete().eq('id',id);
+  if(error){toast('Error: '+error.message);return;}
+  events=events.filter(e=>e.id!==id);
+  copilotCache[curDay]=undefined;
+  renderSidebar();renderDayBar();renderDaySummary();renderTimeline();
+  toast((ev.emoji||'📍')+' '+ev.title+' returned to sidebar');
+}
+
 async function moveEventDay(id,delta){
   const ev=events.find(e=>e.id===id);if(!ev) return;
-  const days=[...new Set(events.map(e=>e.day_number))].sort((a,b)=>a-b);
-  const maxDay=Math.max(...days,curDay);
+  const allDays=[...new Set(events.map(e=>e.day_number))].sort((a,b)=>a-b);
+  const maxDay=Math.max(...allDays,curDay,1);
   const newDay=Math.max(1,Math.min(maxDay+1,ev.day_number+delta));
-  if(newDay===ev.day_number) return;
+  if(newDay===ev.day_number){toast('Already on Day '+newDay);return;}
   await sb.from('itinerary_events').update({day_number:newDay}).eq('id',id);
   ev.day_number=newDay;
   renderDayBar();renderDaySummary();renderTimeline();renderSidebar();
-  toast('Moved to Day '+newDay);
+  toast((delta>0?'▶':'◀')+' Moved to Day '+newDay);
 }
 
 async function deleteEvent(id){
@@ -1762,6 +2438,7 @@ function renderVault(docs){
       <div class="doc-info">
         <div class="doc-name">${esc(d.name)}</div>
         <div class="doc-meta">${esc(d.meta_text||'')}</div>
+        ${(()=>{const dayMatch=events.find(e=>e.title.toLowerCase().includes(d.name.toLowerCase().slice(0,8)));return dayMatch?`<div style="font-size:10px;color:var(--accent);font-weight:500;margin-top:2px">📅 Linked to Day ${dayMatch.day_number}</div>`:''})()}
         ${d.uploader_name?`<div class="doc-who">Added by ${esc(d.uploader_name)}</div>`:''}
       </div>
       <span class="doc-badge" style="${BS[d.badge_color]||BS.muted}">${esc(d.doc_type||'Doc')}</span>
@@ -1774,6 +2451,77 @@ async function deleteDoc(id){
   const{error}=await sb.from('vault_documents').delete().eq('id',id);
   if(error){toast('Delete failed: '+error.message);return;}
   vault=vault.filter(d=>d.id!==id);renderVault(vault);updateEmergencyCard();toast('Removed');
+}
+
+// ─── EXPENSE TRACKING ───
+let expCat='food', expCatIcon='🍜';
+function selExpCat(el,cat,icon){expCat=cat;expCatIcon=icon;document.querySelectorAll('#exp-cats .doc-type-btn').forEach(b=>b.classList.remove('on'));el.classList.add('on');}
+
+function switchVaultTab(tab){
+  document.getElementById('vault-docs-view').style.display=tab==='docs'?'flex':'none';
+  document.getElementById('vault-exp-view').style.display=tab==='exp'?'flex':'none';
+  document.getElementById('vault-docs-view').style.flexDirection='column';
+  document.getElementById('vault-tab-docs').className='m-tab'+(tab==='docs'?' on':'');
+  document.getElementById('vault-tab-exp').className='m-tab'+(tab==='exp'?' on':'');
+  if(tab==='exp') renderExpenses();
+}
+
+async function loadExpenses(){
+  if(!tripId) return;
+  try{
+    const{data}=await sb.from('trip_expenses').select('*').eq('trip_id',tripId).order('created_at',{ascending:false});
+    expenses=data||[];
+  }catch(e){expenses=[];}  // table may not exist yet
+}
+
+function renderExpenses(){
+  const list=document.getElementById('exp-list');
+  const summary=document.getElementById('exp-summary');
+  if(!list) return;
+  if(!expenses.length){
+    summary.innerHTML='';
+    list.innerHTML='<div class="empty" style="padding-top:20px"><div class="empty-ico">💸</div><div class="empty-h">No expenses yet</div><div class="empty-p">Track what the group spends — food, transport, activities.</div></div>';
+    return;
+  }
+  // Group by currency for totals
+  const byCur={};
+  expenses.forEach(e=>{byCur[e.currency]=(byCur[e.currency]||0)+Number(e.amount);});
+  const totalStr=Object.entries(byCur).map(([cur,amt])=>`${cur} ${amt.toLocaleString('en',{minimumFractionDigits:0,maximumFractionDigits:2})}`).join(' · ');
+  const byWho={};
+  expenses.forEach(e=>{if(e.paid_by)byWho[e.paid_by]=(byWho[e.paid_by]||0)+Number(e.amount);});
+  const whoStr=Object.entries(byWho).map(([who,amt])=>`${who}: ${Object.keys(byCur)[0]} ${amt.toFixed(0)}`).join(' · ');
+  summary.innerHTML=`<div class="exp-summary"><div><div style="font-size:9px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Total spent</div><div class="exp-total">${totalStr}</div></div>${whoStr?`<div class="exp-breakdown">${whoStr}</div>`:''}</div>`;
+  list.innerHTML='';
+  const catIcons={food:'🍜',transport:'🚕',stay:'🏨',activity:'🎟',shopping:'🛍',other:'💸'};
+  expenses.forEach(exp=>{
+    const el=document.createElement('div');el.className='expense-item';
+    el.innerHTML=`<div class="exp-cat">${catIcons[exp.category]||'💸'}</div><div class="exp-info"><div class="exp-title">${esc(exp.title)}</div><div class="exp-meta">${exp.paid_by?'Paid by '+esc(exp.paid_by)+' · ':''}${exp.currency}</div></div><div class="exp-amount">${exp.currency} ${Number(exp.amount).toLocaleString('en',{minimumFractionDigits:0,maximumFractionDigits:2})}</div><button class="exp-del" onclick="deleteExpense('${exp.id}')">✕</button>`;
+    list.appendChild(el);
+  });
+}
+
+async function saveExpense(){
+  const title=document.getElementById('exp-title').value.trim();
+  const amount=parseFloat(document.getElementById('exp-amount').value);
+  const currency=document.getElementById('exp-currency').value;
+  if(!title||!amount){toast('Enter title and amount');return;}
+  closeModal('exp-modal');
+  const displayName=user.email?.split('@')[0]||'You';
+  try{
+    const{data,error}=await sb.from('trip_expenses').insert({
+      trip_id:tripId,title,amount,currency,
+      category:expCat,paid_by:displayName
+    }).select().single();
+    if(error) throw error;
+    expenses.unshift(data);renderExpenses();
+    document.getElementById('exp-title').value='';document.getElementById('exp-amount').value='';
+    toast(expCatIcon+' '+title+' added');
+  }catch(e){toast('Could not save — run SQL migration first');}
+}
+
+async function deleteExpense(id){
+  await sb.from('trip_expenses').delete().eq('id',id);
+  expenses=expenses.filter(e=>e.id!==id);renderExpenses();toast('Removed');
 }
 
 async function ragSearch(){
@@ -1916,7 +2664,16 @@ function goTab(tab){
   showScreen(map[tab]);
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   document.getElementById('t-'+tab)?.classList.add('on');
-  if(tab==='plan'){showClusters(true);renderClusters();}
+  if(tab==='plan'){
+    // Stay in planner if already in a city, otherwise show clusters
+    if(curCity){
+      showClusters(false);
+      document.getElementById('planner').classList.add('on');
+      renderPlanner();
+    } else {
+      showClusters(true);renderClusters();
+    }
+  }
   if(tab==='trip'){checkTripMode();requestLocationForTripMode();}
   // Show Porter FAB whenever user is in the app (not chat drawer)
   const fab=document.getElementById('porter-fab');
@@ -1927,12 +2684,13 @@ function goTab(tab){
 // MODALS
 // ═══════════════════════════════════
 function openModal(id){
+  if(id==='profile-modal'){openProfileModal();return;}
   document.getElementById(id)?.classList.add('on');
   if(id==='invite-modal'){renderInviteModal();}
 }
 function closeModal(id){
   document.getElementById(id)?.classList.remove('on');
-  const clear={'ev-modal':['ev-title','ev-loc','ev-time'],'doc-modal':['doc-name','doc-meta']};
+  const clear={'ev-modal':['ev-title','ev-loc','ev-time'],'doc-modal':['doc-name','doc-meta'],'new-trip-modal':['nt-name','nt-start','nt-end'],'profile-modal':['profile-pw']};
   (clear[id]||[]).forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});
 }
 document.querySelectorAll('.modal-bg').forEach(bg=>{bg.addEventListener('click',e=>{if(e.target===bg)closeModal(bg.id);});});
@@ -1970,7 +2728,7 @@ async function deleteCurrentTrip(){
   if(trips.length){
     tripId=trips[0].id;
     renderTripStrip();
-    await Promise.all([loadCards(),loadEvents(),loadVault(),loadMembers()]);
+    await Promise.all([loadCards(),loadEvents(),loadVault(),loadMembers(),loadExpenses()]);
     goTab('capture');
     toast('Trip deleted');
   } else {
@@ -1991,6 +2749,7 @@ function openEditCard(id){
   editingCardId=id;
   editingCardTags=[...(c.tags||[])];
   document.getElementById('ec-title').value=c.title||'';
+  const cityEl=document.getElementById('ec-city');if(cityEl) cityEl.value=c.city||'';
   document.getElementById('ec-location').value=c.location||'';
   // Set tag buttons
   document.querySelectorAll('#ec-tags-sel .doc-type-btn').forEach(btn=>{
@@ -2014,13 +2773,14 @@ function toggleCardTag(btn){
 async function saveCardEdit(){
   if(!editingCardId) return;
   const title=document.getElementById('ec-title').value.trim();
+  const city=document.getElementById('ec-city').value.trim();
   const location=document.getElementById('ec-location').value.trim();
   if(!title){toast('Place needs a name');return;}
   closeModal('edit-card-modal');
-  const{error}=await sb.from('inspiration_cards').update({title,location,tags:editingCardTags}).eq('id',editingCardId);
+  const{error}=await sb.from('inspiration_cards').update({title,city:city||cards.find(c=>c.id===editingCardId)?.city||location.split(',')[0].trim(),location,tags:editingCardTags}).eq('id',editingCardId);
   if(error){toast('Save failed: '+error.message);return;}
   const c=cards.find(c=>c.id===editingCardId);
-  if(c){c.title=title;c.location=location;c.tags=editingCardTags;}
+  if(c){c.title=title;c.city=city||c.city||location.split(',')[0].trim();c.location=location;c.tags=editingCardTags;}
   renderCards();renderClusters();
   if(curCity) renderSidebar();
   toast('✓ Updated');
@@ -2082,11 +2842,18 @@ function openMap() {
   const trip = trips.find(t => t.id === tripId);
   document.getElementById('map-title').textContent = (curCity || trip?.title || 'Map') + ' · Day ' + curDay;
   setTimeout(() => {
+    const mapEl = document.getElementById('mapbox-map');
+    if(!mapEl) return;
+    // Ensure container has real dimensions before Mapbox init
+    mapEl.style.width='100%'; mapEl.style.height='100%';
     if (!mbMap) {
+      // Pick best center: first event with coords, then trip destination, then Bangkok
+      const firstEv = events.filter(e=>e.day_number===curDay&&e.lat).sort((a,b)=>(a.time_slot||'').localeCompare(b.time_slot||''))[0];
+      const center = firstEv ? [firstEv.lng, firstEv.lat] : [100.5, 13.75];
       mbMap = new mapboxgl.Map({
         container: 'mapbox-map',
         style: 'mapbox://styles/mapbox/streets-v12',
-        center: [100.5, 13.75], zoom: 13
+        center, zoom: 13
       });
       mbMap.addControl(new mapboxgl.NavigationControl(), 'top-right');
       mbMap.on('load', () => { mbMap.resize(); plotDayOnMap(); });
@@ -2334,7 +3101,7 @@ YOUR ROLE:
 async function porterGreeting(){
   const trip = trips.find(t => t.id === tripId);
   const cardCount = cards.filter(c=>!c._opt).length;
-  const cities = [...new Set(cards.filter(c=>!c._opt&&c.location).map(c=>c.location.split(',')[0].trim()))];
+  const cities = [...new Set(cards.filter(c=>!c._opt).map(c=>c.city||(c.location||'').split(',')[0].trim()).filter(Boolean))];
 
   let greeting = '';
   if(cardCount === 0){
@@ -2505,6 +3272,7 @@ document.getElementById('a-pw').addEventListener('keydown',e=>{if(e.key==='Enter
 document.getElementById('vault-q').addEventListener('keydown',e=>{if(e.key==='Enter')ragSearch();});
 document.getElementById('qa-in').addEventListener('keydown',e=>{if(e.key==='Enter')quickAdd();});
 document.getElementById('chat-in').addEventListener('keydown',e=>{if(e.key==='Enter')sendChat();});
+document.getElementById('nt-name').addEventListener('keydown',e=>{if(e.key==='Enter')saveNewTrip();});
 </script>
 </body>
 </html>
