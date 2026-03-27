@@ -10,40 +10,178 @@
 <style>
 /* ═══════ RESET ═══════ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+/* ═══════════════════════════════════════════
+   LEDGER DESIGN SYSTEM — Porter v2
+   Cream base · ink type · colour tags · no icon libraries
+═══════════════════════════════════════════ */
 :root{
-  --bg:#F2EDE4;--paper:#F2EDE4;--cream:#FAF8F4;--card:#FFFFFF;--card2:#FEFAF5;
-  --b1:#E8E0D5;--b2:#D9D0C4;--b3:#C8BFB4;
-  --ink:#1C1917;--ink2:#3C3733;--mid:#78716C;--muted:#A8A29E;
-  --border:#E8E0D5;
-  --accent:#2C5F4A;--accent2:#4A8C6F;--accent-s:#EAF2EE;--accent-b:#9BCAB0;
-  --warm:#C4522A;--gold:#9B7B3E;--gold-s:#FEF3C7;--gold-b:#D9B97A;
+  /* Palette */
+  --cream:#F8F4EF;
+  --cream2:#F2EDE6;
+  --cream3:#EDE7DC;
+  --ink:#1A1A1A;
+  --ink2:#3A3530;
+  --muted:#B0A898;
+  --faint:#D5CEC6;
+  --rule:#E8E2DA;
+  --card:#FFFFFF;
+
+  /* Booking status tags */
+  --book-bg:#FEF3C7;--book-tx:#92400E;
+  --free-bg:#D1FAE5;--free-tx:#065F46;
+  --online-bg:#DBEAFE;--online-tx:#1E40AF;
+  --booked-bg:#EDE9FE;--booked-tx:#4C1D95;
+
+  /* Place type tags */
+  --eat-bg:#FEE2E2;--eat-tx:#991B1B;
+  --drinks-bg:#FDF4FF;--drinks-tx:#6B21A8;
+  --explore-bg:#ECFDF5;--explore-tx:#065F46;
+  --beach-bg:#EFF6FF;--beach-tx:#1E40AF;
+  --stay-bg:#FFF7ED;--stay-tx:#9A3412;
+  --spa-bg:#FDF2F8;--spa-tx:#831843;
+  --watch-bg:#FFF7ED;--watch-tx:#9A3412;
+  --hike-bg:#ECFDF5;--hike-tx:#065F46;
+  --dance-bg:#FDF4FF;--dance-tx:#6B21A8;
+  --shop-bg:#EFF6FF;--shop-tx:#1E40AF;
+  --race-bg:#FEE2E2;--race-tx:#991B1B;
+  --visit-bg:#ECFDF5;--visit-tx:#065F46;
+  --sleep-bg:#FFF7ED;--sleep-tx:#9A3412;
+
+  /* Keep legacy vars aliased so old JS doesn't break */
+  --bg:var(--cream);--paper:var(--cream);--b1:var(--rule);--b2:var(--faint);--b3:#C8BFB4;
+  --accent:#1A1A1A;--accent-s:var(--cream2);--accent-b:var(--faint);--accent2:#3A3530;
+  --mid:var(--muted);--warm:#C4522A;--gold:#9B7B3E;--gold-s:#FEF3C7;--gold-b:#D9B97A;
   --red:#991B1B;--red-s:#FEE2E2;--red-b:#FCA5A5;
-  --r:16px;--rs:12px;--rx:8px;--pill:999px;
-  --font:'DM Sans',system-ui,sans-serif;--serif:Georgia,'Fraunces',serif;
-  --sh:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
-  --sh2:0 4px 16px rgba(0,0,0,.10);
+  --green2:var(--faint);
+  --r:14px;--rs:10px;--rx:7px;--pill:999px;
+  --font:'DM Sans',system-ui,sans-serif;--serif:Georgia,serif;
+  --sh:0 1px 3px rgba(0,0,0,.05);--sh2:0 3px 12px rgba(0,0,0,.08);
 }
-html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--font)}
+html,body{height:100%;background:var(--cream);color:var(--ink);font-family:var(--font)}
 body{display:flex;justify-content:center}
 button,input,textarea{font-family:var(--font)}
-.shell{width:100%;max-width:430px;min-height:100svh;display:flex;flex-direction:column;position:relative;background:var(--bg);overflow:hidden}
+.shell{width:100%;max-width:430px;min-height:100svh;display:flex;flex-direction:column;position:relative;background:var(--cream);overflow:hidden}
 .screen{display:none;flex-direction:column;flex:1;overflow:hidden;min-height:0}
 .screen.on{display:flex;animation:rise .18s ease both}
-@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-/* STATUS BAR */
-.sbar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px 0;flex-shrink:0;font-size:10px;color:var(--muted);letter-spacing:.02em}
-.sbar-brand{font-family:var(--serif);font-size:13px;font-style:italic;color:var(--accent);letter-spacing:-.02em}
-/* TABS */
-.tabs{display:flex;background:var(--card);border-top:1px solid var(--b1);padding:6px 0 max(10px,env(safe-area-inset-bottom));flex-shrink:0;box-shadow:0 -1px 0 var(--b1)}
-.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px;position:relative}
-.tab-ico{font-size:19px;transition:transform .2s}
-.tab-lbl{font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.02em;transition:color .2s}
-.tab.on .tab-lbl{color:var(--accent)}
-.tab.on .tab-ico{transform:scale(1.1)}
-.tab .tab-ico svg{color:var(--muted);transition:color .2s}
-.tab.on .tab-ico svg{color:var(--accent)}
-.tab-badge{position:absolute;top:2px;right:calc(50% - 18px);width:7px;height:7px;border-radius:50%;background:var(--warm);border:2px solid var(--card);display:none}
-.tab-badge.on{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── TOP BAR ── */
+.top-bar{padding:14px 18px 10px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;background:var(--cream);border-bottom:1px solid var(--rule)}
+.wordmark{font-size:16px;font-weight:900;color:var(--ink);letter-spacing:-.03em}
+.wordmark em{opacity:.25;font-style:normal}
+.top-actions{display:flex;align-items:center;gap:8px}
+.icon-btn{width:32px;height:32px;border-radius:7px;background:var(--cream2);border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:all .15s;flex-shrink:0;color:var(--ink)}
+.icon-btn:hover{background:var(--cream3)}
+.icon-btn svg{color:var(--ink)}
+.av-btn{width:32px;height:32px;border-radius:50%;background:var(--ink);color:var(--cream);font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;letter-spacing:.04em;flex-shrink:0}
+/* ── ASK BUTTON (top bar right, next to avatar) ── */
+.ask-btn{display:flex;align-items:center;gap:4px;padding:6px 13px;border-radius:99px;background:var(--ink);color:var(--cream);border:none;cursor:pointer;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;flex-shrink:0;transition:opacity .15s;height:32px}
+.ask-btn:hover{opacity:.85}
+.ask-btn .ask-glyph{font-size:11px;opacity:.5}
+/* thin separator between avatar and Ask */
+.ask-sep{width:1px;height:18px;background:var(--rule);flex-shrink:0}
+
+/* ── TABS — 3 tabs only: Capture · Plan · Go ── */
+.tabs{display:flex;background:var(--cream);border-top:1px solid var(--rule);padding:0 0 max(8px,env(safe-area-inset-bottom));flex-shrink:0}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:10px 4px 8px;position:relative}
+.tab-lbl{font-size:9px;font-weight:900;color:var(--faint);letter-spacing:.1em;text-transform:uppercase;transition:color .15s}
+.tab.on .tab-lbl{color:var(--ink);border-top:2.5px solid var(--ink);width:100%;text-align:center;padding-top:9px;margin-top:-10px}
+.tab-badge{display:none}
+/* Ask separator + button */
+.tab-sep{width:1px;background:var(--rule);margin:10px 0;flex-shrink:0}
+.tab-ask{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:8px 4px 8px;position:relative}
+.tab-ask-glyph{font-size:14px;color:var(--ink);opacity:.5;line-height:1;margin-bottom:1px}
+.tab-ask .tab-lbl{color:var(--ink) !important}
+.tab-ask:active .tab-ask-glyph{opacity:.8}
+
+/* ── TRIP STRIP ── */
+.trip-strip{display:flex;gap:5px;padding:8px 18px 0;overflow-x:auto;scrollbar-width:none;flex-shrink:0;background:var(--cream)}
+.trip-strip::-webkit-scrollbar{display:none}
+.trip-chip{padding:4px 12px;border-radius:var(--pill);background:var(--cream2);border:1px solid var(--rule);font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;white-space:nowrap;flex-shrink:0;letter-spacing:.01em}
+.trip-chip.on{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.trip-chip.new{border-style:dashed;color:var(--faint)}
+.members-strip{display:flex;gap:4px;padding:5px 18px 0;overflow-x:auto;scrollbar-width:none;flex-shrink:0;min-height:0}
+
+/* ── INGEST ── */
+.ingest{margin:10px 18px;background:var(--cream2);border:1px solid var(--rule);border-radius:var(--r);padding:11px 13px;display:flex;flex-direction:column;gap:8px;flex-shrink:0;transition:border-color .15s}
+.ingest:focus-within{border-color:var(--ink)}
+.ingest-lbl{font-size:9px;font-weight:900;color:var(--faint);letter-spacing:.12em;text-transform:uppercase}
+.ingest-row{display:flex;gap:7px;align-items:flex-end}
+.ingest-row textarea{flex:1;border:none;background:transparent;font-size:13px;color:var(--ink);outline:none;resize:none;line-height:1.5;padding:0}
+.ingest-row textarea::placeholder{color:var(--muted)}
+.add-btn{padding:8px 16px;border-radius:var(--rs);border:none;background:var(--ink);color:var(--cream);font-size:11px;font-weight:900;cursor:pointer;white-space:nowrap;letter-spacing:.04em;transition:opacity .15s}
+.add-btn:hover{opacity:.85}
+.add-btn:disabled{opacity:.4}
+
+/* ── FILTER CHIPS ── */
+.chips{display:flex;gap:5px;padding:0 18px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
+.chips::-webkit-scrollbar{display:none}
+.chip{padding:4px 10px;border-radius:var(--pill);background:transparent;border:1px solid var(--rule);font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .12s;user-select:none}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--cream);font-weight:700}
+
+/* ── SECTION ROWS ── */
+.sec-row{display:flex;justify-content:space-between;align-items:center;padding:10px 18px 5px;flex-shrink:0}
+.sec-lbl{font-size:9px;font-weight:900;color:var(--faint);text-transform:uppercase;letter-spacing:.12em}
+.sec-act{font-size:11px;font-weight:700;color:var(--ink);cursor:pointer;letter-spacing:.02em}
+
+/* ── BOOKING STATUS PILLS ── */
+.bs-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:var(--pill);font-size:9px;font-weight:800;flex-shrink:0;line-height:1;letter-spacing:.03em}
+.bs-needs{background:var(--book-bg);color:var(--book-tx)}
+.bs-online{background:var(--online-bg);color:var(--online-tx)}
+.bs-free{background:var(--free-bg);color:var(--free-tx)}
+.bs-booked{background:var(--booked-bg);color:var(--booked-tx)}
+.bs-btn{padding:6px 14px;border-radius:var(--pill);font-size:11px;font-weight:700;cursor:pointer;border:none;transition:all .15s;white-space:nowrap}
+.bs-btn.needs{background:var(--book-tx);color:#fff}
+.bs-btn.online{background:var(--online-tx);color:#fff}
+.bs-btn.free{background:var(--free-bg);color:var(--free-tx);border:1px solid var(--free-tx)}
+.bs-btn.booked{background:var(--booked-bg);color:var(--booked-tx)}
+
+/* ── PLACE TAGS ── */
+.tag{display:inline-flex;align-items:center;padding:3px 8px;border-radius:var(--pill);font-size:9px;font-weight:800;white-space:nowrap;letter-spacing:.03em}
+.t-eat{background:var(--eat-bg);color:var(--eat-tx)}
+.t-drinks{background:var(--drinks-bg);color:var(--drinks-tx)}
+.t-explore{background:var(--explore-bg);color:var(--explore-tx)}
+.t-beach,.t-swim{background:var(--beach-bg);color:var(--beach-tx)}
+.t-stay,.t-sleep{background:var(--stay-bg);color:var(--stay-tx)}
+.t-spa{background:var(--spa-bg);color:var(--spa-tx)}
+.t-hike{background:var(--hike-bg);color:var(--hike-tx)}
+.t-dance{background:var(--dance-bg);color:var(--dance-tx)}
+.t-shop{background:var(--shop-bg);color:var(--shop-tx)}
+.t-watch{background:var(--watch-bg);color:var(--watch-tx)}
+.t-race{background:var(--race-bg);color:var(--race-tx)}
+.t-visit{background:var(--visit-bg);color:var(--visit-tx)}
+
+/* ── PLACE CARDS ── */
+.icard{background:var(--cream);border-radius:var(--r);border:none;overflow:hidden;animation:rise .3s ease both;cursor:pointer}
+.icard.ghost{opacity:.4;pointer-events:none}
+.card-hero{height:140px;display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;overflow:hidden;border-radius:var(--r) var(--r) 0 0}
+.card-hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 35%,rgba(0,0,0,.55))}
+.card-hero-meta{position:absolute;bottom:0;left:0;right:0;padding:10px 13px;z-index:2}
+.card-hero-name{font-family:var(--serif);font-size:16px;font-style:italic;color:#fff;line-height:1.2;margin-bottom:3px}
+.card-hero-loc{font-size:10px;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:4px}
+.card-hero-actions{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.card-hero-react{display:flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--pill);background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);font-size:11px;color:#fff;cursor:pointer}
+.card-hero-react.reacted{background:rgba(0,0,0,.3)}
+.card-crew-badge{font-size:9px;font-weight:700;color:rgba(255,255,255,.8);background:rgba(0,0,0,.2);border-radius:99px;padding:2px 8px}
+.card-edit-hero,.card-del-hero{position:absolute;top:8px;background:rgba(0,0,0,.3);border:none;color:#fff;cursor:pointer;font-size:12px;border-radius:6px;padding:4px 7px}
+.card-edit-hero{right:36px}.card-del-hero{right:8px}
+.card-tags-hero{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+.card-desc-hero{font-size:11px;color:rgba(255,255,255,.75);line-height:1.4;margin-bottom:3px}
+.crew-pick-badge{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.45);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:99px;z-index:10}
+
+/* ── STRIP CARDS ── */
+.card-scroll{flex:1;overflow-y:auto;padding:0 0 80px;display:flex;flex-direction:column;gap:0;scrollbar-width:none;min-height:0}
+.card-scroll::-webkit-scrollbar{display:none}
+.strip-card{background:var(--cream);border-bottom:1px solid var(--rule);width:100%;display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 18px;transition:background .12s}
+.strip-card:hover{background:var(--cream2)}
+.strip-card-ico{width:44px;height:44px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.strip-card-body{flex:1;min-width:0}
+.strip-card-name{font-size:13px;font-weight:700;color:var(--ink);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.strip-card-loc{font-size:10px;color:var(--muted);margin-top:1px}
+.strip-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.strip-card-who{font-size:10px;color:var(--muted)}
+.strip-card-react{font-size:10px;padding:2px 8px;border-radius:99px;border:1px solid var(--rule);color:var(--muted);background:transparent;cursor:pointer}
+.strip-card-react.on{color:var(--ink);border-color:var(--ink)}
 /* AUTH */
 #s-auth{align-items:center;justify-content:center;padding:44px 28px;background:var(--cream)}
 .auth-mark{font-family:var(--serif);font-size:52px;font-style:italic;letter-spacing:-.03em;color:var(--ink);margin-bottom:8px;line-height:1}
@@ -61,12 +199,12 @@ button,input,textarea{font-family:var(--font)}
 /* ONBOARD */
 #s-onboard{padding:48px 28px;justify-content:center;background:var(--cream)}
 .ob-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
-.ob-h1{font-family:var(--serif);font-size:36px;font-style:italic;letter-spacing:-.02em;line-height:1.1;color:var(--ink);margin-bottom:10px}
+.ob-h1{font-size:30px;font-weight:900;letter-spacing:-.05em;color:var(--ink);line-height:1.1;margin-bottom:8px}
 .ob-h1 em{color:var(--accent)}
 .ob-p{font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:36px}
 .ob-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:5px}
 .ob-in{width:100%;padding:13px 15px;border-radius:var(--rs);border:1.5px solid var(--b1);background:var(--card);font-size:15px;color:var(--ink);outline:none;transition:border-color .2s;margin-bottom:12px}
-.ob-in:focus{border-color:var(--accent)}.ob-in::placeholder{color:var(--muted)}
+.ob-in:focus{border-color:var(--ink);background:var(--cream)}.ob-in::placeholder{color:var(--muted)}
 .ob-dates{display:flex;gap:8px;margin-bottom:12px}.ob-dates .ob-in{flex:1;margin-bottom:0}
 .ob-cta{width:100%;padding:15px;border-radius:var(--rs);border:none;background:var(--accent);color:#fff;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px;transition:opacity .15s}
 .ob-cta:disabled{opacity:.4;cursor:default}
@@ -96,25 +234,25 @@ button,input,textarea{font-family:var(--font)}
 .ingest{margin:10px 20px;background:var(--card);border:1.5px solid var(--b1);border-radius:var(--r);padding:13px 15px;display:flex;flex-direction:column;gap:9px;flex-shrink:0;transition:border-color .2s;box-shadow:var(--sh)}
 .ingest:focus-within{border-color:var(--accent)}
 .ingest-lbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
-.ingest-row{display:flex;gap:8px;align-items:flex-end}
+.ingest-row{display:flex;gap:7px;align-items:flex-end}
 #url-in{flex:1;border:none;background:var(--bg);border-radius:var(--rx);padding:10px 12px;font-size:14px;color:var(--ink);outline:none;resize:none;min-height:42px;max-height:90px;line-height:1.45}
 #url-in::placeholder{color:var(--muted)}
-.add-btn{background:var(--accent);color:#fff;border:none;border-radius:var(--rx);padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:opacity .15s}
-.add-btn:active{opacity:.8}.add-btn:disabled{opacity:.4;cursor:default}
+
+
 /* CHIPS */
 .chips{display:flex;gap:5px;padding:0 20px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
 .chips::-webkit-scrollbar{display:none}
 .chip{padding:5px 12px;border-radius:var(--pill);background:var(--card);border:1.5px solid var(--b1);font-size:11px;color:var(--muted);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s;user-select:none;box-shadow:var(--sh)}
 .chip.on{background:var(--accent-s);border-color:var(--accent-b);color:var(--accent);font-weight:600}
 /* SEC ROW */
-.sec-row{display:flex;justify-content:space-between;align-items:center;padding:10px 20px 6px;flex-shrink:0}
+.sec-row{display:flex;justify-content:space-between;align-items:center;padding:10px 18px 5px;flex-shrink:0}
 .sec-lbl{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-size:10px}
 .sec-act{font-size:13px;color:var(--accent);font-weight:600;cursor:pointer}
 /* ERR STRIP */
 .err-strip{background:var(--red-s);border:1px solid var(--red-b);border-radius:var(--rx);padding:9px 13px;font-size:12px;color:var(--red);line-height:1.5;margin:0 20px 6px;flex-shrink:0;display:none}
 .err-strip.on{display:block;animation:rise .2s ease}
 /* CARD SCROLL */
-.card-scroll{flex:1;overflow-y:auto;padding:0 0 100px;display:flex;flex-direction:column;gap:0;scrollbar-width:none;min-height:0}
+.card-scroll{flex:1;overflow-y:auto;padding:0 0 100px;display:flex;flex-direction:column;gap:0;scrollbar-width:none;min-height:0;counter-reset:place-counter}
 /* ── SWIPE CARD WRAPPER ── */
 .swipe-wrapper{position:relative;overflow:hidden;margin-bottom:0;flex-shrink:0}
 .swipe-bg-left{position:absolute;inset:0;background:var(--red-s);display:flex;align-items:center;justify-content:flex-end;padding-right:24px;opacity:0;transition:opacity .15s}
@@ -148,7 +286,7 @@ button,input,textarea{font-family:var(--font)}
 .t-spa{background:#ECFDF5;color:#065F46;border:1px solid #6EE7B7}
 .t-music{background:#FDF2F8;color:#86198F;border:1px solid #F0ABFC}
 /* ── BOOKING STATUS BADGES ── */
-.bs-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:var(--pill);font-size:10px;font-weight:600;flex-shrink:0;line-height:1}
+.bs-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:var(--pill);font-size:9px;font-weight:800;flex-shrink:0;line-height:1;letter-spacing:.04em;text-transform:uppercase}
 .bs-needs{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}
 .bs-online{background:#DBEAFE;color:#1E40AF;border:1px solid #BFDBFE}
 .bs-free{background:#EAF2EE;color:#2C5F4A;border:1px solid #9BCAB0}
@@ -175,9 +313,9 @@ button,input,textarea{font-family:var(--font)}
 .empty-h{font-family:var(--serif);font-size:20px;font-style:italic;color:var(--ink2)}
 .empty-p{font-size:13px;color:var(--muted);line-height:1.7;max-width:240px}
 /* PLAN */
-.plan-hd{padding:14px 20px 0;flex-shrink:0;background:var(--cream)}
-.plan-h1{font-family:var(--serif);font-size:28px;font-style:italic;letter-spacing:-.02em;color:var(--ink)}
-.plan-sub{font-size:12px;color:var(--muted);margin-top:2px;margin-bottom:10px}
+.plan-hd{padding:14px 18px 10px;flex-shrink:0;background:var(--cream);border-bottom:1px solid var(--rule)}
+.plan-h1{font-size:22px;font-weight:900;letter-spacing:-.04em;color:var(--ink)}
+.plan-sub{font-size:10px;color:var(--muted);margin-top:3px;margin-bottom:8px;font-weight:500}
 /* CLUSTERS MAP STRIP */
 .clusters-map{height:130px;background:#DDD8CE;flex-shrink:0;position:relative;overflow:hidden}
 .clusters-map svg{position:absolute;inset:0;width:100%;height:100%}
@@ -190,18 +328,18 @@ button,input,textarea{font-family:var(--font)}
 .alloc-chip{padding:4px 11px;border-radius:var(--pill);background:var(--card);border:1.5px solid var(--b1);font-size:11px;color:var(--muted);white-space:nowrap;flex-shrink:0;cursor:pointer;transition:all .15s;box-shadow:var(--sh)}
 .alloc-chip:hover{border-color:var(--accent-b);color:var(--accent)}
 /* SIZING NUDGE */
-.sizing-nudge{margin:0 20px 8px;background:var(--gold-s);border:1px solid var(--gold-b);border-radius:var(--rs);padding:9px 13px;font-size:12px;color:var(--gold);line-height:1.5;flex-shrink:0;display:none}
+.sizing-nudge{margin:0 18px 8px;background:var(--cream2);border:1px solid var(--rule);border-radius:9px;padding:9px 13px;font-size:12px;color:var(--muted);line-height:1.5;flex-shrink:0;display:none}
 .sizing-nudge.on{display:block}
 /* CLUSTERS SCROLL */
 .clusters{flex:1;overflow-y:auto;padding:0 20px 100px;scrollbar-width:none;min-height:0}
 .clusters::-webkit-scrollbar{display:none}
 /* CITY CARD */
-.city-card{background:var(--card);border-radius:var(--r);border:1px solid var(--b1);overflow:hidden;margin-bottom:10px;animation:rise .25s ease both;box-shadow:var(--sh)}
+.city-card{background:var(--cream);border-bottom:1px solid var(--rule);padding:13px 18px;display:flex;align-items:center;justify-content:space-between;animation:rise .25s ease both;cursor:pointer}
 /* ── TRIP DASHBOARD CARDS ── */
-.trip-dash-card{background:var(--card);border-radius:20px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:var(--sh2);flex-shrink:0}
-.trip-dash-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.14)}
-.trip-dash-card:active{transform:scale(.98)}
-.tdc-hero{height:160px;position:relative;overflow:hidden;display:flex;align-items:flex-end}
+.trip-dash-card{background:var(--cream);overflow:hidden;cursor:pointer;flex-shrink:0}
+.trip-dash-card:hover{background:var(--cream2)}
+.trip-dash-card:active{opacity:.85}
+.tdc-hero{height:0;display:none}
 .tdc-hero-bg{position:absolute;inset:0;object-fit:cover;width:100%;height:100%}
 .tdc-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.05) 0%,rgba(0,0,0,.65) 100%)}
 .tdc-status{position:absolute;top:12px;left:14px;padding:4px 10px;border-radius:99px;font-size:10px;font-weight:700;letter-spacing:.04em}
@@ -227,7 +365,7 @@ button,input,textarea{font-family:var(--font)}
 .city-info{flex:1;min-width:0}
 .city-name{font-family:var(--serif);font-size:20px;font-style:italic;letter-spacing:-.01em;color:var(--ink);line-height:1.1}
 .city-meta{font-size:11px;color:var(--muted);margin-top:3px}
-.city-btn{background:var(--accent);color:#fff;border:none;border-radius:var(--pill);padding:8px 16px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:opacity .15s}
+.city-btn{background:var(--ink);color:var(--cream);border:none;border-radius:99px;padding:7px 14px;font-size:10px;font-weight:900;cursor:pointer;white-space:nowrap;flex-shrink:0;letter-spacing:.04em;text-transform:uppercase}
 .city-btn:hover{opacity:.85}
 .city-previews{display:flex;gap:5px;flex-wrap:wrap;padding:0 16px 13px}
 .city-preview{padding:3px 9px;border-radius:var(--pill);background:var(--bg);border:1px solid var(--b1);font-size:11px;color:var(--ink2)}
@@ -255,8 +393,8 @@ button,input,textarea{font-family:var(--font)}
 .half-line{position:absolute;left:0;right:0;border-top:1px dashed #EDE8E0;z-index:2;pointer-events:none}
 .drop-preview{position:absolute;left:4px;right:4px;border-radius:7px;border:2px dashed var(--accent-b);background:var(--accent-s);z-index:8;opacity:0;pointer-events:none;transition:opacity .1s;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--accent);font-weight:700}
 .drop-preview.show{opacity:1}
-.us-chip{padding:5px 10px;border-radius:99px;background:var(--card);border:1.5px solid var(--b1);font-size:11px;color:var(--ink);cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:all .15s}
-.us-chip:hover,.us-chip.sel{background:var(--accent-s);border-color:var(--accent-b);color:var(--accent)}
+.us-chip{padding:5px 11px;border-radius:99px;background:var(--cream2);border:1.5px solid var(--rule);font-size:10px;font-weight:700;color:var(--ink);cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:all .15s}
+.us-chip:hover,.us-chip.sel{background:var(--ink);border-color:var(--ink);color:var(--cream)}
 .us-chip.used{opacity:.3;pointer-events:none}
 .planner.on{display:flex;animation:rise .15s ease}
 .planner-hd{padding:10px 20px 10px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid var(--b1);background:var(--card);flex-shrink:0}
@@ -265,15 +403,15 @@ button,input,textarea{font-family:var(--font)}
 .planner-sub{font-size:11px;color:var(--muted);margin-top:2px}
 .planner-acts{display:flex;gap:6px}
 /* COPILOT BAR */
-.copilot-bar{background:var(--gold-s);border-bottom:1px solid var(--gold-b);padding:9px 20px;font-size:12px;color:var(--gold);line-height:1.5;display:none;align-items:flex-start;gap:8px;flex-shrink:0}
+.copilot-bar{background:var(--cream2);border-bottom:1px solid var(--rule);padding:9px 18px;font-size:12px;color:var(--ink);line-height:1.5;display:none;align-items:flex-start;gap:8px;flex-shrink:0}
 .copilot-bar.on{display:flex;animation:rise .2s ease}
 .cop-x{margin-left:auto;cursor:pointer;opacity:.5;font-size:16px;flex-shrink:0}
 /* DAY BAR */
 .day-bar{display:flex;gap:5px;padding:8px 20px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;background:var(--cream);border-bottom:1px solid var(--b1)}
 .day-bar::-webkit-scrollbar{display:none}
-.day-pill{padding:6px 14px;border-radius:var(--pill);background:var(--card);border:1.5px solid var(--b1);font-size:11px;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s;user-select:none;color:var(--ink2);box-shadow:var(--sh)}
-.day-pill.on{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
-.day-pill.warn{border-color:var(--gold-b);color:var(--gold)}
+.day-pill{padding:5px 12px;border-radius:99px;background:var(--cream2);border:1.5px solid var(--rule);font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s;user-select:none;color:var(--muted);letter-spacing:.02em}
+.day-pill.on{background:var(--ink);color:var(--cream);border-color:var(--ink);font-weight:900}
+.day-pill.warn{border-color:var(--faint);color:var(--muted)}
 /* DAY SUMMARY */
 .day-summary{padding:7px 20px;background:var(--cream);border-bottom:1px solid var(--b1);font-size:11px;color:var(--muted);display:flex;gap:12px;flex-shrink:0;overflow-x:auto;scrollbar-width:none}
 .day-summary::-webkit-scrollbar{display:none}
@@ -284,8 +422,8 @@ button,input,textarea{font-family:var(--font)}
 .sidebar{width:130px;flex-shrink:0;background:var(--bg);border-right:1px solid var(--b1);overflow-y:auto;padding:8px 8px;display:flex;flex-direction:column;gap:6px;scrollbar-width:none}
 .sidebar::-webkit-scrollbar{display:none}
 .sb-lbl{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding:0 3px;margin-bottom:2px}
-.place-tile{background:var(--card);border:1.5px solid var(--b1);border-radius:var(--rs);padding:8px 9px;cursor:pointer;transition:all .15s;user-select:none;box-shadow:var(--sh)}
-.place-tile:hover{border-color:var(--accent-b)}.place-tile.sel{border-color:var(--accent);border-width:2px;background:var(--accent-s)}.place-tile.used{opacity:.3;pointer-events:none}
+.place-tile{background:var(--cream2);border:1px solid var(--rule);border-radius:8px;padding:7px 9px;cursor:pointer;transition:all .15s;user-select:none}
+.place-tile:hover{border-color:var(--ink)}.place-tile.sel{border-color:var(--ink);border-width:2px;background:var(--ink);color:var(--cream)}.place-tile.used{opacity:.25;pointer-events:none}
 .pt-ico{font-size:20px;line-height:1;margin-bottom:4px}.pt-name{font-size:11px;font-weight:500;color:var(--ink2);line-height:1.3}.pt-loc{font-size:10px;color:var(--muted);margin-top:2px}
 /* TIMELINE */
 .timeline{flex:1;overflow-y:auto;padding:10px 14px 80px;scrollbar-width:none;min-height:0}
@@ -338,8 +476,8 @@ button,input,textarea{font-family:var(--font)}
 .rag-msg{max-width:90%;animation:rise .2s ease both}
 .rag-msg.user{align-self:flex-end}.rag-msg.porter{align-self:flex-start}
 .rag-bubble{padding:8px 12px;font-size:13px;line-height:1.6;border-radius:14px}
-.rag-msg.user .rag-bubble{background:var(--bg);color:var(--ink2);border-radius:14px 14px 3px 14px;border:1px solid var(--b1)}
-.rag-msg.porter .rag-bubble{background:var(--accent-s);border:1px solid var(--accent-b);color:var(--ink2);border-radius:14px 14px 14px 3px}
+.rag-msg.user .rag-bubble{background:var(--ink);color:var(--cream);border-radius:14px 14px 3px 14px}
+.rag-msg.porter .rag-bubble{background:var(--cream2);border:1px solid var(--rule);color:var(--ink);border-radius:14px 14px 14px 3px}
 .rag-porter-lbl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
 .rag-ans{display:none}.rag-ans.on{display:block}
 .rag-input-row{display:flex;gap:8px;padding:8px 12px 10px;border-top:1px solid var(--b1)}
@@ -355,7 +493,7 @@ button,input,textarea{font-family:var(--font)}
 /* DOC LIST */
 .doc-list{flex:1;overflow-y:auto;padding:0 20px 80px;display:flex;flex-direction:column;gap:8px;scrollbar-width:none;min-height:0}
 .doc-list::-webkit-scrollbar{display:none}
-.doc-item{background:var(--card);border:1px solid var(--b1);border-radius:var(--rs);padding:11px 13px;display:flex;gap:10px;align-items:center;animation:rise .2s ease both;position:relative;box-shadow:var(--sh)}
+.doc-item{background:var(--cream);border-bottom:1px solid var(--rule);padding:11px 18px;display:flex;gap:10px;align-items:center;animation:rise .2s ease both;position:relative;cursor:pointer}
 .doc-icon{width:40px;height:40px;border-radius:var(--rx);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .doc-info{flex:1;min-width:0;padding-right:28px}
 .doc-name{font-weight:500;font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -366,7 +504,7 @@ button,input,textarea{font-family:var(--font)}
 .doc-del:hover{background:var(--red-s);color:var(--red)}
 /* TRIP MODE */
 #s-trip{background:var(--cream)}
-.trip-mode-hd{padding:16px 20px 10px;flex-shrink:0}
+.trip-mode-hd{padding:14px 18px 10px;flex-shrink:0;border-bottom:1px solid var(--rule)}
 .trip-mode-eyebrow{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
 .trip-mode-h1{font-family:var(--serif);font-size:28px;font-style:italic;letter-spacing:-.02em;color:var(--ink);line-height:1.15}
 .trip-mode-date{font-size:13px;color:var(--muted);margin-top:4px}
@@ -378,19 +516,19 @@ button,input,textarea{font-family:var(--font)}
 .gm-status{font-size:9px;color:var(--muted);text-align:center;max-width:44px;line-height:1.2}
 .gm-status.active{color:var(--accent);font-weight:600}
 .whats-next{margin:0 20px 10px;flex-shrink:0}
-.wn-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:5px}
-.wn-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+.wn-label{font-size:9px;font-weight:900;color:var(--faint);letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px;padding:12px 18px 0;display:flex;align-items:center;gap:5px}
+.wn-dot{width:5px;height:5px;border-radius:50%;background:var(--ink);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
-.wn-card{background:var(--accent);border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh2)}
+.wn-card{background:var(--ink);border-radius:12px;padding:16px 18px;margin:12px 18px 0}
 .wn-card-inner{background:var(--accent);border-radius:var(--r);padding:18px 20px}
 .wn-time{font-size:12px;color:rgba(255,255,255,.7);margin-bottom:4px;font-weight:500}
 .wn-place{font-family:var(--serif);font-size:22px;font-style:italic;color:#fff;line-height:1.2;margin-bottom:4px}
 .wn-loc{font-size:12px;color:rgba(255,255,255,.75)}
 .wn-empty{padding:18px;text-align:center;background:var(--card);border-radius:var(--r);border:1px solid var(--b1);font-size:13px;color:var(--muted)}
-.quick-add{display:flex;gap:8px;padding:0 20px 8px;flex-shrink:0}
-.qa-in{flex:1;padding:10px 14px;border-radius:var(--rs);border:1.5px solid var(--b1);background:var(--card);font-size:13px;color:var(--ink);outline:none;transition:border-color .2s;box-shadow:var(--sh)}
-.qa-in:focus{border-color:var(--accent-b)}.qa-in::placeholder{color:var(--muted)}
-.qa-btn{background:var(--accent);color:#fff;border:none;border-radius:var(--rs);padding:10px 15px;font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0}
+.quick-add{display:flex;gap:8px;padding:10px 18px 8px;flex-shrink:0}
+.qa-in{flex:1;padding:10px 13px;border-radius:9px;border:1.5px solid var(--rule);background:var(--cream2);font-size:13px;color:var(--ink);outline:none;transition:border-color .2s}
+.qa-in:focus{border-color:var(--ink)}.qa-in::placeholder{color:var(--faint)}
+.qa-btn{background:var(--ink);color:var(--cream);border:none;border-radius:9px;padding:10px 14px;font-size:11px;font-weight:900;cursor:pointer;flex-shrink:0;letter-spacing:.04em}
 .trip-day-scroll{flex:1;overflow-y:auto;padding:0 20px 100px;scrollbar-width:none;min-height:0}
 .trip-day-scroll::-webkit-scrollbar{display:none}
 .trip-ev{background:var(--card);border-radius:var(--rs);border:1px solid var(--b1);padding:11px 13px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;box-shadow:var(--sh)}
@@ -400,7 +538,7 @@ button,input,textarea{font-family:var(--font)}
 .trip-ev-ico{font-size:20px;flex-shrink:0}
 .trip-ev-info{flex:1;min-width:0}
 .trip-ev-name{font-weight:600;font-size:14px;color:var(--ink)}.trip-ev-loc{font-size:11px;color:var(--muted);margin-top:2px}
-.countdown-card{margin:16px 20px;background:var(--card);border-radius:var(--r);padding:28px;text-align:center;border:1px solid var(--b1);flex-shrink:0;display:none;box-shadow:var(--sh)}
+.countdown-card{margin:16px 18px;background:var(--cream2);border-radius:12px;padding:28px;text-align:center;border:1px solid var(--rule);flex-shrink:0;display:none}
 .cd-ico{font-size:44px;margin-bottom:12px}
 .cd-h{font-family:var(--serif);font-size:22px;font-style:italic;color:var(--ink);margin-bottom:6px;letter-spacing:-.01em}
 .cd-p{font-size:13px;color:var(--muted);line-height:1.65}
@@ -410,21 +548,21 @@ button,input,textarea{font-family:var(--font)}
 .modal-bg{position:absolute;inset:0;background:rgba(28,25,23,.55);z-index:400;display:none;align-items:flex-end;backdrop-filter:blur(2px)}
 .modal-bg.on{display:flex;animation:rise .15s ease}
 .modal{background:var(--card);border-radius:20px 20px 0 0;width:100%;padding:24px 22px 40px;max-height:88svh;overflow-y:auto;border-top:1px solid var(--b1);box-shadow:0 -8px 40px rgba(0,0,0,.15)}
-.modal-h{font-family:var(--serif);font-size:22px;font-style:italic;letter-spacing:-.01em;margin-bottom:18px;color:var(--ink)}
-.m-in{width:100%;padding:12px 14px;border-radius:var(--rx);border:1.5px solid var(--b1);background:var(--cream);font-size:14px;color:var(--ink);outline:none;margin-bottom:10px;transition:border-color .2s}
-.m-in:focus{border-color:var(--accent)}.m-in::placeholder{color:var(--muted)}
+.modal-h{font-size:20px;font-weight:900;letter-spacing:-.03em;margin-bottom:16px;color:var(--ink)}
+.m-in{width:100%;padding:11px 13px;border-radius:9px;border:1.5px solid var(--rule);background:var(--cream2);font-size:13px;color:var(--ink);outline:none;margin-bottom:10px;transition:border-color .2s}
+.m-in:focus{border-color:var(--ink);background:var(--cream)}.m-in::placeholder{color:var(--faint)}
 .m-ta{width:100%;padding:12px 14px;border-radius:var(--rx);border:1.5px solid var(--b1);background:var(--cream);font-size:13px;color:var(--ink);outline:none;margin-bottom:10px;resize:none;min-height:90px;line-height:1.5;transition:border-color .2s}
 .m-ta:focus{border-color:var(--accent)}.m-ta::placeholder{color:var(--muted)}
 .m-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:7px}
 .m-btns{display:flex;gap:8px;margin-top:10px}
-.m-btn{flex:1;padding:14px;border-radius:var(--rx);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:opacity .15s}
-.m-btn:hover{opacity:.88}.m-btn.pri{background:var(--accent);color:#fff}.m-btn.sec{background:var(--bg);color:var(--muted);border:1.5px solid var(--b1)}
+.m-btn{flex:1;padding:13px;border-radius:9px;font-size:12px;font-weight:900;cursor:pointer;border:none;transition:opacity .15s;letter-spacing:.03em}
+.m-btn:hover{opacity:.88}.m-btn.pri{background:var(--ink);color:var(--cream)}.m-btn.sec{background:var(--cream2);color:var(--muted);border:1.5px solid var(--rule)}
 .doc-types{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
 .doc-type-btn{padding:7px 13px;border-radius:var(--pill);border:1.5px solid var(--b1);font-size:12px;cursor:pointer;background:var(--cream);transition:all .15s;color:var(--ink2)}
 .doc-type-btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
-.m-tabs{display:flex;gap:0;margin-bottom:16px;border:1.5px solid var(--b1);border-radius:var(--rs);overflow:hidden}
-.m-tab{flex:1;padding:10px;text-align:center;font-size:12px;font-weight:600;cursor:pointer;background:var(--cream);color:var(--muted);transition:all .15s;border:none}
-.m-tab.on{background:var(--accent);color:#fff}
+.m-tabs{display:flex;gap:0;margin-bottom:14px;border:1.5px solid var(--rule);border-radius:9px;overflow:hidden}
+.m-tab{flex:1;padding:9px;text-align:center;font-size:10px;font-weight:900;cursor:pointer;background:var(--cream);color:var(--faint);transition:all .15s;border:none;letter-spacing:.06em;text-transform:uppercase}
+.m-tab.on{background:var(--ink);color:var(--cream)}
 .invite-link-box{background:var(--cream);border:1.5px solid var(--b1);border-radius:var(--rs);padding:12px 14px;font-size:12px;color:var(--ink2);font-family:monospace;word-break:break-all;margin-bottom:13px;line-height:1.5}
 .share-btns{display:flex;gap:8px;flex-wrap:wrap}
 .share-btn{flex:1;min-width:100px;padding:11px;border-radius:var(--rs);border:1.5px solid var(--b1);background:var(--cream);font-size:12px;font-weight:600;cursor:pointer;text-align:center;transition:all .15s;color:var(--ink2)}
@@ -439,14 +577,13 @@ button,input,textarea{font-family:var(--font)}
 .toast{position:absolute;bottom:88px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--ink);color:#fff;padding:10px 20px;border-radius:var(--pill);font-size:13px;font-weight:500;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:500;max-width:calc(100% - 44px);text-align:center;box-shadow:var(--sh2)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 /* PORTER FAB + CHAT */
-.porter-fab{position:absolute;right:20px;bottom:88px;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:22px;cursor:pointer;z-index:300;box-shadow:0 4px 20px rgba(44,95,74,.4);transition:transform .2s;display:none;align-items:center;justify-content:center}
-.porter-fab.on{display:flex;animation:rise .2s ease}.porter-fab:hover{transform:scale(1.07)}
+.porter-fab{display:none!important}
 .chat-drawer{position:absolute;inset:0;z-index:350;display:none;flex-direction:column;background:var(--cream)}
 .chat-drawer.on{display:flex;animation:rise .2s ease}
-.chat-hd{padding:14px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--b1);background:var(--card);flex-shrink:0;box-shadow:var(--sh)}
-.chat-hd-back{font-size:20px;cursor:pointer;color:var(--accent)}
+.chat-hd{padding:14px 18px 12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--rule);background:var(--cream);flex-shrink:0}
+.chat-hd-back{font-size:12px;font-weight:700;cursor:pointer;color:var(--muted);letter-spacing:.02em}
 .chat-hd-info{flex:1}
-.chat-hd-name{font-family:var(--serif);font-size:18px;font-style:italic;letter-spacing:-.01em;color:var(--ink)}
+.chat-hd-name{font-size:16px;font-weight:900;letter-spacing:-.03em;color:var(--ink)}
 .chat-hd-sub{font-size:11px;color:var(--muted)}.chat-hd-ico{font-size:20px}
 .chat-messages{flex:1;overflow-y:auto;padding:16px 16px 8px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none;min-height:0}
 .chat-messages::-webkit-scrollbar{display:none}
@@ -530,7 +667,7 @@ button,input,textarea{font-family:var(--font)}
 .card-hero{height:140px;display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;overflow:hidden;border-radius:var(--r) var(--r) 0 0}
 .card-hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 35%,rgba(0,0,0,.52))}
 .card-hero-meta{position:absolute;bottom:0;left:0;right:0;padding:10px 13px;z-index:2}
-.card-hero-name{font-family:var(--serif);font-size:17px;font-style:italic;color:#fff;line-height:1.2;margin-bottom:3px;letter-spacing:-.01em}
+.card-hero-name{font-size:18px;font-weight:900;color:#fff;line-height:1.1;margin-bottom:3px;letter-spacing:-.03em}
 .card-hero-loc{font-size:10px;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:4px}
 .card-hero-actions{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
 .card-hero-react{display:flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--pill);background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);font-size:11px;color:#fff;cursor:pointer;transition:all .15s}
@@ -708,17 +845,23 @@ button,input,textarea{font-family:var(--font)}
   <!-- CAPTURE -->
   <div class="screen" id="s-capture">
     <div class="top-bar">
-      <div class="wordmark">Port<em>er</em></div>
+      <div class="wordmark">Porter<em>.</em></div>
       <div class="top-actions">
-        <div class="icon-btn" onclick="openModal('invite-modal')" title="Invite crew" id="crew-btn">👥</div>
-        <div class="icon-btn" onclick="openModal('trip-actions-modal')" title="Trip options">⋯</div>
+        <div class="icon-btn" onclick="openModal('invite-modal')" title="Invite crew" id="crew-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="icon-btn" onclick="openModal('trip-actions-modal')" title="Trip options">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
+        </div>
         <button class="av-btn" id="av-btn" onclick="openModal('profile-modal')">?</button>
+        <div class="ask-sep"></div>
+        <button class="ask-btn" onclick="openChat()"><span class="ask-glyph">✦</span>Ask</button>
       </div>
     </div>
     <div class="trip-strip" id="trip-strip"></div>
     <div class="members-strip" id="members-strip"></div>
     <div class="ingest">
-      <div class="ingest-lbl">✦ Add a place</div>
+      <div class="ingest-lbl">✦ Find a place</div>
       <div class="ingest-row">
         <textarea id="url-in" placeholder="Paste a TikTok, Instagram or Maps link — or just describe it: &quot;best rooftop bar Bangkok&quot;" rows="1" oninput="autosize(this)"></textarea>
         <button class="add-btn" id="cap-btn" onclick="capture()">Add</button>
@@ -758,21 +901,32 @@ button,input,textarea{font-family:var(--font)}
     <!-- TRIPS DASHBOARD (default view) -->
     <div id="trips-dashboard" style="display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0">
       <!-- Header -->
-      <div style="padding:18px 20px 10px;flex-shrink:0">
-        <div style="font-family:var(--serif);font-size:28px;font-style:italic;letter-spacing:-.02em;color:var(--ink)">Your trips</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:3px" id="trips-dash-sub">Loading…</div>
+      <div class="top-bar">
+        <div>
+          <div class="wordmark">Porter<em>.</em></div>
+          <div style="font-size:10px;font-weight:600;color:var(--muted);margin-top:1px;letter-spacing:.02em" id="trips-dash-sub">Loading…</div>
+        </div>
+        <div class="top-actions">
+          <button class="av-btn" onclick="openModal('profile-modal')" id="av-btn-plan">?</button>
+          <div class="ask-sep"></div>
+          <button class="ask-btn" onclick="openChat()"><span class="ask-glyph">✦</span>Ask</button>
+        </div>
       </div>
       <!-- Trip cards scroll -->
-      <div id="trips-dash-list" style="flex:1;overflow-y:auto;padding:4px 20px 100px;display:flex;flex-direction:column;gap:12px;scrollbar-width:none"></div>
+      <div id="trips-dash-list" style="flex:1;overflow-y:auto;padding:0 0 100px;display:flex;flex-direction:column;gap:0;scrollbar-width:none;border-top:1px solid transparent"></div>
     </div>
     <!-- CITY CLUSTERS (shown after tapping a trip) -->
     <div id="clusters-view" style="display:none;flex-direction:column;flex:1;overflow:hidden;min-height:0">
-      <div class="plan-hd">
-        <div style="display:flex;align-items:center;gap:10px">
-          <button onclick="backToTrips()" style="font-size:12px;color:var(--accent);font-weight:600;background:none;border:none;cursor:pointer;font-family:var(--font)">← Trips</button>
-          <div class="plan-h1" id="clusters-trip-title">—</div>
+      <div class="top-bar">
+        <div>
+          <button onclick="backToTrips()" style="font-size:11px;font-weight:700;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--font);letter-spacing:.02em;margin-bottom:2px;display:block;padding:0">← Trips</button>
+          <div style="font-size:18px;font-weight:900;color:var(--ink);letter-spacing:-.04em;line-height:1" id="clusters-trip-title">—</div>
         </div>
-        <div class="plan-sub" id="plan-sub">Your places, grouped by city</div>
+        <div class="top-actions">
+          <button class="av-btn" onclick="openModal('profile-modal')" id="av-btn-clusters">?</button>
+          <div class="ask-sep"></div>
+          <button class="ask-btn" onclick="openChat()"><span class="ask-glyph">✦</span>Ask</button>
+        </div>
       </div>
       <div class="alloc-bar" id="alloc-bar"></div>
       <div class="sizing-nudge" id="sizing-nudge"></div>
@@ -788,14 +942,13 @@ button,input,textarea{font-family:var(--font)}
         </div>
         <div class="planner-acts">
           <!-- View toggle -->
-          <div style="display:flex;border:1.5px solid var(--b1);border-radius:var(--rx);overflow:hidden;background:var(--bg)">
-            <button id="cal-view-day" onclick="setCalView('day')" style="padding:5px 10px;border:none;background:var(--accent);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font)">Day</button>
-            <button id="cal-view-trip" onclick="setCalView('trip')" style="padding:5px 10px;border:none;background:transparent;color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font)">Trip</button>
+          <div style="display:flex;border:1.5px solid var(--rule);border-radius:var(--rx);overflow:hidden;background:var(--cream2)">
+            <button id="cal-view-day" onclick="setCalView('day')" style="padding:5px 10px;border:none;background:var(--ink);color:var(--cream);font-size:10px;font-weight:900;cursor:pointer;font-family:var(--font);letter-spacing:.04em">Day</button>
+            <button id="cal-view-trip" onclick="setCalView('trip')" style="padding:5px 10px;border:none;background:transparent;color:var(--muted);font-size:10px;font-weight:700;cursor:pointer;font-family:var(--font);letter-spacing:.04em">Trip</button>
           </div>
-          <div class="icon-btn" onclick="openMap()" title="Map">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
-          </div>
-          <div class="icon-btn" onclick="runCopilot()" title="Co-pilot">🧭</div>
+          <div class="icon-btn" onclick="runCopilot()" title="Co-pilot" style="font-size:11px;font-weight:900;letter-spacing:.04em">🧭</div>
+          <div class="ask-sep"></div>
+          <button class="ask-btn" onclick="openChat()"><span class="ask-glyph">✦</span>Ask</button>
         </div>
       </div>
       <div class="copilot-bar" id="copilot-bar">
@@ -889,6 +1042,14 @@ button,input,textarea{font-family:var(--font)}
 
   <!-- TRIP MODE -->
   <div class="screen" id="s-trip">
+    <div class="top-bar">
+      <div class="wordmark">Porter<em>.</em></div>
+      <div class="top-actions">
+        <button class="av-btn" onclick="openModal('profile-modal')" id="av-btn-trip">?</button>
+        <div class="ask-sep"></div>
+        <button class="ask-btn" onclick="openChat()"><span class="ask-glyph">✦</span>Ask</button>
+      </div>
+    </div>
     <div class="trip-mode-hd">
       <div class="trip-mode-eyebrow" id="trip-eyebrow">Now travelling</div>
       <div class="trip-mode-h1" id="trip-mode-h1">Today</div>
@@ -917,24 +1078,16 @@ button,input,textarea{font-family:var(--font)}
     </div>
   </div>
 
-  <!-- TABS -->
+  <!-- TABS — Capture · Plan · Go -->
   <div class="tabs" id="tabs" style="display:none">
     <div class="tab on" id="t-capture" onclick="goTab('capture')">
-      <div class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg></div>
-      <div class="tab-lbl">Capture</div>
+      <div class="tab-lbl">Find</div>
     </div>
     <div class="tab" id="t-plan" onclick="goTab('plan')">
-      <div class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg></div>
       <div class="tab-lbl">Plan</div>
     </div>
-    <div class="tab" id="t-vault" onclick="goTab('vault')">
-      <div class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/><line x1="9" y1="12" x2="15" y2="12" stroke-dasharray="2 2"/></svg></div>
-      <div class="tab-lbl">Bookings</div>
-      <div class="tab-badge" id="vault-badge"></div>
-    </div>
     <div class="tab" id="t-trip" onclick="goTab('trip')">
-      <div class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></div>
-      <div class="tab-lbl">Trip</div>
+      <div class="tab-lbl">Go</div>
     </div>
   </div>
 
@@ -1042,7 +1195,7 @@ button,input,textarea{font-family:var(--font)}
   <!-- DISCOVER DRAWER -->
   <div class="chat-drawer" id="discover-drawer" style="background:var(--cream)">
     <!-- Header -->
-    <div class="chat-hd" style="flex-direction:column;align-items:stretch;gap:0;padding-bottom:0">
+    <div style="display:flex;flex-direction:column;padding:14px 18px 0;border-bottom:1px solid var(--rule);background:var(--cream);flex-shrink:0">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
         <span class="chat-hd-back" onclick="closeDiscover()">←</span>
         <div class="chat-hd-info">
@@ -1458,7 +1611,7 @@ button,input,textarea{font-family:var(--font)}
   </div>
 
   <!-- AI PLANNER FAB -->
-  <button class="porter-fab" id="porter-fab" onclick="openChat()" title="Ask Porter">✦</button>
+  <!-- porter-fab removed — Ask is in nav -->
 
   <!-- AI PLANNER CHAT DRAWER -->
   <div class="chat-drawer" id="chat-drawer">
@@ -1654,7 +1807,7 @@ async function saveProfile(){
   try{
     await sb.from('profiles').upsert({id:user.id,display_name:name||user.email.split('@')[0],avatar_initials:init,country,preferences:prefs},{onConflict:'id'});
     window._profileData={...(window._profileData||{}),display_name:name,avatar_initials:init,country,preferences:prefs};
-    document.getElementById('av-btn').textContent=init;
+    ['av-btn','av-btn-plan','av-btn-trip','av-btn-clusters'].forEach(id=>{const el=document.getElementById(id);if(el) el.textContent=init;});
   }catch(e){/* non-critical — table may not have all columns yet */}
   // Save theme
   localStorage.setItem('porter_theme',theme);
@@ -1783,7 +1936,7 @@ function buildTripDashCard(trip, status, tripMembers){
   card.className='trip-dash-card';
   const gradient=getTripGradient(trip);
   const dest=(trip.destination||trip.title||'').split(',')[0].trim();
-  const statusLabel={active:'Now travelling',upcoming:'Upcoming',past:'Past trip'}[status]||'';
+  const statusLabel={active:'Live',upcoming:'Soon',past:'Past'}[status]||'';
   const statusClass={active:'active',upcoming:'upcoming',past:'past'}[status]||'upcoming';
   const dates=formatTripDates(trip);
   
@@ -1808,29 +1961,34 @@ function buildTripDashCard(trip, status, tripMembers){
     });
   }
   
+  const borderCol=status==='active'?'var(--ink)':status==='upcoming'?'var(--faint)':'var(--cream3)';
+  const opa=status==='past'?'opacity:.4;':'';
+  const bookCount=status==='active'?cards.filter(x=>!x._opt&&(x.booking_status==='needs'||x.booking_status==='online')).length:0;
   card.innerHTML=`
-    <div class="tdc-hero" style="background:${gradient}">
-      <div class="tdc-overlay"></div>
-      <div class="tdc-status ${statusClass}">${statusLabel}</div>
-      <div class="tdc-hero-content">
-        <div class="tdc-destination">${esc(trip.title||dest)}</div>
-        <div class="tdc-dates">${esc(dates)}</div>
-      </div>
-    </div>
-    <div class="tdc-body">
-      <div class="tdc-tagline">${esc(tagline)}</div>
-      <div class="tdc-meta">
-        <div class="tdc-crew">${crewAvatars}</div>
-        <div style="font-size:11px;color:var(--muted);margin-left:${(tripMembers||[]).length?10:0}px">${crewCount===1?'Just you':crewCount+' people'}</div>
-        <div class="tdc-stats">
-          ${placeCount>0?`<div class="tdc-stat"><b>${placeCount}</b> places</div>`:''}
+    <div style="border-left:3px solid ${borderCol};padding:14px 16px 14px 13px;${opa}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:24px;font-weight:900;color:var(--ink);letter-spacing:-.05em;line-height:1">${esc(trip.title||dest)}</div>
+          <div style="font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:4px">${esc(dates)}</div>
         </div>
+        ${status==='active'?'<span style="background:var(--ink);color:var(--cream);font-size:8px;font-weight:900;padding:3px 9px;border-radius:99px;letter-spacing:.08em;text-transform:uppercase;flex-shrink:0;margin-left:8px">Live</span>':''}
+        ${status==='upcoming'?'<span style="background:var(--cream2);color:var(--muted);font-size:8px;font-weight:700;padding:3px 9px;border-radius:99px;border:1px solid var(--rule);letter-spacing:.06em;text-transform:uppercase;flex-shrink:0;margin-left:8px">Upcoming</span>':''}
       </div>
-      <button class="tdc-plan-btn ${status==='past'?'ghost':''}" onclick="event.stopPropagation();openTripFromDash('${trip.id}')">
-        ${status==='active'?'Continue planning →':status==='past'?'View trip →':'Start planning →'}
-      </button>
+      ${tagline?`<div style="font-size:12px;color:#7A7268;font-style:italic;line-height:1.5;margin-bottom:10px" class="tdc-tagline">"${esc(tagline)}"</div>`:'<div class="tdc-tagline" style="display:none"></div>'}
+      ${status==='active'?`
+      <div style="display:flex;gap:16px;margin-bottom:12px">
+        <div><div style="font-size:20px;font-weight:900;color:var(--ink);letter-spacing:-.04em">${placeCount}</div><div style="font-size:8px;font-weight:700;color:var(--faint);text-transform:uppercase;letter-spacing:.1em">Places</div></div>
+        ${bookCount>0?`<div><div style="font-size:20px;font-weight:900;color:var(--book-tx);letter-spacing:-.04em">${bookCount}</div><div style="font-size:8px;font-weight:700;color:var(--faint);text-transform:uppercase;letter-spacing:.1em">To book</div></div>`:''}
+        <div><div style="font-size:20px;font-weight:900;color:var(--ink);letter-spacing:-.04em">${crewCount}</div><div style="font-size:8px;font-weight:700;color:var(--faint);text-transform:uppercase;letter-spacing:.1em">Crew</div></div>
+      </div>
+      <div onclick="event.stopPropagation();openTripFromDash('${trip.id}')" style="background:var(--ink);color:var(--cream);border-radius:9px;padding:9px 14px;text-align:center;font-size:11px;font-weight:900;cursor:pointer;letter-spacing:.04em">Open planner →</div>`
+      :`<div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px">
+        <div style="font-size:11px;color:var(--muted)">${crewCount===1?'Solo':crewCount+' people'}</div>
+        <div style="font-size:13px;font-weight:700;color:var(--faint)">→</div>
+      </div>`}
     </div>`;
   
+  card.style.borderBottom='1px solid var(--rule)';
   card.addEventListener('click',()=>openTripFromDash(trip.id));
   return card;
 }
@@ -1859,7 +2017,7 @@ async function renderTripsDashboard(){
   });
   if(sub) sub.textContent=sorted.length===1?'1 trip':`${sorted.length} trips`;
   if(!sorted.length){
-    list.innerHTML='<div class="empty" style="padding-top:48px"><div class="empty-ico">🌍</div><div class="empty-h">No trips yet</div><div class="empty-p">Create your first trip and start saving places.</div><button onclick="newTrip()" style="margin-top:16px;padding:12px 24px;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Create a trip</button></div>';
+    list.innerHTML='<div class="empty" style="padding-top:48px"><div class="empty-ico">🌍</div><div class="empty-h">No trips yet</div><div class="empty-p">Create your first trip and start saving places.</div><button onclick="newTrip()" style="margin-top:16px;padding:12px 24px;background:var(--ink);color:var(--cream);border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Create a trip</button></div>';
     return;
   }
   sorted.forEach(trip=>{
@@ -2294,14 +2452,14 @@ function checkTripMode(){
   const now=new Date(); now.setHours(0,0,0,0);
   const start=trip.start_date?new Date(trip.start_date+'T00:00:00'):null;
   const end=trip.end_date?new Date(trip.end_date+'T00:00:00'):null;
-  const tripBadge=document.getElementById('t-trip');
+  const tripBadge=document.getElementById('t-go');
 
   if(start&&now>=start&&(!end||now<=end)){
     // We're on the trip! Trip tab glows
-    const tripTabIco=document.getElementById('t-trip')?.querySelector('.tab-ico');
+    const tripTabIco=document.getElementById('t-go')?.querySelector('.tab-ico');
   if(tripTabIco) tripTabIco.style.color='var(--accent)';
   const existLiveDot=document.getElementById('trip-live-dot');
-  if(!existLiveDot){const d=document.createElement('span');d.id='trip-live-dot';d.style.cssText='width:6px;height:6px;border-radius:50%;background:var(--warm);position:absolute;top:2px;right:calc(50% - 18px);border:2px solid var(--card)';document.getElementById('t-trip')?.appendChild(d);}
+  if(!existLiveDot){const d=document.createElement('span');d.id='trip-live-dot';d.style.cssText='width:6px;height:6px;border-radius:50%;background:var(--warm);position:absolute;top:2px;right:calc(50% - 18px);border:2px solid var(--card)';document.getElementById('t-go')?.appendChild(d);}
     renderTripMode(trip,now,start);
   } else if(start){
     const diff=Math.ceil((start-now)/(1000*60*60*24));
@@ -2321,7 +2479,7 @@ function renderTripMode(trip,now,start){
       document.getElementById('trip-eyebrow').textContent='Trip complete ✓';
       document.getElementById('trip-mode-h1').textContent=tripObj.title||'Your trip';
       document.getElementById('trip-mode-date').textContent='What a trip!';
-      document.getElementById('wn-card').innerHTML='<div style="background:var(--accent-s);border:1px solid var(--accent-b);border-radius:var(--r);padding:24px;text-align:center"><div style="font-size:40px;margin-bottom:10px">🎉</div><div style="font-family:var(--serif);font-size:20px;font-style:italic;color:var(--ink);margin-bottom:6px">Trip complete!</div><div style="font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:16px">Hope it was incredible. Share your route or plan the next one.</div><div style="display:flex;gap:8px;justify-content:center"><button onclick="sharePublicLink()" style="padding:11px 18px;background:var(--accent);color:#fff;border:none;border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer">Share itinerary</button><button onclick="newTrip()" style="padding:11px 18px;background:var(--card);border:1.5px solid var(--b1);color:var(--ink2);border-radius:var(--rs);font-size:12px;cursor:pointer">Plan next trip</button></div></div>';
+      document.getElementById('wn-card').innerHTML='<div style="background:var(--accent-s);border:1px solid var(--accent-b);border-radius:var(--r);padding:24px;text-align:center"><div style="font-size:40px;margin-bottom:10px">🎉</div><div style="font-family:var(--serif);font-size:20px;font-style:italic;color:var(--ink);margin-bottom:6px">Trip complete!</div><div style="font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:16px">Hope it was incredible. Share your route or plan the next one.</div><div style="display:flex;gap:8px;justify-content:center"><button onclick="sharePublicLink()" style="padding:11px 18px;background:var(--ink);color:var(--cream);border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">Share itinerary</button><button onclick="newTrip()" style="padding:11px 18px;background:var(--card);border:1.5px solid var(--b1);color:var(--ink2);border-radius:var(--rs);font-size:12px;cursor:pointer">Plan next trip</button></div></div>';
       document.getElementById('group-bar').innerHTML='';
       document.getElementById('trip-day-scroll').innerHTML='';
       return;
@@ -2931,15 +3089,15 @@ function renderClusters(){
     const el=document.createElement('div');
     el.className='city-card';el.style.animationDelay=(i*.07)+'s';
     el.innerHTML=`
-      <div class="city-top">
-        <div class="city-flag">${flag}</div>
-        <div class="city-info">
-          <div class="city-name">${esc(city)}</div>
-          <div class="city-meta">${places.length} place${places.length!==1?'s':''}${planned?` · ${planned} planned`:''}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:baseline;gap:8px">
+          <span style="font-size:18px;line-height:1">${flag}</span>
+          <span style="font-size:18px;font-weight:900;color:var(--ink);letter-spacing:-.04em">${esc(city)}</span>
         </div>
-        <button class="city-btn" onclick="openPlanner('${esc(city)}')">Plan →</button>
+        <div style="font-size:10px;font-weight:600;color:var(--muted);margin-top:3px;letter-spacing:.02em">${places.length} place${places.length!==1?'s':''}${planned?` · ${planned} planned`:''}</div>
+        <div style="display:flex;gap:4px;margin-top:7px;flex-wrap:wrap">${places.slice(0,5).map(p=>`<span style="font-size:10px;background:var(--cream2);border:1px solid var(--rule);border-radius:99px;padding:2px 8px;color:var(--muted);font-weight:600">${p.emoji||'📍'} ${esc(p.title.slice(0,14))}</span>`).join('')}${places.length>5?`<span style="font-size:10px;color:var(--faint);padding:2px 4px">+${places.length-5}</span>`:''}</div>
       </div>
-      <div class="city-previews">${places.slice(0,6).map(p=>`<div class="city-preview">${p.emoji||'📍'} ${esc(p.title)}</div>`).join('')}${places.length>6?`<div class="city-preview">+${places.length-6} more</div>`:''}</div>`;
+      <button class="city-btn" onclick="event.stopPropagation();openPlanner('${esc(city)}')">Plan →</button>`;
     container.appendChild(el);
   });
 }
@@ -4173,24 +4331,26 @@ function showPlanTab(){
 }
 
 function goTab(tab){
-  const map={capture:'capture',plan:'plan',vault:'vault',trip:'trip'};
-  showScreen(map[tab]);
+  // Map all old/alias names to screen and tab IDs
+  const screenMap={capture:'capture',plan:'plan',vault:'plan',trip:'trip',go:'trip'};
+  const tabMap={capture:'t-capture',plan:'t-plan',vault:'t-plan',trip:'t-trip',go:'t-trip'};
+  showScreen(screenMap[tab]||'capture');
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
-  document.getElementById('t-'+tab)?.classList.add('on');
-  if(tab==='plan'){
-    // Stay in planner if already in a city, otherwise show clusters
-    if(curCity){
-      showClusters(false);
-      document.getElementById('planner').classList.add('on');
-      renderPlanner();
-    } else {
-      showClusters(true);renderClusters();
-    }
-  }
-  if(tab==='trip'){checkTripMode();requestLocationForTripMode();}
-  // Show Porter FAB whenever user is in the app (not chat drawer)
-  const fab=document.getElementById('porter-fab');
-  if(fab&&!chatOpen) fab.style.display='flex';
+  const tabId=tabMap[tab];
+  if(tabId) document.getElementById(tabId)?.classList.add('on');
+  if(tab==='plan'||tab==='vault') showPlanTab();
+  if(tab==='trip'||tab==='go'){checkTripMode();requestLocationForTripMode();}
+  // Update avatar initials in top bar
+  const avBtn=document.getElementById('av-btn');
+  if(avBtn){const name=user?.user_metadata?.display_name||user?.email||'?';avBtn.textContent=name.slice(0,2).toUpperCase();}
+}
+
+// ── Update nav avatar initials ──
+function updateNavAvatar(){
+  const btn=document.getElementById('nav-av-btn');
+  if(!btn) return;
+  const name=user?.user_metadata?.display_name||user?.email||'?';
+  btn.textContent=name.slice(0,2).toUpperCase();
 }
 
 // ═══════════════════════════════════
