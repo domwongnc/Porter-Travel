@@ -898,7 +898,7 @@ button,input,textarea{font-family:var(--font)}
       <div class="icon-btn" onclick="refreshMapRoutes()" title="Get travel times">🧭</div>
     </div>
     <div id="map-container">
-      <div id="mapbox-map" style="position:absolute;inset:0"></div>
+      <div id="mapbox-map" style="position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%"></div>
       <div class="route-card" id="route-card" style="display:none">
         <div class="route-hd">Route · travel times estimated by Porter</div>
         <div id="route-legs"></div>
@@ -937,8 +937,8 @@ button,input,textarea{font-family:var(--font)}
 // ═══════════════════════════════════
 const SB_URL   = 'https://bhmawmiikcyxltfjrnlu.supabase.co';
 const SB_KEY   = 'sb_publishable_PEVbJOaaMmPQf5Dl73CUKw_fouTefQ4';
-const AI_KEY   = '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';
-const AI_MODEL = 'claude-sonnet-4-20250514';
+const AI_KEY   = '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';
+const AI_MODEL = 'claude-sonnet-4-6';
 const AI_H = {
   'Content-Type':'application/json',
   'x-api-key': AI_KEY,
@@ -2145,12 +2145,13 @@ function openMap() {
         center: [100.5, 13.75], zoom: 13
       });
       mbMap.addControl(new mapboxgl.NavigationControl(), 'top-right');
-      mbMap.on('load', () => plotDayOnMap());
+      mbMap.on('load', () => { mbMap.resize(); plotDayOnMap(); });
     } else {
+      mbMap.resize();
       clearMapLayers();
       plotDayOnMap();
     }
-  }, 150);
+  }, 200);
 }
 
 function closeMap() {
@@ -2161,8 +2162,9 @@ async function plotDayOnMap() {
   if (!mbMap) return;
   clearMapLayers();
 
+  // city column may not exist yet — fall back to day_number match
   const dayEvs = events
-    .filter(e => e.city === curCity && e.day_number === curDay)
+    .filter(e => e.day_number === curDay && (e.city === curCity || !e.city || e.city === null))
     .sort((a, b) => (a.time_slot || '99').localeCompare(b.time_slot || '99'));
 
   if (!dayEvs.length) { document.getElementById('route-card').style.display = 'none'; return; }
