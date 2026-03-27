@@ -928,7 +928,7 @@ button,input,textarea{font-family:var(--font)}
           <button class="ask-btn" onclick="openChat()"><span class="ask-glyph">✦</span>Ask</button>
         </div>
       </div>
-      <div class="alloc-bar" id="alloc-bar"></div>
+      <div id="plan-sub" style="display:none"></div><div class="alloc-bar" id="alloc-bar"></div>
       <div class="sizing-nudge" id="sizing-nudge"></div>
       <div class="err-strip" id="plan-err"></div>
       <div class="clusters" id="clusters"></div>
@@ -2452,14 +2452,14 @@ function checkTripMode(){
   const now=new Date(); now.setHours(0,0,0,0);
   const start=trip.start_date?new Date(trip.start_date+'T00:00:00'):null;
   const end=trip.end_date?new Date(trip.end_date+'T00:00:00'):null;
-  const tripBadge=document.getElementById('t-go');
+  const tripBadge=document.getElementById('t-trip');
 
   if(start&&now>=start&&(!end||now<=end)){
     // We're on the trip! Trip tab glows
-    const tripTabIco=document.getElementById('t-go')?.querySelector('.tab-ico');
+    const tripTabIco=document.getElementById('t-trip')?.querySelector('.tab-ico');
   if(tripTabIco) tripTabIco.style.color='var(--accent)';
   const existLiveDot=document.getElementById('trip-live-dot');
-  if(!existLiveDot){const d=document.createElement('span');d.id='trip-live-dot';d.style.cssText='width:6px;height:6px;border-radius:50%;background:var(--warm);position:absolute;top:2px;right:calc(50% - 18px);border:2px solid var(--card)';document.getElementById('t-go')?.appendChild(d);}
+  if(!existLiveDot){const d=document.createElement('span');d.id='trip-live-dot';d.style.cssText='width:6px;height:6px;border-radius:50%;background:var(--warm);position:absolute;top:2px;right:calc(50% - 18px);border:2px solid var(--card)';document.getElementById('t-trip')?.appendChild(d);}
     renderTripMode(trip,now,start);
   } else if(start){
     const diff=Math.ceil((start-now)/(1000*60*60*24));
@@ -2589,7 +2589,7 @@ function renderTripModeCountdown(trip){
   if(isDepartureDay){
     const flight=vault.find(v=>v.doc_type==='Flight');
     if(flight){
-      const existing=document.getElementById('dep-flight-card');
+      const existing=document.getElementById('dep-flight-card')||null;
       if(!existing){
         const fc=document.createElement('div');
         fc.id='dep-flight-card';
@@ -3075,10 +3075,10 @@ function renderClusters(){
 
   if(!cities.length){
     container.innerHTML=`<div class="empty"><div class="empty-ico">🗺</div><div class="empty-h">Nothing to plan yet</div><div class="empty-p">Capture some places in the Capture tab — they'll group here by city automatically.</div></div>`;
-    document.getElementById('plan-sub').textContent='Capture places to start planning';
+    const _ps1=document.getElementById('plan-sub');if(_ps1)_ps1.textContent='Capture places to start planning';
     return;
   }
-  document.getElementById('plan-sub').textContent=`${cities.length} cit${cities.length!==1?'ies':'y'} · tap to build your itinerary`;
+  const _ps2=document.getElementById('plan-sub');if(_ps2)_ps2.textContent=`${cities.length} cit${cities.length!==1?'ies':'y'} · tap to build your itinerary`;
 
   const FLAGS={'Bangkok':'🇹🇭','Chiang Mai':'🇹🇭','Phuket':'🇹🇭','Koh Samui':'🇹🇭','Krabi':'🇹🇭','Pai':'🇹🇭','Tokyo':'🇯🇵','Kyoto':'🇯🇵','Osaka':'🇯🇵','Nara':'🇯🇵','Bali':'🇮🇩','Ubud':'🇮🇩','Lombok':'🇮🇩','Jakarta':'🇮🇩','Singapore':'🇸🇬','Paris':'🇫🇷','London':'🇬🇧','Rome':'🇮🇹','Barcelona':'🇪🇸','Amsterdam':'🇳🇱','Lisbon':'🇵🇹','New York':'🇺🇸','Los Angeles':'🇺🇸','Sydney':'🇦🇺','Melbourne':'🇦🇺','Dubai':'🇦🇪','Seoul':'🇰🇷','Busan':'🇰🇷','Hong Kong':'🇭🇰','Taipei':'🇹🇼','Hanoi':'🇻🇳','Ho Chi Minh City':'🇻🇳','Phnom Penh':'🇰🇭','Siem Reap':'🇰🇭','Kuala Lumpur':'🇲🇾','Penang':'🇲🇾','Unplaced':'📍'};
 
@@ -3898,7 +3898,7 @@ async function loadVault(){
   updateEmergencyCard();
   // Badge if new bookings
   const badge=document.getElementById('vault-badge');
-  if(vault.length>0) badge.classList.add('on');
+  if(badge&&vault.length>0) badge.classList.add('on');
 }
 
 function updateEmergencyCard(){
@@ -4267,7 +4267,7 @@ async function saveDoc(){
     } else {toast('Could not save: '+error.message);return;}
   } else {vault.unshift(data);}
   renderVault(vault);updateEmergencyCard();
-  document.getElementById('vault-badge').classList.add('on');
+  // vault-badge removed with vault tab
   toast(docIcon+' '+name+' saved · crew can see this');
   // Reset
   docEmailParsed=null; docAttachmentData=null;
@@ -4707,7 +4707,7 @@ let chatOpen = false;
 function openChat(){
   chatOpen = true;
   document.getElementById('chat-drawer').classList.add('on');
-  document.getElementById('porter-fab').style.display = 'none';
+  // porter-fab removed
   const trip = trips.find(t => t.id === tripId);
   document.getElementById('chat-hd-sub').textContent = trip ? trip.title : 'Your travel assistant';
   if(chatHistory.length === 0) porterGreeting();
@@ -4717,7 +4717,7 @@ function openChat(){
 function closeChat(){
   chatOpen = false;
   document.getElementById('chat-drawer').classList.remove('on');
-  document.getElementById('porter-fab').style.display = 'flex';
+  // porter-fab removed
 }
 
 let userLocation = null; // updated by GPS when on trip tab
