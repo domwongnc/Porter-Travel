@@ -154,14 +154,14 @@ button,input,textarea{font-family:var(--font)}
 /* ── PLACE CARDS ── */
 .icard{background:var(--cream);border-radius:var(--r);border:none;overflow:hidden;animation:rise .3s ease both;cursor:pointer}
 .icard.ghost{opacity:.4;pointer-events:none}
-.card-hero{height:140px;display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;overflow:hidden;border-radius:var(--r) var(--r) 0 0}
-.card-hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 35%,rgba(0,0,0,.55))}
-.card-hero-meta{position:absolute;bottom:0;left:0;right:0;padding:10px 13px;z-index:2}
-.card-hero-name{font-family:var(--serif);font-size:16px;font-style:italic;color:#fff;line-height:1.2;margin-bottom:3px}
-.card-hero-loc{font-size:10px;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:4px}
-.card-hero-actions{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
-.card-hero-react{display:flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--pill);background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);font-size:11px;color:#fff;cursor:pointer}
-.card-hero-react.reacted{background:rgba(0,0,0,.3)}
+
+
+
+
+
+
+
+
 .card-crew-badge{font-size:9px;font-weight:700;color:rgba(255,255,255,.8);background:rgba(0,0,0,.2);border-radius:99px;padding:2px 8px}
 .card-edit-hero,.card-del-hero{position:absolute;top:8px;background:rgba(0,0,0,.3);border:none;color:#fff;cursor:pointer;font-size:12px;border-radius:6px;padding:4px 7px}
 .card-edit-hero{right:36px}.card-del-hero{right:8px}
@@ -265,7 +265,7 @@ button,input,textarea{font-family:var(--font)}
 .card-scroll::-webkit-scrollbar{display:none}
 /* INSPIRATION CARDS */
 /* .icard defined in MAGAZINE CAPTURE CARDS section */
-.card-hero{height:120px;display:flex;align-items:center;justify-content:center;font-size:48px;position:relative;overflow:hidden;border-radius:var(--r) var(--r) 0 0}
+
 .hero-shade{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.18))}
 .card-del{position:absolute;top:8px;right:8px;z-index:10;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.85);color:var(--muted);border:none;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;box-shadow:var(--sh)}
 .card-del:hover{background:var(--red-s);color:var(--red)}
@@ -664,12 +664,12 @@ button,input,textarea{font-family:var(--font)}
 /* ═══ MAGAZINE CAPTURE CARDS ═══ */
 .icard{background:var(--card);border-radius:var(--r);border:1px solid var(--b1);overflow:hidden;animation:rise .3s ease both;box-shadow:var(--sh);cursor:pointer}
 .icard.ghost{opacity:.4;pointer-events:none;filter:blur(.5px)}
-.card-hero{height:140px;display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;overflow:hidden;border-radius:var(--r) var(--r) 0 0}
+
 .card-hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 35%,rgba(0,0,0,.52))}
-.card-hero-meta{position:absolute;bottom:0;left:0;right:0;padding:10px 13px;z-index:2}
-.card-hero-name{font-size:18px;font-weight:900;color:#fff;line-height:1.1;margin-bottom:3px;letter-spacing:-.03em}
-.card-hero-loc{font-size:10px;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:4px}
-.card-hero-actions{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+
+
+
+
 .card-hero-react{display:flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--pill);background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);font-size:11px;color:#fff;cursor:pointer;transition:all .15s}
 .card-hero-react.reacted{background:rgba(44,95,74,.5);border-color:rgba(155,202,176,.5)}
 .card-crew-badge{font-size:9px;font-weight:700;color:rgba(255,255,255,.85);background:rgba(0,0,0,.2);border-radius:99px;padding:2px 8px;letter-spacing:.03em}
@@ -842,58 +842,51 @@ button,input,textarea{font-family:var(--font)}
     </div>
   </div>
 
-  <!-- CAPTURE -->
+  <!-- FIND -->
   <div class="screen" id="s-capture">
     <div class="top-bar">
       <div class="wordmark">Porter<em>.</em></div>
       <div class="top-actions">
-        <div class="icon-btn" onclick="openModal('invite-modal')" title="Invite crew" id="crew-btn">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <div class="icon-btn" onclick="openModal('trip-actions-modal')" title="Trip options">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
-        </div>
         <button class="av-btn" id="av-btn" onclick="openModal('profile-modal')">?</button>
         <div class="ask-sep"></div>
         <button class="ask-btn" onclick="openChat()"><span class="ask-glyph">✦</span>Ask</button>
       </div>
     </div>
-    <div class="trip-strip" id="trip-strip"></div>
-    <div class="members-strip" id="members-strip"></div>
-    <div class="ingest">
-      <div class="ingest-lbl">✦ Find a place</div>
-      <div class="ingest-row">
-        <textarea id="url-in" placeholder="Paste a TikTok, Instagram or Maps link — or just describe it: &quot;best rooftop bar Bangkok&quot;" rows="1" oninput="autosize(this)"></textarea>
-        <button class="add-btn" id="cap-btn" onclick="capture()">Add</button>
+    <!-- Search input -->
+    <div style="padding:10px 16px 8px;flex-shrink:0;border-bottom:1px solid var(--rule)">
+      <div style="display:flex;gap:7px;align-items:center">
+        <div style="flex:1;display:flex;align-items:center;gap:7px;background:var(--cream2);border:1px solid var(--rule);border-radius:9px;padding:9px 12px;cursor:text" onclick="document.getElementById('find-in').focus()">
+          <span style="font-size:11px;opacity:.3;flex-shrink:0;color:var(--ink)">✦</span>
+          <input id="find-in" placeholder="Find a place — or paste a link" style="flex:1;border:none;background:transparent;font-size:13px;color:var(--ink);outline:none;font-family:var(--font)" oninput="onFindInput()" onkeydown="if(event.key==='Enter'){event.preventDefault();doFind()}">
+        </div>
+        <button id="find-btn" onclick="doFind()" style="background:var(--ink);color:var(--cream);border:none;border-radius:9px;padding:9px 14px;font-size:11px;font-weight:900;cursor:pointer;letter-spacing:.04em;font-family:var(--font);flex-shrink:0">Find</button>
       </div>
     </div>
-    <!-- DISCOVER STRIP -->
-    <div id="discover-strip" style="margin:0 20px 8px;background:linear-gradient(135deg,var(--accent) 0%,#1A4A38 100%);border-radius:var(--r);padding:13px 16px;flex-shrink:0;display:none">
-      <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:5px">✦ Discover places</div>
-      <div style="font-family:var(--serif);font-size:14px;font-style:italic;color:#fff;line-height:1.3;margin-bottom:10px" id="discover-strip-title">Not sure where to start?</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button onclick="openDiscover('top10')" style="padding:5px 11px;border-radius:99px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);font-size:10px;font-weight:600;cursor:pointer;font-family:var(--font)">🗺 Top 10 lists</button>
-        <button onclick="openDiscover('day')" style="padding:5px 11px;border-radius:99px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);font-size:10px;font-weight:600;cursor:pointer;font-family:var(--font)">🌅 Build a day</button>
-        <button onclick="openDiscover('gaps')" style="padding:5px 11px;border-radius:99px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25);font-size:10px;font-weight:600;cursor:pointer;font-family:var(--font)">🔍 What am I missing?</button>
+    <!-- View toggle + filter pills row -->
+    <div style="display:flex;align-items:center;gap:0;padding:8px 16px;border-bottom:1px solid var(--rule);flex-shrink:0">
+      <!-- Country / Trip toggle -->
+      <div style="display:flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;flex-shrink:0;margin-right:10px">
+        <button id="find-toggle-country" onclick="setFindView('country')" style="padding:5px 11px;font-size:9px;font-weight:900;border:none;cursor:pointer;font-family:var(--font);letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:var(--cream)">Country</button>
+        <button id="find-toggle-trip" onclick="setFindView('trip')" style="padding:5px 11px;font-size:9px;font-weight:900;border:none;cursor:pointer;font-family:var(--font);letter-spacing:.06em;text-transform:uppercase;background:transparent;color:var(--muted)">Trip</button>
       </div>
+      <!-- Dynamic filter pills -->
+      <div id="country-filter-row" style="display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;flex:1"></div>
     </div>
-    <div class="chips">
-      <div class="chip on" data-f="all" onclick="setFilter(this)">All</div>
-      <div class="chip" data-f="eat" onclick="setFilter(this)">🍜 Eat</div>
-      <div class="chip" data-f="sleep" onclick="setFilter(this)">🏨 Sleep</div>
-      <div class="chip" data-f="explore" onclick="setFilter(this)">🏛 Explore</div>
-      <div class="chip" data-f="hike" onclick="setFilter(this)">🌿 Outdoors</div>
-      <div class="chip" data-f="swim" onclick="setFilter(this)">🏝 Beach</div>
-      <div class="chip" data-f="drinks" onclick="setFilter(this)">🌙 Drinks</div>
-      <div class="chip" data-f="dance" onclick="setFilter(this)">🎵 Music</div>
-      <div class="chip" data-f="shop" onclick="setFilter(this)">🛍 Shop</div>
+    <!-- Discover strip -->
+    <div id="discover-strip" style="margin:10px 16px 0;background:var(--ink);border-radius:10px;padding:11px 14px;flex-shrink:0;display:none;cursor:pointer" onclick="openDiscover('top10')">
+      <div style="font-size:8px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:3px">✦ Discover</div>
+      <div style="font-size:13px;font-weight:800;color:#fff;letter-spacing:-.02em">Top 10 · Build a day · What am I missing?</div>
     </div>
-    <div class="sec-row">
-      <span class="sec-lbl" id="card-count">Saved places</span>
-      <span class="sec-act" onclick="goTab('plan')">Plan →</span>
-    </div>
+    <!-- Search result area (hidden by default) -->
+    <div id="find-result-area" style="display:none;flex:1;overflow-y:auto;padding:12px 16px 100px;scrollbar-width:none"></div>
+    <!-- Main list (clustered) -->
     <div class="err-strip" id="cap-err"></div>
-    <div class="card-scroll" id="card-scroll"></div>
+    <div id="find-list" style="flex:1;overflow-y:auto;padding:0 0 100px;scrollbar-width:none;min-height:0"></div>
+    <!-- hidden stubs kept for legacy compat -->
+    <div id="trip-strip" style="display:none"></div>
+    <div id="members-strip" style="display:none"></div>
+    <div id="card-scroll" style="display:none"></div>
+    <div id="card-count" style="display:none"></div>
   </div>
 
   <!-- PLAN -->
@@ -1201,19 +1194,24 @@ button,input,textarea{font-family:var(--font)}
   <div class="chat-drawer" id="discover-drawer" style="background:var(--cream)">
     <!-- Header -->
     <div style="display:flex;flex-direction:column;padding:14px 18px 0;border-bottom:1px solid var(--rule);background:var(--cream);flex-shrink:0">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
         <span class="chat-hd-back" onclick="closeDiscover()">←</span>
         <div class="chat-hd-info">
           <div class="chat-hd-name" id="discover-title">Discover</div>
           <div class="chat-hd-sub" id="discover-sub">—</div>
         </div>
-        <span id="discover-on-list-count" style="font-size:10px;font-weight:600;color:var(--accent);background:var(--accent-s);border:1px solid var(--accent-b);border-radius:99px;padding:3px 9px;white-space:nowrap"></span>
+        <span id="discover-on-list-count" style="font-size:10px;font-weight:600;color:var(--ink);background:var(--cream2);border:1px solid var(--rule);border-radius:99px;padding:3px 9px;white-space:nowrap"></span>
+      </div>
+      <!-- Context inputs — always visible, used by all modes -->
+      <div style="display:flex;gap:6px;margin-bottom:10px">
+        <input id="disc-area-input" placeholder="Area / where staying (e.g. Sukhumvit)" style="flex:1;padding:7px 10px;border-radius:7px;border:1px solid var(--rule);background:var(--cream2);font-size:11px;color:var(--ink);font-family:var(--font);outline:none;min-width:0" onfocus="this.style.borderColor='var(--ink)'" onblur="this.style.borderColor='var(--rule)'">
+        <input id="disc-interest-input" placeholder="Interests (e.g. street food, rooftops)" style="flex:1;padding:7px 10px;border-radius:7px;border:1px solid var(--rule);background:var(--cream2);font-size:11px;color:var(--ink);font-family:var(--font);outline:none;min-width:0" onfocus="this.style.borderColor='var(--ink)'" onblur="this.style.borderColor='var(--rule)'">
       </div>
       <!-- Mode tabs -->
-      <div style="display:flex;gap:0;border-top:1px solid var(--b1)">
-        <button id="disc-tab-top10" onclick="setDiscoverTab('top10')" style="flex:1;padding:8px;border:none;border-bottom:2px solid var(--accent);background:transparent;font-size:11px;font-weight:700;color:var(--accent);cursor:pointer;font-family:var(--font)">Top 10</button>
-        <button id="disc-tab-day" onclick="setDiscoverTab('day')" style="flex:1;padding:8px;border:none;border-bottom:2px solid transparent;background:transparent;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;font-family:var(--font)">Build a day</button>
-        <button id="disc-tab-gaps" onclick="setDiscoverTab('gaps')" style="flex:1;padding:8px;border:none;border-bottom:2px solid transparent;background:transparent;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;font-family:var(--font)">Gaps</button>
+      <div style="display:flex;gap:0;border-top:1px solid var(--rule)">
+        <button id="disc-tab-top10" onclick="setDiscoverTab('top10')" style="flex:1;padding:8px;border:none;border-bottom:2px solid var(--ink);background:transparent;font-size:11px;font-weight:900;color:var(--ink);cursor:pointer;font-family:var(--font);letter-spacing:.04em;text-transform:uppercase">Top 10</button>
+        <button id="disc-tab-day" onclick="setDiscoverTab('day')" style="flex:1;padding:8px;border:none;border-bottom:2px solid transparent;background:transparent;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;font-family:var(--font);letter-spacing:.04em;text-transform:uppercase">Build a day</button>
+        <button id="disc-tab-gaps" onclick="setDiscoverTab('gaps')" style="flex:1;padding:8px;border:none;border-bottom:2px solid transparent;background:transparent;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;font-family:var(--font);letter-spacing:.04em;text-transform:uppercase">Gaps</button>
       </div>
     </div>
 
@@ -1753,7 +1751,7 @@ async function postLogin(){
     await loadTrips();
     // Start background sync every 30s for real-time feel
     clearInterval(refreshInterval);
-    refreshInterval=setInterval(()=>{if(tripId){loadCards();loadEvents();}},30000);
+    refreshInterval=setInterval(()=>{loadCards();if(tripId){loadEvents();}},30000);
   }catch(e){
     console.error('postLogin:',e);
     showAuthMsg('Could not load data: '+e.message,'err');
@@ -2634,17 +2632,17 @@ async function quickAdd(){
 // CARDS / CAPTURE
 // ═══════════════════════════════════
 async function loadCards(){
-  if(!tripId) return;
-  const{data,error}=await sb.from('inspiration_cards').select('*').eq('trip_id',tripId).order('created_at',{ascending:false});
-  if(error){showErr('cap-err','Could not load places: '+error.message);return;}
+  // Load ALL cards for this user across all trips (not just active trip)
+  const tripIds=trips.map(t=>t.id);
+  if(!tripIds.length){cards=[];renderFindTab();return;}
+  const{data,error}=await sb.from('inspiration_cards').select('*').in('trip_id',tripIds).order('created_at',{ascending:false});
+  if(error){showErr('cap-err','Could not load data: '+error.message);return;}
   cards=data||[];
-  // One-time normalisation: fill city field from location for legacy cards
+  // Normalise: fill city from location for legacy cards
   cards.forEach(card=>{
-    if(!card.city && card.location){
-      card.city=card.location.split(',')[0].trim().slice(0,60);
-    }
+    if(!card.city && card.location) card.city=card.location.split(',')[0].trim().slice(0,60);
   });
-  renderCards();renderClusters();
+  renderFindTab();renderClusters();
 }
 
 function addSwipe(el, card){
@@ -2730,109 +2728,713 @@ async function quickAddCardToTrip(card){
   renderClusters();
 }
 
-function renderCards(){
-  const scroll=document.getElementById('card-scroll');
-  const filtered=cardFilter==='all'?cards:cards.filter(c=>(c.tags||[]).includes(cardFilter));
-  const real=filtered.filter(c=>!c._opt);
-  document.getElementById('card-count').textContent=real.length?`${real.length} place${real.length!==1?'s':''}`:'Saved places';
-  scroll.innerHTML='';
+// ── COUNTRY FLAGS ──
+const COUNTRY_FLAGS={'Afghanistan':'🇦🇫','Albania':'🇦🇱','Algeria':'🇩🇿','Argentina':'🇦🇷','Armenia':'🇦🇲','Australia':'🇦🇺','Austria':'🇦🇹','Azerbaijan':'🇦🇿','Bahrain':'🇧🇭','Bangladesh':'🇧🇩','Belgium':'🇧🇪','Bolivia':'🇧🇴','Bosnia':'🇧🇦','Brazil':'🇧🇷','Bulgaria':'🇧🇬','Cambodia':'🇰🇭','Canada':'🇨🇦','Chile':'🇨🇱','China':'🇨🇳','Colombia':'🇨🇴','Costa Rica':'🇨🇷','Croatia':'🇭🇷','Cuba':'🇨🇺','Czech Republic':'🇨🇿','Denmark':'🇩🇰','Ecuador':'🇪🇨','Egypt':'🇪🇬','Estonia':'🇪🇪','Ethiopia':'🇪🇹','Finland':'🇫🇮','France':'🇫🇷','Georgia':'🇬🇪','Germany':'🇩🇪','Ghana':'🇬🇭','Greece':'🇬🇷','Guatemala':'🇬🇹','Hong Kong':'🇭🇰','Hungary':'🇭🇺','Iceland':'🇮🇸','India':'🇮🇳','Indonesia':'🇮🇩','Iran':'🇮🇷','Iraq':'🇮🇶','Ireland':'🇮🇪','Israel':'🇮🇱','Italy':'🇮🇹','Jamaica':'🇯🇲','Japan':'🇯🇵','Jordan':'🇯🇴','Kazakhstan':'🇰🇿','Kenya':'🇰🇪','Kuwait':'🇰🇼','Laos':'🇱🇦','Latvia':'🇱🇻','Lebanon':'🇱🇧','Lithuania':'🇱🇹','Luxembourg':'🇱🇺','Macau':'🇲🇴','Malaysia':'🇲🇾','Maldives':'🇲🇻','Malta':'🇲🇹','Mexico':'🇲🇽','Moldova':'🇲🇩','Mongolia':'🇲🇳','Montenegro':'🇲🇪','Morocco':'🇲🇦','Myanmar':'🇲🇲','Nepal':'🇳🇵','Netherlands':'🇳🇱','New Zealand':'🇳🇿','Nigeria':'🇳🇬','North Macedonia':'🇲🇰','Norway':'🇳🇴','Oman':'🇴🇲','Pakistan':'🇵🇰','Panama':'🇵🇦','Paraguay':'🇵🇾','Peru':'🇵🇪','Philippines':'🇵🇭','Poland':'🇵🇱','Portugal':'🇵🇹','Qatar':'🇶🇦','Romania':'🇷🇴','Russia':'🇷🇺','Saudi Arabia':'🇸🇦','Senegal':'🇸🇳','Serbia':'🇷🇸','Singapore':'🇸🇬','Slovakia':'🇸🇰','Slovenia':'🇸🇮','South Africa':'🇿🇦','South Korea':'🇰🇷','Spain':'🇪🇸','Sri Lanka':'🇱🇰','Sweden':'🇸🇪','Switzerland':'🇨🇭','Taiwan':'🇹🇼','Tanzania':'🇹🇿','Thailand':'🇹🇭','Tunisia':'🇹🇳','Turkey':'🇹🇷','UAE':'🇦🇪','Uganda':'🇺🇬','Ukraine':'🇺🇦','United Kingdom':'🇬🇧','United States':'🇺🇸','Uruguay':'🇺🇾','USA':'🇺🇸','Uzbekistan':'🇺🇿','Venezuela':'🇻🇪','Vietnam':'🇻🇳','Zambia':'🇿🇲','Zimbabwe':'🇿🇼'};
+const VALID_COUNTRIES=new Set(Object.keys(COUNTRY_FLAGS));
+function countryFlag(c){return COUNTRY_FLAGS[c]||'🌍';}
+function isValidCountry(c){return c&&VALID_COUNTRIES.has(c);}
 
-  // Optimistic loading card
-  const opts=filtered.filter(c=>c._opt);
-  opts.forEach(c=>{
-    const el=document.createElement('div');el.className='parse-card';
-    el.innerHTML=`<div class="parse-spin"></div><div class="parse-txt"><strong>Identifying…</strong><br>${esc((c.raw||'').slice(0,50))}</div>`;
-    scroll.appendChild(el);
+let findCountryFilter='all';
+let findTripFilter='all';
+let findViewMode='country'; // 'country' | 'trip'
+
+function setFindView(mode){
+  findViewMode=mode;
+  findCountryFilter='all';
+  findTripFilter='all';
+  const btnC=document.getElementById('find-toggle-country');
+  const btnT=document.getElementById('find-toggle-trip');
+  if(btnC){btnC.style.background=mode==='country'?'var(--ink)':'transparent';btnC.style.color=mode==='country'?'var(--cream)':'var(--muted)';}
+  if(btnT){btnT.style.background=mode==='trip'?'var(--ink)':'transparent';btnT.style.color=mode==='trip'?'var(--cream)':'var(--muted)';}
+  renderFindTab();
+}
+
+function renderFindTab(){
+  const list=document.getElementById('find-list');
+  if(!list) return;
+  const real=cards.filter(c=>!c._opt);
+
+  // ── Filter pills (country mode = country pills, trip mode = trip pills) ──
+  const filterRow=document.getElementById('country-filter-row');
+  if(filterRow){
+    filterRow.innerHTML='';
+    const makeChip=(label,val,active,onclick)=>{
+      const d=document.createElement('div');
+      d.style.cssText=`padding:4px 11px;border-radius:99px;font-size:9px;font-weight:900;cursor:pointer;white-space:nowrap;flex-shrink:0;letter-spacing:.06em;text-transform:uppercase;border:1px solid ${active?'var(--ink)':'var(--rule)'};background:${active?'var(--ink)':'transparent'};color:${active?'var(--cream)':'var(--muted)'}`;
+      d.textContent=label;
+      d.onclick=onclick;
+      filterRow.appendChild(d);
+    };
+
+    if(findViewMode==='country'){
+      // Only show pills for valid countries
+      const countries=[...new Set(real.map(c=>c.country).filter(isValidCountry))].sort();
+      makeChip('All','all',findCountryFilter==='all',()=>{findCountryFilter='all';renderFindTab();});
+      countries.forEach(c=>makeChip(countryFlag(c)+' '+c,c,findCountryFilter===c,()=>{findCountryFilter=c;renderFindTab();}));
+    }else{
+      // Trip filter pills
+      makeChip('All trips','all',findTripFilter==='all',()=>{findTripFilter='all';renderFindTab();});
+      trips.forEach(t=>makeChip(t.title,t.id,findTripFilter===t.id,()=>{findTripFilter=t.id;renderFindTab();}));
+      makeChip('Unassigned','unassigned',findTripFilter==='unassigned',()=>{findTripFilter='unassigned';renderFindTab();});
+    }
+  }
+
+  // ── Discover strip ──
+  const ds=document.getElementById('discover-strip');
+  if(ds) ds.style.display=real.length>=3?'block':'none';
+
+  list.innerHTML='';
+
+  // Optimistic loading
+  cards.filter(c=>c._opt).forEach(c=>{
+    const el=document.createElement('div');
+    el.style.cssText='display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--rule)';
+    el.innerHTML=`<div class="parse-spin"></div><div style="font-size:12px;color:var(--muted)">Finding ${esc((c.raw||'').slice(0,40))}…</div>`;
+    list.appendChild(el);
   });
 
-  if(!real.length&&!opts.length){
-    scroll.innerHTML=`<div class="empty"><div class="empty-ico">🌍</div><div class="empty-h">No places yet</div><div class="empty-p">Paste any link or describe a place above — Porter extracts and structures it instantly.</div></div>`;
+  if(!real.length&&!cards.some(c=>c._opt)){
+    list.innerHTML=`<div style="padding:48px 24px;text-align:center"><div style="font-size:36px;margin-bottom:12px">🌍</div><div style="font-size:16px;font-weight:900;letter-spacing:-.03em;color:var(--ink);margin-bottom:6px">Nothing saved yet</div><div style="font-size:13px;color:var(--muted);line-height:1.6">Search for a place above, or paste a link from TikTok, Instagram or Google Maps</div></div>`;
     return;
   }
 
-  // ── HERO CARD (first place, full bleed) ──
-  if(real.length>0){
-    const c=real[0];
-    const bg=c.color||'#C8DFC8';
-    const reacted=myReactions.has(c.id);
-    const reactions=c.reaction_count||0;
-    const addedBy=c.added_by_name||user?.email?.split('@')[0]||'You';
-    const isCrewPick=reactions>=2;
-    const hero=document.createElement('div');
-    hero.className='icard';
-    hero.style.cssText='margin:12px 20px 0;border-radius:var(--r)';
-    hero.innerHTML=`
-      <div class="card-hero" style="background:linear-gradient(145deg,${bg} 0%,${darken(bg)} 100%);height:180px">
-        <span style="position:relative;z-index:1;font-size:64px;filter:drop-shadow(0 4px 16px rgba(0,0,0,.25))">${c.emoji||'📍'}</span>
-        <div class="card-hero-overlay"></div>
-        ${isCrewPick?`<div class="crew-pick-badge">🔥 Crew pick</div>`:''}
-        <button class="card-edit-hero" onclick="event.stopPropagation();openEditCard('${c.id}')">✏️</button>
-        <button class="card-del-hero" onclick="event.stopPropagation();deleteCard('${c.id}')">✕</button>
-        <div class="card-hero-meta">
-          ${c.description?`<div class="card-desc-hero">${esc(c.description)}</div>`:''}
-          <div class="card-hero-name">${esc(c.title)}</div>
-          <div class="card-hero-loc">📍 ${esc(c.city||c.location||'')}</div>
-          ${getBookingBadge(c,'hero')}
-          <div class="card-tags-hero">${(c.tags||[]).map(t=>`<span class="tag t-${t}" style="background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.25)">${t}</span>`).join('')}</div>
-          <div class="card-hero-actions">
-            <div style="display:flex;align-items:center;gap:5px">
-              <button class="card-hero-react ${reacted?'reacted':''}" onclick="event.stopPropagation();toggleReaction('${c.id}',this)">
-                👍${reactions>0?` <strong>${reactions}</strong>`:''}
-              </button>
-              ${isCrewPick?`<span style="font-size:9px;color:rgba(255,255,255,.7)">everyone loves this</span>`:''}
-            </div>
-            <div class="card-crew-badge">${esc(addedBy)} · ${getTimeAgo(c.created_at)}</div>
-          </div>
-          ${c.booking_status==='needs'?`<button onclick="event.stopPropagation();openBookingAction('${c.id}')" style="margin-top:8px;width:100%;padding:8px;border-radius:8px;border:none;background:var(--warm);color:#fff;font-size:11px;font-weight:700;cursor:pointer">⚠ Book this — tap to find link</button>`:''}
-          ${c.booking_status==='online'?`<button onclick="event.stopPropagation();openBookingAction('${c.id}')" style="margin-top:8px;width:100%;padding:8px;border-radius:8px;border:none;background:#1E40AF;color:#fff;font-size:11px;font-weight:700;cursor:pointer">🔗 Book online →</button>`:''}
-        </div>
-      </div>`;
-    scroll.appendChild(hero);
-  }
-
-  // strip label removed — sec-row already shows count
-
-  // ── VERTICAL SWIPEABLE LIST (remaining cards) ──
-  if(real.length>1){
-    const strip=document.createElement('div');
-    strip.style.cssText='display:flex;flex-direction:column;gap:0;';
-    real.slice(1).forEach((c,i)=>{
-      const bg=c.color||'#C8DFC8';
-      const reacted=myReactions.has(c.id);
-      const reactions=c.reaction_count||0;
-      const addedBy=c.added_by_name||'You';
-      const el=document.createElement('div');
-      el.className='strip-card';
-      el.style.animationDelay=(i*.04)+'s';
-      const wrapper=document.createElement('div');
-      wrapper.className='swipe-wrapper';
-      wrapper.innerHTML=`
-        <div class="swipe-bg-left"><div style="text-align:center"><div class="swipe-icon">✕</div><div class="swipe-lbl">Remove</div></div></div>
-        <div class="swipe-bg-right"><div style="text-align:center"><div class="swipe-icon">✓</div><div class="swipe-lbl">Add to plan</div></div></div>
-        <div class="swipe-inner">
-          <div class="strip-card" style="margin:0;border-radius:0;border-left:none;border-right:none;border-top:none">
-            <div class="strip-card-ico" style="background:linear-gradient(135deg,${bg},${darken(bg)})">${c.emoji||'📍'}</div>
-            <div class="strip-card-body">
-              <div class="strip-card-name">${esc(c.title)}</div>
-              <div class="strip-card-loc">${esc(c.city||c.location||'')}</div>
-              <div class="strip-card-footer">
-                <div style="display:flex;align-items:center;gap:5px">
-                  ${getBookingBadge(c,'strip')||`<span style="font-size:9px;color:var(--muted)">${esc(addedBy.split('@')[0])}</span>`}
-                </div>
-                <div class="strip-card-react ${reacted?'on':''}" onclick="event.stopPropagation();toggleReaction('${c.id}',this)">👍${reactions>0?' '+reactions:''}</div>
-              </div>
-            </div>
-            <div style="font-size:13px;color:var(--b2);padding:0 4px 0 0;flex-shrink:0">⋯</div>
-          </div>
-        </div>`;
-      wrapper.querySelector('.swipe-inner').addEventListener('click',()=>openEditCard(c.id));
-      addSwipe(wrapper, c);
-      strip.appendChild(wrapper);
-    });
-    scroll.appendChild(strip);
-    scroll.style.paddingBottom='100px';
+  if(findViewMode==='country'){
+    renderFindByCountry(real, list);
+  }else{
+    renderFindByTrip(real, list);
   }
 }
+
+function renderFindByCountry(real, list){
+  // Only use cards with a valid country
+  let filtered=real.filter(c=>isValidCountry(c.country));
+  if(findCountryFilter!=='all') filtered=filtered.filter(c=>c.country===findCountryFilter);
+
+  if(!filtered.length){
+    const el=document.createElement('div');
+    el.style.cssText='padding:24px;text-align:center;font-size:13px;color:var(--muted)';
+    el.textContent=real.length?'No places with a recognised country yet. Try searching and saving a new place.':'Nothing saved yet.';
+    list.appendChild(el);
+    return;
+  }
+
+  // Group by country → city
+  const countryMap={};
+  filtered.forEach(c=>{
+    const country=c.country;
+    const city=c.city||'';
+    if(!countryMap[country]) countryMap[country]={};
+    if(!countryMap[country][city]) countryMap[country][city]=[];
+    countryMap[country][city].push(c);
+  });
+
+  Object.keys(countryMap).sort().forEach(country=>{
+    const cityMap=countryMap[country];
+    const cityKeys=Object.keys(cityMap).sort();
+    const totalCount=cityKeys.reduce((s,k)=>s+cityMap[k].length,0);
+    const cityPreview=cityKeys.filter(Boolean).slice(0,3).join(' · ');
+
+    // Country header — sticky
+    const ch=document.createElement('div');
+    ch.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:10px 16px 8px;border-bottom:1px solid var(--rule);background:var(--cream);position:sticky;top:0;z-index:2';
+    ch.innerHTML=`
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:20px;line-height:1">${countryFlag(country)}</span>
+        <div>
+          <div style="font-size:17px;font-weight:900;color:var(--ink);letter-spacing:-.04em;line-height:1">${esc(country)}</div>
+          ${cityPreview?`<div style="font-size:9px;color:var(--muted);margin-top:2px">${esc(cityPreview)}</div>`:''}
+        </div>
+      </div>
+      <span style="font-size:10px;font-weight:700;color:var(--faint)">${totalCount}</span>`;
+    list.appendChild(ch);
+
+    // City sub-headers + cards
+    cityKeys.forEach(city=>{
+      const cCards=cityMap[city];
+      if(city&&cityKeys.filter(Boolean).length>1){
+        const csh=document.createElement('div');
+        csh.style.cssText='padding:6px 16px 4px;font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--rule);background:var(--cream2)';
+        csh.textContent=city;
+        list.appendChild(csh);
+      }
+      cCards.forEach(c=>list.appendChild(buildFindRow(c)));
+    });
+  });
+}
+
+function renderFindByTrip(real, list){
+  // Filter by selected trip if set
+  let filtered=real;
+  if(findTripFilter==='unassigned') filtered=real.filter(c=>!c.trip_id);
+  else if(findTripFilter!=='all') filtered=real.filter(c=>c.trip_id===findTripFilter);
+
+  // Group: trips first, then unassigned
+  const byTrip={};
+  const unassigned=[];
+  filtered.forEach(c=>{
+    if(c.trip_id){
+      if(!byTrip[c.trip_id]) byTrip[c.trip_id]=[];
+      byTrip[c.trip_id].push(c);
+    }else{
+      unassigned.push(c);
+    }
+  });
+
+  const now=new Date();now.setHours(0,0,0,0);
+
+  // Sort trips: active first, upcoming, past
+  const sortedTripIds=Object.keys(byTrip).sort((a,b)=>{
+    const ta=trips.find(t=>t.id===a);
+    const tb=trips.find(t=>t.id===b);
+    const ord=t=>!t?3:getTripStatus(t,now)==='active'?0:getTripStatus(t,now)==='upcoming'?1:2;
+    return ord(ta)-ord(tb);
+  });
+
+  if(!sortedTripIds.length&&!unassigned.length){
+    const el=document.createElement('div');
+    el.style.cssText='padding:24px;text-align:center;font-size:13px;color:var(--muted)';
+    el.textContent='Nothing here yet.';
+    list.appendChild(el);
+    return;
+  }
+
+  sortedTripIds.forEach(tid=>{
+    const trip=trips.find(t=>t.id===tid);
+    const tCards=byTrip[tid];
+    const isActive=trip&&getTripStatus(trip,now)==='active';
+
+    // Trip section header
+    const th=document.createElement('div');
+    th.style.cssText=`display:flex;align-items:center;justify-content:space-between;padding:10px 16px 8px;border-bottom:1px solid var(--rule);background:var(--cream);position:sticky;top:0;z-index:2;border-left:3px solid ${isActive?'var(--ink)':'var(--rule)'}`;
+    th.innerHTML=`
+      <div>
+        <div style="font-size:17px;font-weight:900;color:var(--ink);letter-spacing:-.04em;line-height:1">${esc(trip?.title||'Trip')}</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:2px">${tCards.length} place${tCards.length!==1?'s':''}${isActive?' · Live':''}</div>
+      </div>
+      ${isActive?'<span style="background:var(--ink);color:var(--cream);font-size:8px;font-weight:900;padding:3px 9px;border-radius:99px;letter-spacing:.08em;text-transform:uppercase">Live</span>':''}`;
+    list.appendChild(th);
+
+    tCards.forEach(c=>list.appendChild(buildFindRow(c)));
+  });
+
+  // Unassigned section
+  if(unassigned.length||(findTripFilter==='all'||findTripFilter==='unassigned')){
+    if(unassigned.length){
+      const uh=document.createElement('div');
+      uh.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:10px 16px 8px;border-bottom:1px solid var(--rule);background:var(--cream2);position:sticky;top:0;z-index:2';
+      uh.innerHTML=`<div style="font-size:13px;font-weight:900;color:var(--muted);letter-spacing:-.02em">Unassigned</div><span style="font-size:10px;font-weight:700;color:var(--faint)">${unassigned.length}</span>`;
+      list.appendChild(uh);
+      unassigned.forEach(c=>list.appendChild(buildFindRow(c)));
+    }
+  }
+}
+
+// ── Quick trip assign from card row ──
+function quickAssignCard(cardId, e){
+  e.stopPropagation();
+  const card=cards.find(c=>c.id===cardId);
+  if(!card||!trips.length) return;
+
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:absolute;inset:0;background:rgba(26,26,26,.5);z-index:400;display:flex;align-items:flex-end;backdrop-filter:blur(2px)';
+  overlay.className='porter-overlay';
+
+  const sheet=document.createElement('div');
+  sheet.style.cssText='width:100%;background:var(--cream);border-radius:18px 18px 0 0;padding:16px 18px 32px';
+
+  const handle='<div style="width:36px;height:3px;background:var(--faint);border-radius:99px;margin:0 auto 14px"></div>';
+  const title=`<div style="font-size:14px;font-weight:900;color:var(--ink);letter-spacing:-.03em;margin-bottom:3px">Assign to trip</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px">${esc(card.title)}</div>`;
+
+  const tripBtns=trips.map(t=>{
+    const isAssigned=card.trip_id===t.id;
+    return `<div onclick="doAssignCard('${card.id}','${t.id}')" style="display:flex;align-items:center;justify-content:space-between;border:1.5px solid ${isAssigned?'var(--ink)':'var(--rule)'};border-radius:9px;padding:10px 13px;margin-bottom:7px;cursor:pointer;background:${isAssigned?'var(--cream2)':'transparent'}">
+      <div>
+        <div style="font-size:13px;font-weight:700;color:var(--ink)">${esc(t.title)}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:1px">${t.start_date?new Date(t.start_date+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short',year:'numeric'}):''}</div>
+      </div>
+      ${isAssigned?'<span style="font-size:11px;color:var(--ink)">✓</span>':'<span style="font-size:13px;color:var(--faint)">›</span>'}
+    </div>`;
+  }).join('');
+
+  const removeBtn=card.trip_id?`<div onclick="doAssignCard('${card.id}',null)" style="text-align:center;font-size:12px;font-weight:700;color:var(--muted);padding:10px;cursor:pointer">Remove from trip</div>`:'';
+
+  const cancelBtn=`<button onclick="this.closest('.porter-overlay').remove()" style="width:100%;padding:11px;border-radius:9px;background:transparent;border:1px solid var(--rule);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;font-family:var(--font);margin-top:4px">Cancel</button>`;
+
+  sheet.innerHTML=handle+title+tripBtns+removeBtn+cancelBtn;
+  overlay.appendChild(sheet);
+  overlay.onclick=e=>{if(e.target===overlay) overlay.remove();};
+  document.querySelector('.shell').appendChild(overlay);
+}
+
+async function doAssignCard(cardId, newTripId){
+  document.querySelector('.porter-overlay')?.remove();
+  const card=cards.find(c=>c.id===cardId);
+  if(!card) return;
+
+  const{error}=await sb.from('inspiration_cards').update({trip_id:newTripId}).eq('id',cardId);
+  if(error){toast('Could not assign: '+error.message);return;}
+  card.trip_id=newTripId;
+
+  const tripName=newTripId?trips.find(t=>t.id===newTripId)?.title:'removed from trip';
+  toast(newTripId?'✓ Moved to '+tripName:'✓ Unassigned');
+  renderFindTab();renderClusters();
+}
+
+
+function renderFindTab(){
+  const list=document.getElementById('find-list');
+  if(!list) return;
+  const real=cards.filter(c=>!c._opt);
+
+  // ── Country filter pills ──
+  const filterRow=document.getElementById('country-filter-row');
+  if(filterRow){
+    const countries=[...new Set(real.map(c=>c.country||deriveCountry(c)).filter(Boolean))].sort();
+    filterRow.innerHTML='';
+    const makeChip=(label,val,active)=>{
+      const d=document.createElement('div');
+      d.style.cssText=`padding:4px 11px;border-radius:99px;font-size:9px;font-weight:900;cursor:pointer;white-space:nowrap;flex-shrink:0;letter-spacing:.06em;text-transform:uppercase;border:1px solid ${active?'var(--ink)':'var(--rule)'};background:${active?'var(--ink)':'transparent'};color:${active?'var(--cream)':'var(--muted)'}`;
+      d.textContent=label;
+      d.onclick=()=>{findCountryFilter=val;renderFindTab();};
+      filterRow.appendChild(d);
+    };
+    makeChip('All','all',findCountryFilter==='all');
+    countries.forEach(c=>makeChip(countryFlag(c)+' '+c,c,findCountryFilter===c));
+    filterRow.style.paddingBottom='8px';
+  }
+
+  // ── Discover strip ──
+  const ds=document.getElementById('discover-strip');
+  if(ds) ds.style.display=real.length>=3?'block':'none';
+
+  list.innerHTML='';
+
+  const filtered=findCountryFilter==='all'?real:real.filter(c=>(c.country||deriveCountry(c))===findCountryFilter);
+
+  // Optimistic loading
+  cards.filter(c=>c._opt).forEach(c=>{
+    const el=document.createElement('div');
+    el.style.cssText='display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--rule)';
+    el.innerHTML=`<div class="parse-spin"></div><div style="font-size:12px;color:var(--muted)">Finding ${esc((c.raw||'').slice(0,40))}…</div>`;
+    list.appendChild(el);
+  });
+
+  if(!filtered.length&&!cards.some(c=>c._opt)){
+    list.innerHTML=`<div style="padding:48px 24px;text-align:center"><div style="font-size:36px;margin-bottom:12px">🌍</div><div style="font-size:16px;font-weight:900;letter-spacing:-.03em;color:var(--ink);margin-bottom:6px">Nothing saved yet</div><div style="font-size:13px;color:var(--muted);line-height:1.6">Search for a place above, or paste a link from TikTok, Instagram or Google Maps</div></div>`;
+    return;
+  }
+
+  // ── Country → City clusters ──
+  const countryMap={};
+  filtered.forEach(c=>{
+    const country=c.country||deriveCountry(c)||'Other';
+    const city=c.city||'';
+    if(!countryMap[country]) countryMap[country]={};
+    if(!countryMap[country][city]) countryMap[country][city]=[];
+    countryMap[country][city].push(c);
+  });
+
+  Object.keys(countryMap).sort().forEach(country=>{
+    const cityMap=countryMap[country];
+    const cityKeys=Object.keys(cityMap).sort();
+    const totalCount=cityKeys.reduce((s,k)=>s+cityMap[k].length,0);
+    const cityPreview=cityKeys.filter(Boolean).slice(0,3).join(' · ');
+
+    // Country header
+    const ch=document.createElement('div');
+    ch.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:10px 16px 8px;border-bottom:1px solid var(--rule);background:var(--cream);position:sticky;top:0;z-index:2';
+    ch.innerHTML=`
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:20px;line-height:1">${countryFlag(country)}</span>
+        <div>
+          <div style="font-size:17px;font-weight:900;color:var(--ink);letter-spacing:-.04em;line-height:1">${esc(country)}</div>
+          ${cityPreview?`<div style="font-size:9px;color:var(--muted);margin-top:2px">${esc(cityPreview)}</div>`:''}
+        </div>
+      </div>
+      <span style="font-size:10px;font-weight:700;color:var(--faint)">${totalCount}</span>`;
+    list.appendChild(ch);
+
+    // City sub-headers + cards
+    cityKeys.forEach(city=>{
+      const cCards=cityMap[city];
+      if(city&&cityKeys.filter(Boolean).length>1){
+        const csh=document.createElement('div');
+        csh.style.cssText='padding:6px 16px 4px;font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--rule);background:var(--cream2)';
+        csh.textContent=city;
+        list.appendChild(csh);
+      }
+      cCards.forEach(c=>list.appendChild(buildFindRow(c)));
+    });
+  });
+}
+
+function toggleCountrySection(country){} // legacy stub — no longer used
+
+function deriveCountry(card){
+  // Try to match location string against known countries
+  if(!card.location) return '';
+  const loc=card.location;
+  for(const country of Object.keys(COUNTRY_FLAGS)){
+    if(loc.includes(country)) return country;
+  }
+  // Last segment fallback
+  const parts=loc.split(',');
+  const last=(parts[parts.length-1]||'').trim().slice(0,40);
+  return isValidCountry(last)?last:'';
+}
+
+function buildFindRow(c){
+  const el=document.createElement('div');
+  el.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--rule);cursor:pointer;transition:background .1s';
+  el.onmouseover=()=>el.style.background='var(--cream2)';
+  el.onmouseout=()=>el.style.background='';
+  el.onclick=()=>openEditCard(c.id);
+
+  const bLabels={needs:'Book',online:'Online',free:'Free',booked:'Booked ✓'};
+  const bColors={needs:'var(--book-bg)',online:'var(--online-bg)',free:'var(--free-bg)',booked:'var(--booked-bg)'};
+  const bTx={needs:'var(--book-tx)',online:'var(--online-tx)',free:'var(--free-tx)',booked:'var(--booked-tx)'};
+  const bBadge=c.booking_status?`<span style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:99px;background:${bColors[c.booking_status]||'var(--cream3)'};color:${bTx[c.booking_status]||'var(--muted)'};letter-spacing:.03em">${bLabels[c.booking_status]||''}</span>`:'';
+  const ratingStr=c.rating?`<span style="font-size:10px;color:var(--muted)">★ ${c.rating}</span>`:'';
+  const priceStr=c.price_range?`<span style="font-size:10px;color:var(--muted)">${c.price_range}</span>`:'';
+
+  el.innerHTML=`
+    <div style="width:36px;height:36px;border-radius:8px;background:${c.color||'var(--cream2)'};display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">${c.emoji||'📍'}</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:13px;font-weight:700;color:var(--ink);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.title)}</div>
+      <div style="display:flex;align-items:center;gap:5px;margin-top:2px;flex-wrap:wrap">
+        <span style="font-size:10px;color:var(--muted)">${esc(c.city||'')}${c.city&&c.country?' · ':' '}${esc(c.country||'')}</span>
+        ${ratingStr}${priceStr}
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+      ${bBadge}
+      <span style="font-size:13px;color:var(--faint)">›</span>
+    </div>`;
+  return el;
+}
+
+
+// ── FIND SEARCH FLOW ──
+let findSearching=false;
+
+function onFindInput(){
+  // Show/hide find button style based on content
+  const val=document.getElementById('find-in').value.trim();
+  const btn=document.getElementById('find-btn');
+  if(btn) btn.style.opacity=val?'1':'0.4';
+}
+
+async function doFind(){
+  const input=document.getElementById('find-in');
+  const val=input.value.trim();
+  if(!val||findSearching) return;
+
+  // Show result area, hide list
+  const resultArea=document.getElementById('find-result-area');
+  const findList=document.getElementById('find-list');
+  resultArea.style.display='block';
+  findList.style.display='none';
+  resultArea.innerHTML=`<div style="display:flex;align-items:center;gap:8px;padding:8px 0;font-size:13px;color:var(--muted)"><div class="parse-spin"></div>Looking that up…</div>`;
+  findSearching=true;
+
+  try{
+    const isLink=val.startsWith('http');
+    const res=await fetchWithRetry({
+      model:AI_MODEL,max_tokens:800,
+      tools:[{type:'web_search_20250305',name:'web_search'}],
+      system:`You are Porter, a travel assistant. The user wants to find or save a travel place.
+
+${isLink?'They pasted a link — extract the place from it.':'Determine if this is a SPECIFIC place query (single known venue) or a SUGGESTION query (looking for recommendations).'}
+
+Search the web to get:
+- Exact place name, city, country
+- Google rating and review count
+- Today's opening hours
+- Whether booking is required (needs reservation=needs, can book online=online, walk in=free)
+- Price range ($, $$, $$$, $$$$)
+- 1-2 sentence description
+- Place type tags (from: eat, drinks, explore, sleep, spa, beach, hike, shop, dance)
+
+Return ONLY valid JSON, no markdown:
+
+For SPECIFIC (one place found):
+{"confidence":"specific","places":[{"title":"Name","city":"City","country":"Country","emoji":"emoji","tags":["tag1","tag2"],"booking_status":"needs|online|free","description":"1-2 sentences","rating":4.5,"review_count":1200,"hours_today":"9am-10pm or Closed","price_range":"$$","color":"hex color"}]}
+
+For SUGGESTION (multiple options):
+{"confidence":"suggestion","places":[{"title":"Name","city":"City","country":"Country","emoji":"emoji","tags":["tag"],"booking_status":"needs|online|free","description":"1 sentence","rating":4.3,"review_count":800,"hours_today":"hours","price_range":"$$","color":"hex color"},... up to 3]}
+
+Color guide: #FEE2E2 food, #D1FAE5 nature/explore, #EFF6FF beach, #FDF4FF nightlife, #FDF2F8 spa, #FFF7ED stay, #ECFDF5 outdoors`,
+      messages:[{role:'user',content:isLink?`Link: ${val}`:`Find: ${val}`}]
+    });
+
+    const txt=(res.content?.filter(b=>b.type==='text').map(b=>b.text).join('')||'').trim();
+    const match=txt.match(/\{[\s\S]*\}/);
+    if(!match) throw new Error('No result');
+    const parsed=JSON.parse(match[0]);
+    showFindResult(parsed, val);
+  }catch(e){
+    resultArea.innerHTML=`<div style="padding:12px;background:var(--cream2);border-radius:9px;font-size:13px;color:var(--muted)">Couldn't find that — try rephrasing or paste a direct link.</div>
+    <div style="margin-top:10px"><button onclick="hideFindResult()" style="font-size:11px;font-weight:700;color:var(--ink);background:none;border:none;cursor:pointer;font-family:var(--font)">← Back to my list</button></div>`;
+  }finally{
+    findSearching=false;
+  }
+}
+
+function showFindResult(parsed, query){
+  const resultArea=document.getElementById('find-result-area');
+  const isSpecific=parsed.confidence==='specific';
+  const places=parsed.places||[];
+  if(!places.length){resultArea.innerHTML=`<div style="padding:12px;color:var(--muted);font-size:13px">No results found. <button onclick="hideFindResult()" style="font-weight:700;color:var(--ink);background:none;border:none;cursor:pointer;font-family:var(--font)">← Back</button></div>`;return;}
+
+  // Store results globally so saves don't destroy list
+  window._findResults=places;
+  window._findSaved=new Set(); // track which indices saved
+
+  renderFindResults(isSpecific);
+}
+
+function renderFindResults(isSpecific){
+  const resultArea=document.getElementById('find-result-area');
+  const places=window._findResults||[];
+  const saved=window._findSaved||new Set();
+
+  let html=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <div style="font-size:13px;font-weight:700;color:var(--ink)">${isSpecific?'We found it.':'We found '+places.length+' options.'}</div>
+    <button onclick="hideFindResult()" style="font-size:11px;font-weight:700;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--font)">✕</button>
+  </div>`;
+
+  places.forEach((p,i)=>{
+    const bLabels={needs:'Book required',online:'Book online',free:'Walk in — free'};
+    const bColors={needs:'var(--book-bg)',online:'var(--online-bg)',free:'var(--free-bg)'};
+    const bTx={needs:'var(--book-tx)',online:'var(--online-tx)',free:'var(--free-tx)'};
+    const tagHTML=(p.tags||[]).slice(0,2).map(t=>`<span style="font-size:8px;font-weight:700;padding:2px 6px;border-radius:99px;background:var(--${t}-bg,var(--cream3));color:var(--${t}-tx,var(--muted))">${t}</span>`).join('');
+    const stars=p.rating?'★'.repeat(Math.min(5,Math.round(p.rating))):'';
+    const isSaved=saved.has(i);
+
+    // Price with rough number
+    const priceMap={'$':'~$10–30','$$':'~$30–80','$$$':'~$80–200','$$$$':'$200+'};
+    const priceLabel=p.price_range?(p.price_range+' '+( priceMap[p.price_range]||'')):'—';
+
+    if(isSpecific){
+      html+=`<div style="border:1px solid var(--ink);border-radius:12px;overflow:hidden;margin-bottom:10px${isSaved?';opacity:.65':''}">
+        <div style="background:${p.color||'var(--cream2)'};padding:14px 14px 12px">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px">
+            <div style="font-size:28px">${p.emoji||'📍'}</div>
+            ${p.rating?`<div style="text-align:right"><div style="font-size:12px;font-weight:800;color:var(--ink)">${p.rating} ${stars}</div><div style="font-size:9px;color:var(--muted);margin-top:1px">${p.review_count?p.review_count.toLocaleString()+' reviews':''}</div></div>`:''}
+          </div>
+          <div style="font-size:19px;font-weight:900;letter-spacing:-.04em;color:var(--ink);line-height:1">${esc(p.title)}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">📍 ${esc(p.city||'')}${p.city&&p.country?', ':''}${esc(p.country||'')}</div>
+        </div>
+        <div style="padding:11px 14px">
+          <div style="font-size:12px;color:var(--ink2);line-height:1.6;margin-bottom:10px">${esc(p.description||'')}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px">
+            <div style="background:var(--cream2);border-radius:7px;padding:7px 8px">
+              <div style="font-size:7px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Hours today</div>
+              <div style="font-size:11px;font-weight:700;color:var(--ink);margin-top:3px;line-height:1.3">${esc(p.hours_today||'—')}</div>
+            </div>
+            <div style="background:${bColors[p.booking_status]||'var(--cream2)'};border-radius:7px;padding:7px 8px">
+              <div style="font-size:7px;font-weight:700;color:${bTx[p.booking_status]||'var(--muted)'};text-transform:uppercase;letter-spacing:.06em;opacity:.8">Booking</div>
+              <div style="font-size:11px;font-weight:700;color:${bTx[p.booking_status]||'var(--ink)'};margin-top:3px;line-height:1.3">${bLabels[p.booking_status]||'—'}</div>
+            </div>
+            <div style="background:var(--cream2);border-radius:7px;padding:7px 8px">
+              <div style="font-size:7px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Price</div>
+              <div style="font-size:11px;font-weight:700;color:var(--ink);margin-top:3px;line-height:1.3">${esc(priceLabel)}</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap">${tagHTML}</div>
+          ${isSaved
+            ? `<div style="display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:var(--free-bg);border-radius:8px;font-size:12px;font-weight:700;color:var(--free-tx)">✓ Saved to your list</div>`
+            : `<div style="display:flex;gap:7px">
+                <button onclick="saveFindPlace(${i})" id="save-btn-${i}" style="flex:2;background:var(--ink);color:var(--cream);border:none;border-radius:8px;padding:10px;font-size:11px;font-weight:900;cursor:pointer;font-family:var(--font);letter-spacing:.03em">Save to my list</button>
+                <button onclick="doFind()" style="flex:1;background:var(--cream2);border:1px solid var(--rule);border-radius:8px;padding:10px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);color:var(--muted)">Not this</button>
+              </div>`
+          }
+        </div>
+      </div>`;
+    }else{
+      // Suggestion list row
+      html+=`<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--rule)${isSaved?';opacity:.65':''}">
+        <div style="width:38px;height:38px;border-radius:9px;background:${p.color||'var(--cream2)'};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${p.emoji||'📍'}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:700;color:var(--ink);line-height:1.2">${esc(p.title)}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:1px">${esc(p.city||'')}${p.city&&p.country?', ':''}${esc(p.country||'')}${p.rating?' · ★ '+p.rating:''}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4">${esc(p.description||'')}</div>
+          <div style="display:flex;gap:5px;margin-top:5px;flex-wrap:wrap">
+            ${tagHTML}
+            ${p.booking_status?`<span style="font-size:7px;font-weight:700;padding:2px 6px;border-radius:99px;background:${bColors[p.booking_status]||'var(--cream3)'};color:${bTx[p.booking_status]||'var(--muted)'}">${bLabels[p.booking_status]||''}</span>`:''}
+            ${p.hours_today?`<span style="font-size:8px;color:var(--muted)">· ${esc(p.hours_today)}</span>`:''}
+            ${p.price_range?`<span style="font-size:8px;color:var(--muted)">· ${esc(priceLabel)}</span>`:''}
+          </div>
+        </div>
+        ${isSaved
+          ? `<div style="font-size:9px;font-weight:700;color:var(--free-tx);background:var(--free-bg);padding:5px 9px;border-radius:7px;flex-shrink:0;white-space:nowrap">✓ Saved</div>`
+          : `<button onclick="saveFindPlace(${i})" id="save-btn-${i}" style="background:var(--ink);color:var(--cream);border:none;border-radius:7px;padding:7px 11px;font-size:10px;font-weight:900;cursor:pointer;font-family:var(--font);flex-shrink:0;margin-top:2px">+ Save</button>`
+        }
+      </div>`;
+    }
+  });
+
+  window._findIsSpecific=isSpecific;
+  resultArea.innerHTML=html;
+}
+
+
+function hideFindResult(){
+  const resultArea=document.getElementById('find-result-area');
+  const findList=document.getElementById('find-list');
+  resultArea.style.display='none';
+  resultArea.innerHTML='';
+  findList.style.display='';
+  document.getElementById('find-in').value='';
+  window._findResults=null;
+  window._findSaved=null;
+}
+
+async function saveFindPlace(idx){
+  const p=window._findResults?.[idx];
+  if(!p) return;
+  if(window._findSaved?.has(idx)) return;
+
+  if(!window._findSaved) window._findSaved=new Set();
+  window._findSaved.add(idx);
+  renderFindResults(window._findIsSpecific||false);
+
+  const bookable=['eat','drinks','sleep','dance','watch','race','spa'];
+  const freeEntry=['explore','hike','swim','visit','beach'];
+  let bStatus=p.booking_status||'';
+  if(!bStatus){
+    const tags=p.tags||[];
+    if(tags.some(t=>freeEntry.includes(t))) bStatus='free';
+    else if(tags.some(t=>bookable.includes(t))) bStatus='needs';
+  }
+
+  // Must have a trip_id — use active or first available
+  const saveTripId=tripId||trips[0]?.id||null;
+  if(!saveTripId){toast('Create a trip first in Plan tab');window._findSaved?.delete(idx);renderFindResults(window._findIsSpecific||false);return;}
+
+  const payload={
+    trip_id:saveTripId,
+    added_by:user.id,
+    title:p.title,
+    city:p.city||'',
+    location:p.city&&p.country?`${p.city}, ${p.country}`:p.city||p.country||'',
+    emoji:p.emoji||'📍',
+    tags:p.tags||[],
+    description:p.description||'',
+    color:p.color||'#D4CFC4',
+    booking_status:bStatus,
+  };
+
+  // Try with extra columns first, fall back without
+  let saved=null;
+  try{
+    const withExtra={...payload,country:p.country||'',rating:p.rating||null,hours_today:p.hours_today||null,price_range:p.price_range||null};
+    const{data,error}=await sb.from('inspiration_cards').insert(withExtra).select().single();
+    if(error) throw error;
+    saved=data;
+  }catch(e){
+    const{data,error}=await sb.from('inspiration_cards').insert(payload).select().single();
+    if(error){toast('Save failed: '+error.message);window._findSaved?.delete(idx);renderFindResults(window._findIsSpecific||false);return;}
+    saved=data;
+  }
+
+  cards.unshift(saved);
+  toast('✓ '+saved.title+' saved');
+  renderFindTab();renderClusters();
+}
+
+// ── TRIP ASSIGN — full screen overlay ──
+function openTripAssignScreen(card){
+  // Find matching trips (country/city match)
+  const cardCountry=(card.country||deriveCountry(card)||'').toLowerCase();
+  const cardCity=(card.city||'').toLowerCase();
+  const matchingTrips=trips.filter(t=>{
+    if(!t.title) return false;
+    const tl=t.title.toLowerCase();
+    const dest=(t.destination||'').toLowerCase();
+    return (cardCountry&&(tl.includes(cardCountry.slice(0,4))||dest.includes(cardCountry.slice(0,4))))||
+           (cardCity&&(tl.includes(cardCity.slice(0,4))||dest.includes(cardCity.slice(0,4))));
+  });
+  const otherTrips=trips.filter(t=>!matchingTrips.find(m=>m.id===t.id));
+
+  // Build full-screen overlay
+  const screen=document.createElement('div');
+  screen.id='trip-assign-screen';
+  screen.style.cssText='position:absolute;inset:0;background:var(--cream);z-index:450;display:flex;flex-direction:column;animation:rise .18s ease';
+
+  const now=new Date();now.setHours(0,0,0,0);
+  const formatDate=t=>t.start_date?new Date(t.start_date+'T00:00:00').toLocaleDateString('en-SG',{day:'numeric',month:'short',year:'numeric'}):'No dates yet';
+  const statusLabel=t=>{const s=getTripStatus(t,now);return s==='active'?'<span style="background:var(--ink);color:var(--cream);font-size:8px;font-weight:900;padding:2px 8px;border-radius:99px;letter-spacing:.06em;text-transform:uppercase">Live</span>':s==='upcoming'?'<span style="font-size:10px;font-weight:700;color:var(--muted)">Upcoming</span>':'<span style="font-size:10px;color:var(--faint)">Past</span>';};
+
+  const makeTripRow=(t,highlighted)=>`
+    <div onclick="assignCardToTrip('${card.id}','${t.id}')" style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--rule);cursor:pointer;transition:background .12s;${highlighted?'background:var(--cream2);':''}" onmouseover="this.style.background='var(--cream2)'" onmouseout="this.style.background='${highlighted?'var(--cream2)':'transparent'}'">
+      <div style="border-left:3px solid ${getTripStatus(t,now)==='active'?'var(--ink)':'var(--rule)'};padding:2px 0 2px 10px;flex:1;min-width:0">
+        <div style="font-size:15px;font-weight:900;color:var(--ink);letter-spacing:-.03em;line-height:1">${esc(t.title)}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">${formatDate(t)}</div>
+      </div>
+      ${statusLabel(t)}
+      <div style="font-size:16px;color:var(--faint);flex-shrink:0">›</div>
+    </div>`;
+
+  const matchSection=matchingTrips.length?`
+    <div style="padding:12px 18px 5px;font-size:9px;font-weight:900;color:var(--faint);letter-spacing:.14em;text-transform:uppercase">Looks like a match</div>
+    ${matchingTrips.map(t=>makeTripRow(t,true)).join('')}`:'' ;
+
+  const otherSection=otherTrips.length?`
+    <div style="padding:12px 18px 5px;font-size:9px;font-weight:900;color:var(--faint);letter-spacing:.14em;text-transform:uppercase">${matchingTrips.length?'Other trips':'Your trips'}</div>
+    ${otherTrips.map(t=>makeTripRow(t,false)).join('')}`:'' ;
+
+  screen.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px 12px;border-bottom:1px solid var(--rule);flex-shrink:0">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:2px">Saved ✓</div>
+        <div style="font-size:17px;font-weight:900;color:var(--ink);letter-spacing:-.04em;line-height:1">${esc(card.title)}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">📍 ${esc(card.city||'')}${card.city&&card.country?', ':''}${esc(card.country||'')}</div>
+      </div>
+      <div style="width:44px;height:44px;border-radius:10px;background:${card.color||'var(--cream2)'};display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${card.emoji||'📍'}</div>
+    </div>
+    <div style="padding:14px 18px 6px;flex-shrink:0">
+      <div style="font-size:15px;font-weight:900;color:var(--ink);letter-spacing:-.03em">Add to a trip?</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:3px">Pick a trip or skip — you can always assign later.</div>
+    </div>
+    <div style="flex:1;overflow-y:auto;scrollbar-width:none">
+      ${matchSection}
+      ${otherSection}
+      ${!trips.length?`<div style="padding:20px 18px;text-align:center;color:var(--muted);font-size:13px">No trips yet — create one in Plan tab</div>`:''}
+    </div>
+    <div style="padding:14px 18px;border-top:1px solid var(--rule);flex-shrink:0">
+      <button onclick="closeTripAssignScreen()" style="width:100%;padding:13px;border-radius:10px;background:transparent;border:1px solid var(--rule);font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;font-family:var(--font)">Skip — just save for now</button>
+    </div>`;
+
+  document.querySelector('.shell').appendChild(screen);
+}
+
+function closeTripAssignScreen(){
+  document.getElementById('trip-assign-screen')?.remove();
+  toast('Saved to your list');
+}
+
+async function assignCardToTrip(cardId,newTripId){
+  document.getElementById('trip-assign-screen')?.remove();
+  document.querySelector('.porter-overlay')?.remove();
+  const{error}=await sb.from('inspiration_cards').update({trip_id:newTripId}).eq('id',cardId);
+  if(error){toast('Could not assign');return;}
+  const card=cards.find(c=>c.id===cardId);
+  if(card) card.trip_id=newTripId;
+  renderFindTab();renderClusters();
+  const trip=trips.find(t=>t.id===newTripId);
+  toast('✓ Added to '+(trip?.title||'trip'));
+}
+
+// Legacy compat stubs
+function renderCards(){renderFindTab();}
+function setFilter(el){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  el?.classList?.add('on');
+}
+
+
 
 function getBookingBadge(card, context){
   // Derive status from tags if not explicitly set
@@ -2924,7 +3526,7 @@ async function deleteCard(id){
   const{error}=await sb.from('inspiration_cards').delete().eq('id',id);
   if(error){toast('Delete failed: '+error.message);return;}
   cards=cards.filter(c=>c.id!==id);
-  renderCards();renderClusters();toast('Removed');
+  renderFindTab();renderClusters();toast('Removed');
 }
 
 function setFilter(el){
@@ -2952,33 +3554,19 @@ function showTripPicker(onSelect){
 }
 
 async function capture(){
-  const input=document.getElementById('url-in');
-  const btn=document.getElementById('cap-btn');
-  const val=input.value.trim();
+  // Route to new doFind flow
+  const findIn=document.getElementById('find-in');
+  const urlIn=document.getElementById('url-in');
+  const val=(findIn?.value||urlIn?.value||'').trim();
   if(!val) return;
-  if(!tripId){toast('Create a trip first');return;}
-  btn.disabled=true;btn.textContent='…';
-  input.value='';input.style.height='42px';
-  if(trips.length>1){
-    // Ask which trip, then capture into that one
-    showTripPicker(async(selectedTripId)=>{
-      const prevTripId=tripId;
-      tripId=selectedTripId;
-      await captureToTrip(val);
-      tripId=prevTripId;
-      btn.disabled=false;btn.textContent='Add';
-    });
-    // Keep btn disabled until picker resolves — reset if modal closed without picking
-    return;
-  }
-  await captureToTrip(val);
-  btn.disabled=false;btn.textContent='Add';
+  if(findIn) findIn.value=val;
+  doFind();
 }
 
 async function captureToTrip(raw){
   hideErr('cap-err');
   const optId='_opt_'+Date.now();
-  cards.unshift({id:optId,_opt:true,raw});renderCards();
+  cards.unshift({id:optId,_opt:true,raw});renderFindTab();
   let parsed=null;
   try{
     const res=await fetchWithRetry({
@@ -3014,7 +3602,7 @@ async function captureToTrip(raw){
     else derivedStatus='';
   }
   const payload={
-    trip_id:tripId,added_by:user.id,
+    trip_id:tripId||null,added_by:user.id,
     title:parsed?.title||raw.slice(0,60),
     city:derivedCity,
     location:parsed?.location||parsed?.city||raw.slice(0,100),
@@ -3039,7 +3627,7 @@ async function captureToTrip(raw){
     if(cards.filter(x=>!x._opt).length===1 && members.length<2) setTimeout(()=>toast('💡 Invite your crew — tap 👥 so they can add places too!'),1800);
     if(data.location) geocodeAndSaveCard(data.id, data.title, data.location);
   }
-  renderCards();renderClusters();
+  renderFindTab();renderClusters();
 }
 
 // ═══════════════════════════════════
@@ -4343,6 +4931,7 @@ function goTab(tab){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   const tabId=tabMap[tab];
   if(tabId) document.getElementById(tabId)?.classList.add('on');
+  if(tab==='capture'||tab==='find') renderFindTab();
   if(tab==='plan'||tab==='vault') showPlanTab();
   if(tab==='trip'||tab==='go'){checkTripMode();requestLocationForTripMode();}
   // Update avatar initials in top bar
@@ -4426,15 +5015,134 @@ function openEditCard(id){
   const c=cards.find(c=>c.id===id);if(!c) return;
   editingCardId=id;
   editingCardTags=[...(c.tags||[])];
-  document.getElementById('ec-title').value=c.title||'';
-  const cityEl=document.getElementById('ec-city');if(cityEl) cityEl.value=c.city||'';
-  document.getElementById('ec-location').value=c.location||'';
-  // Set tag buttons
-  document.querySelectorAll('#ec-tags-sel .doc-type-btn').forEach(btn=>{
-    const tag=btn.dataset.tag;
-    btn.className='doc-type-btn'+(editingCardTags.includes(tag)?' on':'');
-  });
+
+  // Build rich detail sheet
+  const bLabels={needs:'Book required',online:'Book online',free:'Walk in — free',booked:'Booked ✓'};
+  const bColors={needs:'var(--book-bg)',online:'var(--online-bg)',free:'var(--free-bg)',booked:'var(--booked-bg)'};
+  const bTx={needs:'var(--book-tx)',online:'var(--online-tx)',free:'var(--free-tx)',booked:'var(--booked-tx)'};
+  const bStatus=c.booking_status||'';
+  const tripName=c.trip_id?trips.find(t=>t.id===c.trip_id)?.title:'';
+
+  const modal=document.getElementById('edit-card-modal');
+  const inner=modal?.querySelector('.modal');
+  if(!inner) return;
+
+  inner.innerHTML=`
+    <!-- Header with emoji and colour -->
+    <div style="background:${c.color||'var(--cream2)'};border-radius:10px;padding:16px;margin-bottom:14px;display:flex;align-items:flex-start;gap:12px">
+      <div style="font-size:36px;line-height:1">${c.emoji||'📍'}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:18px;font-weight:900;color:var(--ink);letter-spacing:-.03em;line-height:1.2">${esc(c.title)}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">📍 ${esc(c.city||'')}${c.city&&c.country?', ':''}${esc(c.country||'')}</div>
+        ${bStatus?`<span style="display:inline-block;margin-top:6px;font-size:9px;font-weight:800;padding:3px 9px;border-radius:99px;background:${bColors[bStatus]};color:${bTx[bStatus]};letter-spacing:.04em;text-transform:uppercase">${bLabels[bStatus]}</span>`:''}
+      </div>
+    </div>
+
+    <!-- Description -->
+    ${c.description?`<div style="font-size:13px;color:var(--ink2);line-height:1.65;margin-bottom:12px;padding:0 2px">${esc(c.description)}</div>`:''}
+
+    <!-- Meta grid -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px">
+      <div style="background:var(--cream2);border-radius:8px;padding:9px 11px">
+        <div style="font-size:8px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Open today</div>
+        <div style="font-size:13px;font-weight:700;color:var(--ink);margin-top:3px" id="ec-hours-display">${c.hours_today||'—'}</div>
+      </div>
+      <div style="background:var(--cream2);border-radius:8px;padding:9px 11px">
+        <div style="font-size:8px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Price</div>
+        <div style="font-size:13px;font-weight:700;color:var(--ink);margin-top:3px">${c.price_range||'—'}</div>
+      </div>
+      ${c.rating?`<div style="background:var(--cream2);border-radius:8px;padding:9px 11px">
+        <div style="font-size:8px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Rating</div>
+        <div style="font-size:13px;font-weight:700;color:var(--ink);margin-top:3px">★ ${c.rating}${c.review_count?' ('+c.review_count.toLocaleString()+')':''}</div>
+      </div>`:''}
+      ${tripName?`<div style="background:var(--cream2);border-radius:8px;padding:9px 11px">
+        <div style="font-size:8px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Trip</div>
+        <div style="font-size:12px;font-weight:700;color:var(--ink);margin-top:3px">${esc(tripName)}</div>
+      </div>`:''}
+    </div>
+
+    <!-- Address -->
+    <div style="margin-bottom:12px">
+      <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Address</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <input class="m-in" id="ec-location" value="${esc(c.location||c.city||'')}" placeholder="Address" style="flex:1;margin:0;font-size:12px">
+        <button onclick="lookupAddress('${id}')" style="padding:8px 12px;border-radius:8px;background:var(--cream2);border:1px solid var(--rule);font-size:11px;font-weight:700;color:var(--ink);cursor:pointer;font-family:var(--font);white-space:nowrap">Look up</button>
+      </div>
+    </div>
+
+    <!-- Edit fields collapsed -->
+    <div style="border:1px solid var(--rule);border-radius:9px;overflow:hidden;margin-bottom:12px">
+      <div onclick="toggleEditFields()" style="display:flex;align-items:center;justify-content:space-between;padding:10px 13px;cursor:pointer;background:var(--cream2)">
+        <div style="font-size:12px;font-weight:700;color:var(--ink)">Edit details</div>
+        <div style="font-size:12px;color:var(--faint)" id="edit-fields-arrow">›</div>
+      </div>
+      <div id="edit-fields-body" style="display:none;padding:12px 13px;border-top:1px solid var(--rule)">
+        <div class="m-label">Place name</div>
+        <input class="m-in" id="ec-title" value="${esc(c.title||'')}">
+        <div class="m-label">City</div>
+        <input class="m-in" id="ec-city" value="${esc(c.city||'')}">
+        <div class="m-label" style="margin-bottom:8px">Category</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:0" id="ec-tags-sel">
+          ${['eat','drinks','sleep','explore','hike','swim','dance','shop','spa','race'].map(tag=>
+            `<button class="doc-type-btn${editingCardTags.includes(tag)?' on':''}" data-tag="${tag}" onclick="toggleCardTag(this)">${tag}</button>`
+          ).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;gap:7px;margin-bottom:8px">
+      ${bStatus!=='booked'?`<button onclick="openBookingAction('${id}')" style="flex:2;padding:11px;border-radius:9px;background:var(--ink);color:var(--cream);border:none;font-size:12px;font-weight:900;cursor:pointer;font-family:var(--font);letter-spacing:.03em">${bStatus==='needs'?'⚠ Find booking link':'Find booking link →'}</button>`:''}
+      <button onclick="deleteCard('${id}')" style="flex:1;padding:11px;border-radius:9px;background:var(--cream2);border:1px solid var(--rule);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;font-family:var(--font)">Remove</button>
+    </div>
+    <div style="display:flex;gap:7px">
+      <button class="m-btn sec" onclick="closeModal('edit-card-modal')" style="flex:1">Close</button>
+      <button class="m-btn pri" onclick="saveCardEdit()" style="flex:1">Save changes</button>
+    </div>`;
+
   openModal('edit-card-modal');
+}
+
+function toggleEditFields(){
+  const body=document.getElementById('edit-fields-body');
+  const arrow=document.getElementById('edit-fields-arrow');
+  if(!body) return;
+  const open=body.style.display==='none';
+  body.style.display=open?'block':'none';
+  if(arrow) arrow.textContent=open?'⌄':'›';
+}
+
+async function lookupAddress(cardId){
+  const c=cards.find(c=>c.id===cardId);if(!c) return;
+  const btn=document.querySelector(`button[onclick="lookupAddress('${cardId}')"]`);
+  if(btn){btn.disabled=true;btn.textContent='Looking up…';}
+  try{
+    const res=await fetchWithRetry({
+      model:AI_MODEL,max_tokens:300,
+      tools:[{type:'web_search_20250305',name:'web_search'}],
+      system:'Return ONLY valid JSON, no markdown: {"address":"full street address","hours_today":"todays hours e.g. 10am-10pm or Closed","phone":"phone number or null"}',
+      messages:[{role:'user',content:`Find the address and todays opening hours for: ${c.title}, ${c.city||c.country||''}`}]
+    });
+    const txt=(res.content?.filter(b=>b.type==='text').map(b=>b.text).join('')||'').trim();
+    const match=txt.match(/\{[\s\S]*\}/);
+    if(match){
+      const d=JSON.parse(match[0]);
+      const locEl=document.getElementById('ec-location');
+      const hoursEl=document.getElementById('ec-hours-display');
+      if(locEl&&d.address) locEl.value=d.address;
+      if(hoursEl&&d.hours_today) hoursEl.textContent=d.hours_today;
+      // Save to DB
+      const upd={};
+      if(d.address) upd.location=d.address;
+      if(d.hours_today) upd.hours_today=d.hours_today;
+      if(Object.keys(upd).length){
+        await sb.from('inspiration_cards').update(upd).eq('id',cardId);
+        Object.assign(c,upd);
+        toast('✓ Address updated');
+      }
+    }
+  }catch(e){toast('Could not look up address');}
+  if(btn){btn.disabled=false;btn.textContent='Look up';}
 }
 
 function toggleCardTag(btn){
@@ -4459,7 +5167,7 @@ async function saveCardEdit(){
   if(error){toast('Save failed: '+error.message);return;}
   const c=cards.find(c=>c.id===editingCardId);
   if(c){c.title=title;c.city=city||c.city||location.split(',')[0].trim();c.location=location;c.tags=editingCardTags;}
-  renderCards();renderClusters();
+  renderFindTab();renderClusters();
   if(curCity) renderSidebar();
   toast('✓ Updated');
   editingCardId=null;
@@ -4977,10 +5685,17 @@ function showDiscoverStrip(){
 
 function openDiscover(mode){
   document.getElementById('discover-drawer').classList.add('on');
-  const trip=trips.find(t=>t.id===tripId);
-  const dest=trip?.destination||trip?.title||'Unknown destination';
-  document.getElementById('discover-title').textContent='Discover '+dest.split(',')[0];
+  // Use active country filter, fall back to active trip destination
+  let dest='';
+  if(findCountryFilter&&findCountryFilter!=='all'){
+    dest=findCountryFilter;
+  } else {
+    const trip=trips.find(t=>t.id===tripId);
+    dest=trip?.destination||trip?.title||'';
+  }
+  document.getElementById('discover-title').textContent='Discover '+(dest.split(',')[0]||'');
   document.getElementById('discover-sub').textContent=dest;
+  window._discoverDest=dest;
   setDiscoverTab(mode||'top10');
 }
 
@@ -5022,26 +5737,33 @@ function renderTop10Categories(){
   const container=document.getElementById('disc-top10-content');
   if(!container) return;
   container.innerHTML='';
-  const trip=trips.find(t=>t.id===tripId);
-  const dest=trip?.destination||trip?.title||'';
+  const dest=window._discoverDest||(trips.find(t=>t.id===tripId)?.title||'');
   TOP10_CATEGORIES.forEach(cat=>{
     const div=document.createElement('div');
-    div.style.cssText='background:var(--card);border-radius:var(--rs);border:1px solid var(--b1);padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:11px;margin-bottom:7px;transition:all .15s';
-    div.innerHTML=`<span style="font-size:22px">${cat.emoji}</span><div style="flex:1"><div style="font-weight:600;font-size:13px;color:var(--ink)">${cat.name}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">10 places in ${dest.split(',')[0]}</div></div><span style="font-size:16px;color:var(--muted)">›</span>`;
+    div.style.cssText='background:var(--cream2);border-radius:9px;border:1px solid var(--rule);padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:11px;margin-bottom:7px;transition:all .15s';
+    div.innerHTML=`<span style="font-size:22px">${cat.emoji}</span><div style="flex:1"><div style="font-weight:700;font-size:13px;color:var(--ink)">${cat.name}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">10 places in ${dest.split(',')[0]}</div></div><span style="font-size:16px;color:var(--faint)">›</span>`;
     div.onclick=()=>runTop10(cat,dest);
     container.appendChild(div);
   });
 }
 
 async function runTop10(cat,dest){
-  showDiscLoading('Finding the best '+cat.name.toLowerCase()+' in '+dest.split(',')[0]+'…');
-  const prompt=`List the top 10 ${cat.name.toLowerCase()} in ${dest}. 
+  // Use area input to narrow to city if provided
+  const area=(document.getElementById('disc-area-input')?.value||'').trim();
+  const interests=(document.getElementById('disc-interest-input')?.value||'').trim();
+  const focusDest=area?`${area}, ${dest.split(',')[0]}`:dest.split(',')[0];
+  showDiscLoading('Finding the best '+cat.name.toLowerCase()+' in '+focusDest+'…');
+  const contextStr=[
+    area?`Focus on places near or in: ${area}`:'',
+    interests?`User preferences: ${interests}`:'',
+  ].filter(Boolean).join('. ');
+  const prompt=`List the top 10 ${cat.name.toLowerCase()} in ${focusDest}.${contextStr?' '+contextStr+'.':''}
 Return ONLY valid JSON array, no markdown:
-[{"name":"Place name","location":"Suburb, City","emoji":"one emoji","why":"1 sentence why it's special","tags":["1-2 tags from: eat/drinks/sleep/explore/hike/swim/dance/shop/spa/visit/watch"],"booking_status":"needs|free|online"}]`;
+[{"name":"Place name","location":"Specific street/area, City","emoji":"one emoji","why":"1 sentence why its special","tags":["1-2 tags from: eat/drinks/sleep/explore/hike/swim/dance/shop/spa/visit/watch"],"booking_status":"needs|free|online","price_range":"$|$$|$$$|$$$$"}]`;
   const places=await runDiscoverAI(prompt,'top10_'+cat.id);
   hideDiscLoading();
   if(!places) return;
-  renderDiscoverList(places,cat.name+' in '+dest.split(',')[0],true);
+  renderDiscoverList(places,cat.name+' in '+focusDest,true);
 }
 
 function renderThemePicker(){
@@ -5053,66 +5775,95 @@ function renderThemePicker(){
   const container=document.getElementById('disc-themes');
   if(!container) return;
   container.innerHTML='';
+  const div0=document.createElement('div');
+  div0.style.cssText='font-size:10px;font-weight:700;color:var(--faint);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px';
+  div0.textContent='Pick a vibe';
+  container.appendChild(div0);
   THEMES.forEach(theme=>{
     const div=document.createElement('div');
-    div.style.cssText='border-radius:var(--rs);overflow:hidden;cursor:pointer;border:1px solid var(--b1)';
-    div.innerHTML=`<div style="height:52px;background:${theme.color};display:flex;align-items:center;padding:0 16px;gap:11px"><span style="font-size:24px">${theme.emoji}</span><div style="flex:1"><div style="font-family:var(--serif);font-size:13px;font-style:italic;color:#fff">${theme.name}</div><div style="font-size:9px;color:rgba(255,255,255,.75);margin-top:2px">${theme.desc}</div></div><span style="font-size:14px;color:rgba(255,255,255,.6)">›</span></div>`;
+    div.style.cssText='border-radius:9px;overflow:hidden;cursor:pointer;border:1px solid var(--rule);margin-bottom:7px';
+    div.innerHTML=`<div style="height:52px;background:${theme.color};display:flex;align-items:center;padding:0 16px;gap:11px"><span style="font-size:24px">${theme.emoji}</span><div style="flex:1"><div style="font-size:13px;font-weight:800;color:#fff;letter-spacing:-.02em">${theme.name}</div><div style="font-size:9px;color:rgba(255,255,255,.7);margin-top:2px">${theme.desc}</div></div><span style="font-size:14px;color:rgba(255,255,255,.5)">›</span></div>`;
     div.onclick=()=>runDayBuilder(theme);
     container.appendChild(div);
   });
-  // Custom theme
   const custom=document.createElement('div');
-  custom.style.cssText='border-radius:var(--rs);border:1.5px dashed var(--b2);padding:14px;text-align:center;cursor:pointer;margin-top:2px';
-  custom.innerHTML='<div style="font-size:14px;margin-bottom:4px">✦</div><div style="font-size:13px;font-weight:600;color:var(--ink)">Custom theme</div><div style="font-size:11px;color:var(--muted);margin-top:3px">Tell Porter what kind of day you want</div>';
+  custom.style.cssText='border-radius:9px;border:1.5px dashed var(--faint);padding:14px;text-align:center;cursor:pointer;margin-top:2px';
+  custom.innerHTML='<div style="font-size:13px;font-weight:800;color:var(--ink);margin-bottom:3px">✦ Custom vibe</div><div style="font-size:11px;color:var(--muted)">Describe the day you want</div>';
   custom.onclick=()=>{
-    const vibe=prompt('What kind of day? (e.g. "street art and coffee", "wine country escape", "old town exploration")');
-    if(vibe) runDayBuilder({id:'custom',emoji:'✦',name:vibe,desc:vibe,color:'linear-gradient(135deg,var(--accent),#1A4A38)'});
+    const vibe=window.prompt('What kind of day?');
+    if(vibe) runDayBuilder({id:'custom',emoji:'✦',name:vibe,desc:vibe,color:'linear-gradient(135deg,var(--ink),#3A3530)'});
   };
   container.appendChild(custom);
 }
 
 async function runDayBuilder(theme){
-  const trip=trips.find(t=>t.id===tripId);
-  const dest=trip?.destination||trip?.title||'';
-  showDiscLoading('Building your '+theme.name.toLowerCase()+' in '+dest.split(',')[0]+'…');
+  const dest=window._discoverDest||(trips.find(t=>t.id===tripId)?.title||'');
+  const area=(document.getElementById('disc-area-input')?.value||'').trim();
+  const interests=(document.getElementById('disc-interest-input')?.value||'').trim();
+
+  const contextStr=[
+    area?`User is staying/starting from: ${area}`:'',
+    interests?`User preferences: ${interests}`:'',
+  ].filter(Boolean).join('\n');
+
+  showDiscLoading('Building your '+theme.name.toLowerCase()+' day in '+dest.split(',')[0]+'…');
   const existingList=cards.filter(c=>!c._opt).map(c=>`- ${c.title} (${c.city||c.location||'?'})`).join('\n');
-  const prompt=`Build a "${theme.name}" day itinerary in ${dest}. Theme: ${theme.desc}.\n${existingList?'User already has these places saved:\n'+existingList+'\nMark these as ON_LIST in the response.':''}\nReturn ONLY valid JSON array of 6-8 places in the order to visit them, no markdown:\n[{"name":"Place name","location":"Suburb, City","emoji":"one emoji","why":"1 sentence why it fits this day","time":"suggested time e.g. 8:00am","tags":["1-2 tags"],"booking_status":"needs|free|online","on_list":true|false,"dont_miss":true|false}]\nAlso flag 1-2 places with dont_miss:true that are unmissable but not commonly known.`;
+
+  const prompt=`Build a "${theme.name}" day itinerary in ${dest}. Theme: ${theme.desc}.
+${contextStr}
+${existingList?'User already has these places saved:\n'+existingList+'\nMark these as on_list:true in the response.':''}
+
+CRITICAL RULES:
+1. All places MUST be geographically close to each other — walkable or max 10min by transport between consecutive stops. Do NOT mix places from different parts of the city.
+2. ${area?`Prioritise places near ${area} or easily accessible from there.`:'Keep all places in one coherent neighbourhood or district.'}
+3. Order places so the route makes geographic sense — no backtracking across the city.
+4. ${interests?`Strongly factor in: ${interests}`:''}
+5. Include suggested times so the day flows naturally.
+
+Return ONLY valid JSON array of 5-7 places in visit order, no markdown:
+[{"name":"Place name","location":"Specific street/area, City","emoji":"one emoji","why":"1 sentence why it fits — mention how close it is to previous stop","time":"suggested time e.g. 9:00am","tags":["1-2 tags from: eat/drinks/explore/hike/swim/dance/shop/spa/visit"],"booking_status":"needs|free|online","on_list":true|false,"dont_miss":true|false}]
+
+Flag 1-2 places with dont_miss:true that are genuinely special and not just tourist traps.`;
+
   const places=await runDiscoverAI(prompt,'day_'+theme.id);
   hideDiscLoading();
   if(!places) return;
-  // Show results
   const picker=document.getElementById('disc-theme-picker');
   const results=document.getElementById('disc-day-results');
   if(picker) picker.style.display='none';
   if(results){results.style.display='flex';results.style.flexDirection='column';}
-  renderDayResults(places, theme, dest);
+  renderDayResults(places, theme, dest, area);
 }
 
-function renderDayResults(places, theme, dest){
+function renderDayResults(places, theme, dest, area){
   const results=document.getElementById('disc-day-results');
   if(!results) return;
   results.innerHTML='';
   // Back button
   const back=document.createElement('div');
   back.style.cssText='display:flex;align-items:center;gap:8px;margin-bottom:10px;cursor:pointer';
-  back.innerHTML=`<span style="font-size:12px;color:var(--accent);font-weight:600">← Themes</span>`;
+  back.innerHTML=`<span style="font-size:12px;font-weight:700;color:var(--muted)">← Themes</span>`;
   back.onclick=()=>{results.style.display='none';document.getElementById('disc-theme-picker').style.display='block';};
   results.appendChild(back);
   // Theme header
   const hd=document.createElement('div');
-  hd.style.cssText=`border-radius:var(--r);overflow:hidden;margin-bottom:12px;background:${theme.color};padding:14px 16px`;
-  hd.innerHTML=`<div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.65);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">${theme.emoji} ${theme.name}</div><div style="font-family:var(--serif);font-size:16px;font-style:italic;color:#fff;margin-bottom:10px">${dest.split(',')[0]}</div><button onclick="addAllDiscoverPlaces()" style="padding:7px 16px;border-radius:99px;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font)">Add all to my list →</button>`;
+  hd.style.cssText=`border-radius:10px;overflow:hidden;margin-bottom:12px;background:${theme.color};padding:14px 16px`;
+  hd.innerHTML=`
+    <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">${theme.emoji} ${theme.name}</div>
+    <div style="font-size:16px;font-weight:900;color:#fff;letter-spacing:-.03em;margin-bottom:2px">${dest.split(',')[0]}</div>
+    ${area?`<div style="font-size:10px;color:rgba(255,255,255,.6);margin-bottom:10px">Near ${area}</div>`:'<div style="margin-bottom:10px"></div>'}
+    <button onclick="addAllDiscoverPlaces()" style="padding:7px 16px;border-radius:99px;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font)">Add all to my list →</button>`;
   results.appendChild(hd);
   // Gap analysis
-  const hasBookingGap=!places.some(p=>p.booking_status==='needs'&&p.tags?.includes('eat'));
-  const hasMorning=places.some(p=>p.time&&(p.time.includes('7:')||p.time.includes('8:')||p.time.includes('6:')));
-  if(!hasMorning||hasBookingGap){
+  const hasMorning=places.some(p=>p.time&&/^[678]:/.test(p.time));
+  const hasMeal=places.some(p=>(p.tags||[]).includes('eat'));
+  if(!hasMorning||!hasMeal){
     const gap=document.createElement('div');
-    gap.style.cssText='background:#FEF3C7;border:1px solid #FDE68A;border-radius:var(--rs);padding:10px 13px;margin-bottom:10px';
+    gap.style.cssText='background:var(--book-bg);border:1px solid #FDE68A;border-radius:9px;padding:10px 13px;margin-bottom:10px';
     const gaps=[];
-    if(!hasMorning) gaps.push('no <strong>morning activity</strong> (early starts feel great in '+dest.split(',')[0]+')');
-    if(hasBookingGap) gaps.push('no <strong>must-book restaurant</strong> — dining spots fill up fast');
-    gap.innerHTML=`<div style="font-size:10px;font-weight:700;color:#92400E;margin-bottom:4px">⚠ You might be missing</div><div style="font-size:11px;color:#78350F;line-height:1.6">${gaps.join(' and ')}.</div>`;
+    if(!hasMorning) gaps.push('no <strong>early start</strong> — mornings are the best time to beat crowds');
+    if(!hasMeal) gaps.push('no <strong>meal stop</strong> — long days need fuel');
+    gap.innerHTML=`<div style="font-size:10px;font-weight:700;color:var(--book-tx);margin-bottom:4px">You might be missing</div><div style="font-size:11px;color:#78350F;line-height:1.6">${gaps.join(' · ')}.</div>`;
     results.appendChild(gap);
   }
   // Place list
@@ -5331,7 +6082,7 @@ async function addDiscoverPlace(place){
   if(error){toast('Could not add: '+error.message);return;}
   cards.unshift(data);
   toast('✓ '+place.name+' added to your list');
-  renderCards();renderClusters();updateOnListCount();
+  renderFindTab();renderClusters();updateOnListCount();
   if(place.booking_status==='needs') setTimeout(()=>toast('💡 '+place.name+' needs a booking — add to Bookings tab'),2000);
 }
 
